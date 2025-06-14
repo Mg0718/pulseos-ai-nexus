@@ -73,6 +73,8 @@ const Morale = () => {
     ? moraleEntries.reduce((sum, entry) => sum + entry.morale_score, 0) / moraleEntries.length
     : 0;
 
+  const atRiskCount = teamMorales.filter(team => team.avg_score < 6).length;
+
   if (loading) {
     return (
       <div className="min-h-screen p-6 flex items-center justify-center">
@@ -98,7 +100,10 @@ const Morale = () => {
           </div>
         </motion.div>
 
-        <MoraleOverviewCards averageMorale={averageMorale} />
+        <MoraleOverviewCards 
+          averageMorale={averageMorale} 
+          atRiskCount={atRiskCount}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <MoraleTrendChart moraleEntries={moraleEntries} />

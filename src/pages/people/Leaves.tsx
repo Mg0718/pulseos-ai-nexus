@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Calendar } from "@/components/ui/calendar";
@@ -8,6 +7,7 @@ import { toast } from "sonner";
 import { LeaveRequestDialog } from "@/components/people/leaves/LeaveRequestDialog";
 import { LeaveBalanceCard } from "@/components/people/leaves/LeaveBalanceCard";
 import { LeaveRequestsList } from "@/components/people/leaves/LeaveRequestsList";
+import { LeaveCalendarView } from "@/components/people/leaves/LeaveCalendarView";
 
 interface LeaveRequest {
   id: string;
@@ -111,24 +111,10 @@ const Leaves = () => {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Leave Balances */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1">
             <LeaveBalanceCard leaveBalances={leaveBalances} />
-
-            <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-              <CardHeader>
-                <CardTitle className="text-white">Calendar</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  className="text-white"
-                />
-              </CardContent>
-            </Card>
           </div>
 
           {/* Leave Requests */}
@@ -136,6 +122,9 @@ const Leaves = () => {
             <LeaveRequestsList leaveRequests={leaveRequests} />
           </div>
         </div>
+
+        {/* Enhanced Calendar View */}
+        <LeaveCalendarView />
       </div>
     </div>
   );

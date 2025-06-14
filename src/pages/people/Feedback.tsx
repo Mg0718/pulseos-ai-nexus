@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -115,6 +114,9 @@ const Feedback = () => {
             />
           </div>
         </motion.div>
+
+        {/* Add Feedback Metrics */}
+        <FeedbackMetrics />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Feedback Statistics */}
