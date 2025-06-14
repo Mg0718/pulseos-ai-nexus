@@ -22,8 +22,8 @@ const ParticlesBackground = () => {
     <Particles
       className="absolute inset-0 pointer-events-none"
       id="tsparticles"
-      particlesInit={particlesInit}
-      particlesLoaded={particlesLoaded}
+      init={particlesInit}
+      loaded={particlesLoaded}
       options={{
         background: {
           color: {
@@ -79,8 +79,7 @@ const ParticlesBackground = () => {
           number: {
             density: {
               enable: true,
-              width: 1920,
-              height: 1080,
+              area: 800,
             },
             value: 80,
           },
