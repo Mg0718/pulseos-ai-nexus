@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
@@ -10,7 +9,7 @@ import {
   Lightbulb, 
   Settings, 
   Zap, 
-  Sync, 
+  RefreshCw, 
   FileText, 
   Wrench, 
   Building2, 
@@ -114,7 +113,7 @@ const modules = [
     id: 10,
     title: "PulseSync",
     description: "Integration middleware, OAuth management",
-    icon: Sync,
+    icon: RefreshCw,
     color: "bg-cyan-500",
     route: "/integrations",
     status: "Active"
