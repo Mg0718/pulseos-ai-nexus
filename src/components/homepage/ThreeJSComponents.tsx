@@ -1,9 +1,8 @@
 
 import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Float, MeshWobbleMaterial, Text, Sphere } from "@react-three/drei";
+import { OrbitControls, Float, MeshWobbleMaterial, Sphere } from "@react-three/drei";
 import { Mesh } from "three";
-import { Brain, Users, BarChart3 } from "lucide-react";
 
 // Enhanced 3D Icon Component with rotation and floating
 const ThreeJSIcon = ({ position, color }: { position: [number, number, number], color: string }) => {
@@ -62,7 +61,9 @@ const FloatingParticles = () => {
       {[...Array(12)].map((_, i) => (
         <mesh
           key={i}
-          ref={(el) => el && (particlesRef.current[i] = el)}
+          ref={(el) => {
+            if (el) particlesRef.current[i] = el;
+          }}
           position={[
             (Math.random() - 0.5) * 10,
             (Math.random() - 0.5) * 10,
@@ -84,7 +85,6 @@ export const ThreeJSScene = () => {
       <Canvas 
         camera={{ position: [0, 0, 10], fov: 50 }}
         dpr={[1, 2]}
-        performance={{ min: 0.5 }}
       >
         <Suspense fallback={null}>
           {/* Enhanced lighting setup */}

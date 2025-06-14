@@ -6,6 +6,7 @@ import type { Container, Engine } from "@tsparticles/engine";
 
 const ParticlesBackground = () => {
   const particlesInit = useCallback(async (engine: Engine) => {
+    console.log("Initializing particles engine");
     await loadSlim(engine);
   }, []);
 
@@ -17,8 +18,8 @@ const ParticlesBackground = () => {
     <Particles
       className="absolute inset-0 pointer-events-none"
       id="tsparticles"
-      init={particlesInit}
-      loaded={particlesLoaded}
+      particlesInit={particlesInit}
+      particlesLoaded={particlesLoaded}
       options={{
         background: {
           color: {
