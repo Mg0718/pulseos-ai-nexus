@@ -48,7 +48,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const redirectUrl = `${window.location.origin}/`;
+    // Use the actual deployed URL instead of localhost
+    const redirectUrl = window.location.hostname === 'localhost' 
+      ? 'https://36695471-4bb1-4881-84a1-2fa162aaf89a.lovableproject.com/'
+      : `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
       email,
