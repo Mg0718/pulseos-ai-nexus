@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,6 +27,9 @@ import Feedback from "./pages/people/Feedback";
 import Morale from "./pages/people/Morale";
 import Profiles from "./pages/people/Profiles";
 import PeopleSettings from "./pages/people/Settings";
+import FinanceDashboard from "./pages/finance/Dashboard";
+import Payroll from "./pages/finance/Payroll";
+import Invoices from "./pages/finance/Invoices";
 
 const queryClient = new QueryClient();
 
@@ -126,6 +128,24 @@ const AppContent = () => {
             <Finance />
           </ProtectedRoute>
         } />
+        
+        {/* Finance Module Routes */}
+        <Route path="/finance/dashboard" element={
+          <ProtectedRoute>
+            <FinanceDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/finance/payroll" element={
+          <ProtectedRoute>
+            <Payroll />
+          </ProtectedRoute>
+        } />
+        <Route path="/finance/invoices" element={
+          <ProtectedRoute>
+            <Invoices />
+          </ProtectedRoute>
+        } />
+        
         <Route path="/settings" element={
           <ProtectedRoute>
             <Settings />
