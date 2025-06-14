@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Send, Eye, Edit, FileText, DollarSign, Clock, AlertTriangle } from "lucide-react";
+import { Plus, Send, Eye, Edit, FileText, DollarSign, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 interface Invoice {
@@ -25,6 +25,7 @@ interface Invoice {
   due_date: string;
   description: string;
   created_at: string;
+  created_by?: string;
 }
 
 const Invoices = () => {
@@ -41,9 +42,9 @@ const Invoices = () => {
   const fetchInvoices = async () => {
     try {
       const { data, error } = await supabase
-        .from('invoices')
+        .from('invoices' as any)
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false }) as { data: Invoice[] | null, error: any };
 
       if (error) throw error;
       setInvoices(data || []);
@@ -59,7 +60,7 @@ const Invoices = () => {
     try {
       if (editingInvoice) {
         const { error } = await supabase
-          .from('invoices')
+          .from('invoices' as any)
           .update(invoice)
           .eq('id', editingInvoice.id);
 
@@ -68,7 +69,7 @@ const Invoices = () => {
       } else {
         const invoiceNumber = `INV-${new Date().getFullYear()}-${String(invoices.length + 1).padStart(3, '0')}`;
         const { error } = await supabase
-          .from('invoices')
+          .from('invoices' as any)
           .insert([{ 
             ...invoice, 
             invoice_number: invoiceNumber,
@@ -91,7 +92,7 @@ const Invoices = () => {
   const handleStatusUpdate = async (invoiceId: string, newStatus: string) => {
     try {
       const { error } = await supabase
-        .from('invoices')
+        .from('invoices' as any)
         .update({ status: newStatus })
         .eq('id', invoiceId);
 

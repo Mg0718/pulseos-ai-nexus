@@ -3,9 +3,37 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { DollarSign, TrendingUp, TrendingDown, Calculator, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+
+interface Transaction {
+  id: string;
+  transaction_id: string;
+  type: string;
+  amount: number;
+  currency: string;
+  status: string;
+  description: string;
+  category: string;
+  payment_method: string;
+  reference_id: string;
+  created_at: string;
+}
+
+interface Invoice {
+  id: string;
+  invoice_number: string;
+  client_name: string;
+  client_email: string;
+  amount: number;
+  currency: string;
+  status: string;
+  due_date: string;
+  description: string;
+  created_by: string;
+  created_at: string;
+}
 
 const Dashboard = () => {
   const [metrics, setMetrics] = useState({
@@ -26,15 +54,15 @@ const Dashboard = () => {
 
   const fetchFinancialData = async () => {
     try {
-      // Fetch transactions for revenue and expenses
+      // Fetch transactions for revenue and expenses using type assertion
       const { data: transactions } = await supabase
-        .from('transactions')
-        .select('*');
+        .from('transactions' as any)
+        .select('*') as { data: Transaction[] | null };
 
-      // Fetch invoices for overdue tracking
+      // Fetch invoices for overdue tracking using type assertion
       const { data: invoices } = await supabase
-        .from('invoices')
-        .select('*');
+        .from('invoices' as any)
+        .select('*') as { data: Invoice[] | null };
 
       if (transactions && invoices) {
         calculateMetrics(transactions, invoices);
@@ -47,14 +75,14 @@ const Dashboard = () => {
     }
   };
 
-  const calculateMetrics = (transactions: any[], invoices: any[]) => {
+  const calculateMetrics = (transactions: Transaction[], invoices: Invoice[]) => {
     const revenue = transactions
       .filter(t => t.type === 'income' && t.status === 'completed')
-      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+      .reduce((sum, t) => sum + parseFloat(t.amount.toString()), 0);
 
     const expenses = transactions
       .filter(t => t.type === 'expense' && t.status === 'completed')
-      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+      .reduce((sum, t) => sum + parseFloat(t.amount.toString()), 0);
 
     const overdueCount = invoices.filter(i => 
       i.status === 'overdue' || 
@@ -63,7 +91,7 @@ const Dashboard = () => {
 
     const pendingAmount = transactions
       .filter(t => t.status === 'pending')
-      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+      .reduce((sum, t) => sum + parseFloat(t.amount.toString()), 0);
 
     setMetrics({
       totalRevenue: revenue,
@@ -75,7 +103,7 @@ const Dashboard = () => {
     });
   };
 
-  const prepareChartData = (transactions: any[]) => {
+  const prepareChartData = (transactions: Transaction[]) => {
     const monthlyData = transactions.reduce((acc: any, transaction) => {
       const month = new Date(transaction.created_at).toLocaleDateString('en-US', { month: 'short' });
       if (!acc[month]) {
@@ -83,9 +111,9 @@ const Dashboard = () => {
       }
       
       if (transaction.type === 'income') {
-        acc[month].income += parseFloat(transaction.amount);
+        acc[month].income += parseFloat(transaction.amount.toString());
       } else if (transaction.type === 'expense') {
-        acc[month].expenses += parseFloat(transaction.amount);
+        acc[month].expenses += parseFloat(transaction.amount.toString());
       }
       
       return acc;
@@ -94,7 +122,7 @@ const Dashboard = () => {
     setChartData(Object.values(monthlyData));
   };
 
-  const ruleOf40 = ((metrics.monthlyRevenue * 12 - metrics.totalRevenues) / metrics.totalRevenues * 100) + 
+  const ruleOf40 = ((metrics.monthlyRevenue * 12 - metrics.totalRevenue) / metrics.totalRevenue * 100) + 
                    (metrics.netProfit / metrics.totalRevenue * 100);
   
   const roic = metrics.totalRevenue > 0 ? (metrics.netProfit / metrics.totalRevenue * 100) : 0;
