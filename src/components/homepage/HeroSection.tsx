@@ -117,7 +117,7 @@ const HeroSection = () => {
               </Badge>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </motion.section>
   );
