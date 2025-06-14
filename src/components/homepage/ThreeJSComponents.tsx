@@ -9,9 +9,14 @@ const ThreeJSIcon = ({ position, color }: { position: [number, number, number], 
   const meshRef = useRef<Mesh>(null);
   
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime) * 0.2;
-      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.3;
+    // Enhanced null checks to prevent runtime errors
+    if (meshRef.current && meshRef.current.rotation) {
+      try {
+        meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime) * 0.2;
+        meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.3;
+      } catch (error) {
+        console.log("Error updating mesh rotation:", error);
+      }
     }
   });
 
@@ -46,15 +51,21 @@ const FloatingParticles = () => {
   const particlesRef = useRef<(Mesh | null)[]>([]);
 
   useFrame((state) => {
-    particlesRef.current.forEach((particle, i) => {
-      // Enhanced null checks to prevent the runtime error
-      if (particle && particle.position && particle.rotation) {
-        particle.position.y = Math.sin(state.clock.elapsedTime + i) * 0.5;
-        particle.position.x = Math.cos(state.clock.elapsedTime * 0.5 + i) * 0.3;
-        particle.rotation.x = state.clock.elapsedTime * 0.5;
-        particle.rotation.y = state.clock.elapsedTime * 0.3;
-      }
-    });
+    if (particlesRef.current && Array.isArray(particlesRef.current)) {
+      particlesRef.current.forEach((particle, i) => {
+        // Enhanced null checks to prevent the runtime error
+        if (particle && particle.position && particle.rotation) {
+          try {
+            particle.position.y = Math.sin(state.clock.elapsedTime + i) * 0.5;
+            particle.position.x = Math.cos(state.clock.elapsedTime * 0.5 + i) * 0.3;
+            particle.rotation.x = state.clock.elapsedTime * 0.5;
+            particle.rotation.y = state.clock.elapsedTime * 0.3;
+          } catch (error) {
+            console.log("Error updating particle:", error);
+          }
+        }
+      });
+    }
   });
 
   return (
@@ -81,46 +92,61 @@ const FloatingParticles = () => {
   );
 };
 
-// 3D Scene Component with enhanced lighting and effects
+// Error Boundary Component for Three.js
+const ThreeErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <Suspense fallback={<div className="absolute inset-0" />}>
+      {children}
+    </Suspense>
+  );
+};
+
+// 3D Scene Component with enhanced error handling
 export const ThreeJSScene = () => {
   return (
     <div className="absolute inset-0 w-full h-full pointer-events-none">
-      <Canvas 
-        camera={{ position: [0, 0, 10], fov: 50 }}
-        dpr={[1, 2]}
-      >
-        <Suspense fallback={null}>
-          {/* Enhanced lighting setup */}
-          <ambientLight intensity={0.3} />
-          <pointLight position={[10, 10, 10]} intensity={1} color="#B9FAF8" />
-          <pointLight position={[-10, -10, -10]} intensity={0.5} color="#6F2DBD" />
-          <spotLight 
-            position={[0, 10, 0]} 
-            angle={0.3} 
-            penumbra={1} 
-            intensity={1}
-            color="#A663CC"
-          />
-          
-          {/* 3D Icons */}
-          <ThreeJSIcon position={[-4, 2, 0]} color="#6F2DBD" />
-          <ThreeJSIcon position={[4, -2, 0]} color="#A663CC" />
-          <ThreeJSIcon position={[0, 0, -2]} color="#B298DC" />
-          
-          {/* Floating particles */}
-          <FloatingParticles />
-          
-          {/* Orbit controls with smooth damping */}
-          <OrbitControls 
-            enableZoom={false} 
-            enablePan={false} 
-            autoRotate 
-            autoRotateSpeed={0.5}
-            dampingFactor={0.1}
-            enableDamping
-          />
-        </Suspense>
-      </Canvas>
+      <ThreeErrorBoundary>
+        <Canvas 
+          camera={{ position: [0, 0, 10], fov: 50 }}
+          dpr={[1, 2]}
+          onCreated={({ gl }) => {
+            // Ensure WebGL context is properly initialized
+            gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          }}
+        >
+          <Suspense fallback={null}>
+            {/* Enhanced lighting setup */}
+            <ambientLight intensity={0.3} />
+            <pointLight position={[10, 10, 10]} intensity={1} color="#B9FAF8" />
+            <pointLight position={[-10, -10, -10]} intensity={0.5} color="#6F2DBD" />
+            <spotLight 
+              position={[0, 10, 0]} 
+              angle={0.3} 
+              penumbra={1} 
+              intensity={1}
+              color="#A663CC"
+            />
+            
+            {/* 3D Icons */}
+            <ThreeJSIcon position={[-4, 2, 0]} color="#6F2DBD" />
+            <ThreeJSIcon position={[4, -2, 0]} color="#A663CC" />
+            <ThreeJSIcon position={[0, 0, -2]} color="#B298DC" />
+            
+            {/* Floating particles */}
+            <FloatingParticles />
+            
+            {/* Orbit controls with smooth damping */}
+            <OrbitControls 
+              enableZoom={false} 
+              enablePan={false} 
+              autoRotate 
+              autoRotateSpeed={0.5}
+              dampingFactor={0.1}
+              enableDamping
+            />
+          </Suspense>
+        </Canvas>
+      </ThreeErrorBoundary>
     </div>
   );
 };
