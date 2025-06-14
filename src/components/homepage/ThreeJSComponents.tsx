@@ -47,14 +47,12 @@ const FloatingParticles = () => {
 
   useFrame((state) => {
     particlesRef.current.forEach((particle, i) => {
-      // Defensive: Only update if particle is defined
-      if (particle) {
-        if (particle.position && particle.rotation) {
-          particle.position.y = Math.sin(state.clock.elapsedTime + i) * 0.5;
-          particle.position.x = Math.cos(state.clock.elapsedTime * 0.5 + i) * 0.3;
-          particle.rotation.x = state.clock.elapsedTime * 0.5;
-          particle.rotation.y = state.clock.elapsedTime * 0.3;
-        }
+      // Enhanced null checks to prevent the runtime error
+      if (particle && particle.position && particle.rotation) {
+        particle.position.y = Math.sin(state.clock.elapsedTime + i) * 0.5;
+        particle.position.x = Math.cos(state.clock.elapsedTime * 0.5 + i) * 0.3;
+        particle.rotation.x = state.clock.elapsedTime * 0.5;
+        particle.rotation.y = state.clock.elapsedTime * 0.3;
       }
     });
   });
@@ -65,7 +63,9 @@ const FloatingParticles = () => {
         <mesh
           key={i}
           ref={(el) => {
-            particlesRef.current[i] = el;
+            if (particlesRef.current) {
+              particlesRef.current[i] = el;
+            }
           }}
           position={[
             (Math.random() - 0.5) * 10,
