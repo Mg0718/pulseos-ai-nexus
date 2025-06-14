@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,6 +19,15 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import PremiumHomepage from "./components/PremiumHomepage";
 import FloatingSidebar from "./components/FloatingSidebar";
+import PeopleLayout from "./components/people/PeopleLayout";
+import Dashboard from "./pages/people/Dashboard";
+import Onboarding from "./pages/people/Onboarding";
+import PeopleTeams from "./pages/people/Teams";
+import Leaves from "./pages/people/Leaves";
+import Feedback from "./pages/people/Feedback";
+import Morale from "./pages/people/Morale";
+import Profiles from "./pages/people/Profiles";
+import PeopleSettings from "./pages/people/Settings";
 
 const queryClient = new QueryClient();
 
@@ -126,6 +136,23 @@ const AppContent = () => {
             <Admin />
           </ProtectedRoute>
         } />
+        
+        {/* People & TeamOps Module Routes */}
+        <Route path="/people" element={
+          <ProtectedRoute>
+            <PeopleLayout />
+          </ProtectedRoute>
+        }>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="onboarding" element={<Onboarding />} />
+          <Route path="teams" element={<PeopleTeams />} />
+          <Route path="leaves" element={<Leaves />} />
+          <Route path="feedback" element={<Feedback />} />
+          <Route path="morale" element={<Morale />} />
+          <Route path="profiles" element={<Profiles />} />
+          <Route path="settings" element={<PeopleSettings />} />
+        </Route>
+        
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
