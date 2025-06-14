@@ -28,21 +28,13 @@ interface FeedbackEntry {
   sentiment_score: string | null;
   is_anonymous: boolean;
   created_at: string;
-  from_profile?: {
-    full_name: string;
-    avatar_url: string;
-  };
-  to_profile?: {
-    full_name: string;
-    avatar_url: string;
-  };
 }
 
 interface Profile {
   id: string;
-  full_name: string;
-  avatar_url: string;
-  job_title: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  job_title: string | null;
 }
 
 const Feedback = () => {
@@ -69,29 +61,25 @@ const Feedback = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select(`
-          id, full_name, avatar_url,
-          feedback_given:feedback_entries!from_user_id(
-            id, to_user_id, feedback_type, visibility, title, content, 
-            sentiment_score, is_anonymous, created_at,
-            to_profile:profiles!to_user_id(full_name, avatar_url)
-          ),
-          feedback_received:feedback_entries!to_user_id(
-            id, from_user_id, feedback_type, visibility, title, content,
-            sentiment_score, is_anonymous, created_at,
-            from_profile:profiles!from_user_id(full_name, avatar_url)
-          )
-        `)
-        .eq('id', user.id)
-        .single();
+      // Fetch feedback entries where user is involved
+      const { data: givenFeedback, error: givenError } = await supabase
+        .from('feedback_entries')
+        .select('*')
+        .eq('from_user_id', user.id)
+        .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      const { data: receivedFeedback, error: receivedError } = await supabase
+        .from('feedback_entries')
+        .select('*')
+        .eq('to_user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (givenError) throw givenError;
+      if (receivedError) throw receivedError;
 
       const allFeedback = [
-        ...(data.feedback_given || []),
-        ...(data.feedback_received || [])
+        ...(givenFeedback || []),
+        ...(receivedFeedback || [])
       ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
       setFeedbackEntries(allFeedback);
@@ -222,7 +210,7 @@ const Feedback = () => {
                       <SelectContent>
                         {profiles.map((profile) => (
                           <SelectItem key={profile.id} value={profile.id}>
-                            {profile.full_name} - {profile.job_title}
+                            {profile.full_name} {profile.job_title && `- ${profile.job_title}`}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -369,37 +357,27 @@ const Feedback = () => {
                       >
                         <div className="flex justify-between items-start mb-3">
                           <div className="flex items-center gap-3">
-                            {!feedback.is_anonymous && (
-                              <Avatar className="w-8 h-8">
-                                <AvatarImage src={feedback.from_profile?.avatar_url || feedback.to_profile?.avatar_url} />
-                                <AvatarFallback>
-                                  {(feedback.from_profile?.full_name || feedback.to_profile?.full_name)?.charAt(0)}
-                                </AvatarFallback>
-                              </Avatar>
-                            )}
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <Badge className="bg-[#6F2DBD]/20 text-purple-300">
-                                  {feedback.feedback_type}
+                            <div className="flex items-center gap-2">
+                              <Badge className="bg-[#6F2DBD]/20 text-purple-300">
+                                {feedback.feedback_type}
+                              </Badge>
+                              {feedback.sentiment_score && (
+                                <Badge className={getSentimentColor(feedback.sentiment_score)}>
+                                  {getSentimentIcon(feedback.sentiment_score)}
+                                  <span className="ml-1">{feedback.sentiment_score}</span>
                                 </Badge>
-                                {feedback.sentiment_score && (
-                                  <Badge className={getSentimentColor(feedback.sentiment_score)}>
-                                    {getSentimentIcon(feedback.sentiment_score)}
-                                    <span className="ml-1">{feedback.sentiment_score}</span>
-                                  </Badge>
-                                )}
-                                {feedback.visibility === 'anonymous' && (
-                                  <EyeOff className="w-4 h-4 text-white/60" />
-                                )}
-                                {feedback.visibility === 'manager_only' && (
-                                  <Eye className="w-4 h-4 text-white/60" />
-                                )}
-                              </div>
-                              <p className="text-sm text-white/60">
-                                {format(new Date(feedback.created_at), 'MMM dd, yyyy')}
-                              </p>
+                              )}
+                              {feedback.visibility === 'anonymous' && (
+                                <EyeOff className="w-4 h-4 text-white/60" />
+                              )}
+                              {feedback.visibility === 'manager_only' && (
+                                <Eye className="w-4 h-4 text-white/60" />
+                              )}
                             </div>
                           </div>
+                          <span className="text-sm text-white/60">
+                            {format(new Date(feedback.created_at), 'MMM dd, yyyy')}
+                          </span>
                         </div>
                         
                         <h4 className="text-white font-medium mb-2">{feedback.title}</h4>

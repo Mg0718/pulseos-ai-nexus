@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 interface MoraleEntry {
   id: string;
@@ -310,7 +310,7 @@ const Morale = () => {
                     </AreaChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="h-200 flex items-center justify-center text-white/60">
+                  <div className="h-[200px] flex items-center justify-center text-white/60">
                     No morale data yet. Log your first entry!
                   </div>
                 )}
@@ -330,7 +330,7 @@ const Morale = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {teamMorales.map((team, index) => (
+                  {teamMorales.map((team) => (
                     <div key={team.team_name} className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">

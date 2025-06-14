@@ -91,6 +91,60 @@ export type Database = {
           },
         ]
       }
+      feedback_entries: {
+        Row: {
+          content: string
+          created_at: string
+          feedback_type: string
+          from_user_id: string
+          id: string
+          is_anonymous: boolean
+          sentiment_score: string | null
+          title: string
+          to_user_id: string
+          visibility: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          feedback_type?: string
+          from_user_id: string
+          id?: string
+          is_anonymous?: boolean
+          sentiment_score?: string | null
+          title: string
+          to_user_id: string
+          visibility?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          feedback_type?: string
+          from_user_id?: string
+          id?: string
+          is_anonymous?: boolean
+          sentiment_score?: string | null
+          title?: string
+          to_user_id?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_entries_from_user_id_fkey"
+            columns: ["from_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feedback_entries_to_user_id_fkey"
+            columns: ["to_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       finance_records: {
         Row: {
           amount: number
@@ -172,6 +226,51 @@ export type Database = {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      morale_entries: {
+        Row: {
+          created_at: string
+          feedback_text: string | null
+          id: string
+          morale_score: number
+          sentiment: string
+          team_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feedback_text?: string | null
+          id?: string
+          morale_score: number
+          sentiment: string
+          team_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feedback_text?: string | null
+          id?: string
+          morale_score?: number
+          sentiment?: string
+          team_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "morale_entries_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "morale_entries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -270,21 +369,60 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           created_at: string
+          department: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          employee_id: string | null
+          employment_status: string | null
           full_name: string | null
+          hire_date: string | null
           id: string
+          job_title: string | null
+          location: string | null
+          phone: string | null
+          skills: string[] | null
+          timezone: string | null
+          workspace_type: string | null
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
+          department?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          employee_id?: string | null
+          employment_status?: string | null
           full_name?: string | null
+          hire_date?: string | null
           id: string
+          job_title?: string | null
+          location?: string | null
+          phone?: string | null
+          skills?: string[] | null
+          timezone?: string | null
+          workspace_type?: string | null
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
+          department?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          employee_id?: string | null
+          employment_status?: string | null
           full_name?: string | null
+          hire_date?: string | null
           id?: string
+          job_title?: string | null
+          location?: string | null
+          phone?: string | null
+          skills?: string[] | null
+          timezone?: string | null
+          workspace_type?: string | null
         }
         Relationships: []
       }
