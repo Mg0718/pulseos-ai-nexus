@@ -1,29 +1,11 @@
 
-import { useCallback } from "react";
 import Particles from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
-import type { Container, Engine } from "@tsparticles/engine";
 
 const ParticlesBackground = () => {
-  const particlesInit = useCallback(async (engine: Engine) => {
-    console.log("Initializing particles engine");
-    try {
-      await loadSlim(engine);
-    } catch (error) {
-      console.log("Error initializing particles:", error);
-    }
-  }, []);
-
-  const particlesLoaded = useCallback(async (container: Container | undefined) => {
-    console.log("Particles loaded", container);
-  }, []);
-
   return (
     <Particles
       className="absolute inset-0 pointer-events-none"
       id="tsparticles"
-      particlesInit={particlesInit}
-      particlesLoaded={particlesLoaded}
       options={{
         background: {
           color: {
