@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { FeedbackStats } from "@/components/people/feedback/FeedbackStats";
 import { FeedbackForm } from "@/components/people/feedback/FeedbackForm";
 import { FeedbackList } from "@/components/people/feedback/FeedbackList";
+import { FeedbackMetrics } from "@/components/people/feedback/FeedbackMetrics";
 
 interface FeedbackEntry {
   id: string;
