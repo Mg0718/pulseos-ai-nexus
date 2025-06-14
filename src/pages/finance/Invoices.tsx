@@ -3,16 +3,13 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Send, Eye, Edit, FileText, DollarSign, AlertTriangle } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { InvoiceForm } from "@/components/finance/InvoiceForm";
+import { InvoiceSummaryCards } from "@/components/finance/InvoiceSummaryCards";
+import { InvoicesTable } from "@/components/finance/InvoicesTable";
 
 interface Invoice {
   id: string;
@@ -105,20 +102,6 @@ const Invoices = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'paid': return 'bg-green-500';
-      case 'sent': return 'bg-blue-500';
-      case 'overdue': return 'bg-red-500';
-      case 'draft': return 'bg-gray-500';
-      default: return 'bg-gray-500';
-    }
-  };
-
-  const totalAmount = invoices.reduce((sum, invoice) => sum + invoice.amount, 0);
-  const paidAmount = invoices.filter(i => i.status === 'paid').reduce((sum, invoice) => sum + invoice.amount, 0);
-  const overdueCount = invoices.filter(i => i.status === 'overdue').length;
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 p-6 flex items-center justify-center">
@@ -157,142 +140,13 @@ const Invoices = () => {
           </div>
         </motion.div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-white/70 text-sm">Total Invoiced</p>
-                    <p className="text-2xl font-bold text-white">${totalAmount.toLocaleString()}</p>
-                  </div>
-                  <FileText className="w-8 h-8 text-blue-400" />
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+        <InvoiceSummaryCards invoices={invoices} />
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-white/70 text-sm">Paid Amount</p>
-                    <p className="text-2xl font-bold text-white">${paidAmount.toLocaleString()}</p>
-                  </div>
-                  <DollarSign className="w-8 h-8 text-green-400" />
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-white/70 text-sm">Overdue Invoices</p>
-                    <p className="text-2xl font-bold text-white">{overdueCount}</p>
-                  </div>
-                  <AlertTriangle className="w-8 h-8 text-red-400" />
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-
-        {/* Invoices Table */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-            <CardHeader>
-              <CardTitle className="text-white">All Invoices</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-white/20">
-                    <TableHead className="text-white">Invoice #</TableHead>
-                    <TableHead className="text-white">Client</TableHead>
-                    <TableHead className="text-white">Amount</TableHead>
-                    <TableHead className="text-white">Due Date</TableHead>
-                    <TableHead className="text-white">Status</TableHead>
-                    <TableHead className="text-white">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {invoices.map((invoice) => (
-                    <TableRow key={invoice.id} className="border-white/20">
-                      <TableCell className="text-white font-medium">{invoice.invoice_number}</TableCell>
-                      <TableCell className="text-white">{invoice.client_name}</TableCell>
-                      <TableCell className="text-white">${invoice.amount.toLocaleString()}</TableCell>
-                      <TableCell className="text-white">{new Date(invoice.due_date).toLocaleDateString()}</TableCell>
-                      <TableCell>
-                        <Select value={invoice.status} onValueChange={(value) => handleStatusUpdate(invoice.id, value)}>
-                          <SelectTrigger className="w-24 bg-transparent border-white/20">
-                            <Badge className={getStatusColor(invoice.status)}>
-                              {invoice.status}
-                            </Badge>
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="draft">Draft</SelectItem>
-                            <SelectItem value="sent">Sent</SelectItem>
-                            <SelectItem value="paid">Paid</SelectItem>
-                            <SelectItem value="overdue">Overdue</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setEditingInvoice(invoice)}
-                            className="text-white hover:bg-white/10"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => toast.info('PDF preview coming soon')}
-                            className="text-white hover:bg-white/10"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => toast.info('Email sending coming soon')}
-                            className="text-white hover:bg-white/10"
-                          >
-                            <Send className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <InvoicesTable 
+          invoices={invoices}
+          onEdit={setEditingInvoice}
+          onStatusUpdate={handleStatusUpdate}
+        />
 
         {/* Edit Dialog */}
         {editingInvoice && (
@@ -307,87 +161,6 @@ const Invoices = () => {
         )}
       </div>
     </div>
-  );
-};
-
-const InvoiceForm = ({ invoice, onSave }: { 
-  invoice?: Invoice | null; 
-  onSave: (invoice: Partial<Invoice>) => void;
-}) => {
-  const [formData, setFormData] = useState({
-    client_name: invoice?.client_name || '',
-    client_email: invoice?.client_email || '',
-    amount: invoice?.amount || 0,
-    currency: invoice?.currency || 'USD',
-    due_date: invoice?.due_date || '',
-    description: invoice?.description || '',
-    status: invoice?.status || 'draft'
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-white mb-2">Client Name</label>
-          <Input
-            value={formData.client_name}
-            onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
-            className="bg-white/10 border-white/20 text-white"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-white mb-2">Client Email</label>
-          <Input
-            type="email"
-            value={formData.client_email}
-            onChange={(e) => setFormData({ ...formData, client_email: e.target.value })}
-            className="bg-white/10 border-white/20 text-white"
-            required
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-white mb-2">Amount</label>
-          <Input
-            type="number"
-            step="0.01"
-            value={formData.amount}
-            onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
-            className="bg-white/10 border-white/20 text-white"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-white mb-2">Due Date</label>
-          <Input
-            type="date"
-            value={formData.due_date}
-            onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
-            className="bg-white/10 border-white/20 text-white"
-            required
-          />
-        </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-white mb-2">Description</label>
-        <Textarea
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          className="bg-white/10 border-white/20 text-white"
-          rows={3}
-        />
-      </div>
-      <Button type="submit" className="w-full bg-[#6F2DBD] hover:bg-[#6F2DBD]/80">
-        {invoice ? 'Update' : 'Create'} Invoice
-      </Button>
-    </form>
   );
 };
 
