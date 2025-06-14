@@ -36,7 +36,9 @@ const ParticlesBackground = () => {
               enable: true,
               mode: "repulse",
             },
-            resize: true,
+            resize: {
+              enable: true,
+            },
           },
           modes: {
             push: {
@@ -72,7 +74,8 @@ const ParticlesBackground = () => {
           number: {
             density: {
               enable: true,
-              area: 800,
+              width: 1920,
+              height: 1080,
             },
             value: 80,
           },
