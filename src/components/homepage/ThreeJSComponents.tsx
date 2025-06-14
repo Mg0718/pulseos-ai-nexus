@@ -43,15 +43,18 @@ const ThreeJSIcon = ({ position, color }: { position: [number, number, number], 
 
 // Floating particles around the icons
 const FloatingParticles = () => {
-  const particlesRef = useRef<Mesh[]>([]);
-  
+  const particlesRef = useRef<(Mesh | null)[]>([]);
+
   useFrame((state) => {
     particlesRef.current.forEach((particle, i) => {
+      // Defensive: Only update if particle is defined
       if (particle) {
-        particle.position.y = Math.sin(state.clock.elapsedTime + i) * 0.5;
-        particle.position.x = Math.cos(state.clock.elapsedTime * 0.5 + i) * 0.3;
-        particle.rotation.x = state.clock.elapsedTime * 0.5;
-        particle.rotation.y = state.clock.elapsedTime * 0.3;
+        if (particle.position && particle.rotation) {
+          particle.position.y = Math.sin(state.clock.elapsedTime + i) * 0.5;
+          particle.position.x = Math.cos(state.clock.elapsedTime * 0.5 + i) * 0.3;
+          particle.rotation.x = state.clock.elapsedTime * 0.5;
+          particle.rotation.y = state.clock.elapsedTime * 0.3;
+        }
       }
     });
   });
@@ -62,7 +65,7 @@ const FloatingParticles = () => {
         <mesh
           key={i}
           ref={(el) => {
-            if (el) particlesRef.current[i] = el;
+            particlesRef.current[i] = el;
           }}
           position={[
             (Math.random() - 0.5) * 10,
