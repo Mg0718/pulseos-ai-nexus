@@ -22,7 +22,7 @@ const leaveRequests = [
   {
     id: 1,
     employee: "Sarah Chen",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b056f02",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b056f02d?w=400",
     type: "Annual Leave",
     dates: "Dec 25-29, 2024",
     days: 5,
@@ -33,7 +33,7 @@ const leaveRequests = [
   {
     id: 2,
     employee: "Marcus Johnson",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
     type: "Sick Leave",
     dates: "Dec 15, 2024",
     days: 1,
@@ -44,7 +44,7 @@ const leaveRequests = [
   {
     id: 3,
     employee: "Elena Rodriguez",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400",
     type: "Personal Leave",
     dates: "Dec 20-22, 2024",
     days: 3,

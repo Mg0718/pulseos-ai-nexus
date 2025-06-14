@@ -1,10 +1,18 @@
 
+import React, { Suspense } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Brain, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { ThreeJSScene } from "./ThreeJSComponents";
+import ThreeJSErrorBoundary from "./ThreeJSErrorBoundary";
+
+// Lazy load ThreeJS components to prevent context issues
+const ThreeJSScene = React.lazy(() => 
+  import("./ThreeJSComponents").then(module => ({ default: module.ThreeJSScene })).catch(() => ({ 
+    default: () => <div className="absolute inset-0" /> 
+  }))
+);
 
 const stats = [
   { label: "Teams Powered", value: "50K+", change: "+127%" },
@@ -23,7 +31,11 @@ const HeroSection = () => {
       style={{ y: heroY, opacity: heroOpacity }}
       className="relative min-h-screen flex items-center justify-center px-6 pt-20"
     >
-      <ThreeJSScene />
+      <ThreeJSErrorBoundary fallback={<div className="absolute inset-0" />}>
+        <Suspense fallback={<div className="absolute inset-0" />}>
+          <ThreeJSScene />
+        </Suspense>
+      </ThreeJSErrorBoundary>
       
       <div className="max-w-6xl mx-auto text-center relative z-10">
         <motion.div
@@ -105,7 +117,7 @@ const HeroSection = () => {
               </Badge>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </motion.section>
   );
