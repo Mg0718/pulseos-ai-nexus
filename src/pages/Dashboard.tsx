@@ -1,19 +1,14 @@
 
 import { motion } from "framer-motion";
 import { 
-  Calendar, 
   CreditCard, 
   Users, 
-  TrendingUp, 
   DollarSign, 
-  FileText,
-  Bell,
-  Activity,
-  Clock,
-  Target,
   Zap,
   BarChart3,
-  ArrowRight
+  ArrowRight,
+  Activity,
+  Target
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,8 +19,8 @@ import { Link } from "react-router-dom";
 const quickStats = [
   { label: "Monthly Revenue", value: "$124,350", change: "+12.5%", icon: DollarSign, color: "text-green-400" },
   { label: "Active Employees", value: "147", change: "+3", icon: Users, color: "text-blue-400" },
-  { label: "Pending Invoices", value: "23", change: "-5", icon: FileText, color: "text-orange-400" },
   { label: "Active Workflows", value: "12", change: "+2", icon: Zap, color: "text-purple-400" },
+  { label: "Performance Score", value: "94%", change: "+5%", icon: Target, color: "text-orange-400" },
 ];
 
 const modules = [
@@ -71,7 +66,7 @@ const recentActivities = [
   { type: "payment", message: "Payment received from Acme Corp", time: "2 minutes ago" },
   { type: "workflow", message: "Automated workflow completed successfully", time: "15 minutes ago" },
   { type: "employee", message: "New employee onboarding started", time: "1 hour ago" },
-  { type: "invoice", message: "Invoice #INV-2024-001 generated", time: "2 hours ago" },
+  { type: "invoice", message: "Invoice generated and sent", time: "2 hours ago" },
 ];
 
 const Dashboard = () => {
@@ -211,39 +206,6 @@ const Dashboard = () => {
                         </div>
                       </div>
                     ))}
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <Card className="glass border-white/20">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2">
-                      <Target className="w-5 h-5 text-green-400" />
-                      Quick Actions
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <Button variant="ghost" className="w-full justify-start glass border-white/20 text-white hover:bg-white/10">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Schedule Meeting
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start glass border-white/20 text-white hover:bg-white/10">
-                      <FileText className="w-4 h-4 mr-2" />
-                      Create Invoice
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start glass border-white/20 text-white hover:bg-white/10">
-                      <Users className="w-4 h-4 mr-2" />
-                      Add Employee
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start glass border-white/20 text-white hover:bg-white/10">
-                      <Zap className="w-4 h-4 mr-2" />
-                      Create Workflow
-                    </Button>
                   </CardContent>
                 </Card>
               </motion.div>

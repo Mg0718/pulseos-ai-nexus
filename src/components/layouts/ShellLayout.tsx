@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Menu, 
-  X, 
   Bell, 
   Search, 
   Settings,
@@ -42,7 +40,6 @@ interface ShellLayoutProps {
 }
 
 const ShellLayout = ({ children }: ShellLayoutProps) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, signOut } = useAuth();
   const location = useLocation();
 
@@ -52,143 +49,8 @@ const ShellLayout = ({ children }: ShellLayoutProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#6F2DBD] via-[#A663CC] to-[#B298DC]">
-      {/* Sidebar */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
-
-            {/* Sidebar */}
-            <motion.div
-              initial={{ x: -320 }}
-              animate={{ x: 0 }}
-              exit={{ x: -320 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed left-0 top-0 h-full w-80 bg-black/20 backdrop-blur-xl border-r border-white/10 z-50 overflow-y-auto"
-            >
-              {/* Header */}
-              <div className="p-6 border-b border-white/10">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-[#6F2DBD] to-[#A663CC] rounded-xl flex items-center justify-center">
-                      <Brain className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-bold text-white">PulseOS</h2>
-                      <p className="text-white/60 text-sm">Business OS</p>
-                    </div>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setSidebarOpen(false)}
-                    className="text-white hover:bg-white/10 lg:hidden"
-                  >
-                    <X className="w-5 h-5" />
-                  </Button>
-                </div>
-
-                {/* User Profile */}
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage src={user?.user_metadata?.avatar_url} />
-                    <AvatarFallback className="bg-[#6F2DBD] text-white">
-                      {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium truncate">
-                      {user?.user_metadata?.full_name || "User"}
-                    </p>
-                    <p className="text-white/60 text-sm truncate">{user?.email}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Navigation */}
-              <div className="p-6">
-                <nav className="space-y-2">
-                  {sidebarItems.map((item, index) => {
-                    const isActive = location.pathname === item.path;
-                    return (
-                      <motion.div
-                        key={item.path}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                      >
-                        <Link
-                          to={item.path}
-                          onClick={() => setSidebarOpen(false)}
-                          className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group ${
-                            isActive 
-                              ? "bg-white/20 text-white border border-white/20" 
-                              : "text-white/70 hover:text-white hover:bg-white/10"
-                          }`}
-                        >
-                          <item.icon className={`w-5 h-5 ${isActive ? "text-white" : item.color} transition-all duration-300 group-hover:scale-110`} />
-                          <span className="font-medium">{item.label}</span>
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
-
-                  {/* Admin Section */}
-                  <div className="pt-4 mt-4 border-t border-white/10">
-                    <p className="text-white/40 text-xs font-medium uppercase tracking-wider mb-3">Admin</p>
-                    {adminItems.map((item, index) => {
-                      const isActive = location.pathname === item.path;
-                      return (
-                        <motion.div
-                          key={item.path}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: (sidebarItems.length + index) * 0.05 }}
-                        >
-                          <Link
-                            to={item.path}
-                            onClick={() => setSidebarOpen(false)}
-                            className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group ${
-                              isActive 
-                                ? "bg-white/20 text-white border border-white/20" 
-                                : "text-white/70 hover:text-white hover:bg-white/10"
-                            }`}
-                          >
-                            <item.icon className={`w-5 h-5 ${isActive ? "text-white" : item.color} transition-all duration-300 group-hover:scale-110`} />
-                            <span className="font-medium">{item.label}</span>
-                          </Link>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                </nav>
-              </div>
-
-              {/* Footer */}
-              <div className="p-6 border-t border-white/10 mt-auto">
-                <Button
-                  onClick={handleSignOut}
-                  variant="ghost"
-                  className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
-                >
-                  <LogOut className="w-5 h-5 mr-3" />
-                  Sign Out
-                </Button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-80 lg:overflow-y-auto">
+      {/* Desktop Sidebar - Always visible */}
+      <div className="fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto">
         <div className="h-full bg-black/20 backdrop-blur-xl border-r border-white/10">
           {/* Header */}
           <div className="p-6 border-b border-white/10">
@@ -291,22 +153,13 @@ const ShellLayout = ({ children }: ShellLayoutProps) => {
       </div>
 
       {/* Main Content */}
-      <div className="lg:pl-80">
+      <div className="pl-80">
         {/* Top Bar */}
         <motion.header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="sticky top-0 z-40 flex h-16 items-center gap-x-4 border-b border-white/10 bg-black/20 backdrop-blur-xl px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8"
         >
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSidebarOpen(true)}
-            className="text-white hover:bg-white/10 lg:hidden"
-          >
-            <Menu className="w-5 h-5" />
-          </Button>
-
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="relative flex flex-1 items-center">
               <Search className="absolute left-3 w-4 h-4 text-white/60" />
