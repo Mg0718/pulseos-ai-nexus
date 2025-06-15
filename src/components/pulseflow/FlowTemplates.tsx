@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -247,6 +246,7 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
         })}
       </div>
 
+      {/* Empty state */}
       {filteredTemplates.length === 0 && (
         <motion.div
           initial={{ opacity: 0 }}
