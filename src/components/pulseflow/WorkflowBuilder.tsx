@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Save, Play, Pause, Copy, Download, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useWorkflows, WorkflowNode, WorkflowEdge } from '@/hooks/useWorkflows';
+import { useWorkflows } from '@/hooks/useWorkflows';
 import TriggerNode from './nodes/TriggerNode';
 import ActionNode from './nodes/ActionNode';
 import ConditionNode from './nodes/ConditionNode';
@@ -37,19 +37,26 @@ const nodeTypes = {
   delay: DelayNode,
 };
 
+// Initial sample nodes to show the canvas is working
+const initialNodes: Node[] = [
+  {
+    id: 'sample-trigger',
+    type: 'trigger',
+    position: { x: 100, y: 100 },
+    data: { 
+      label: 'Sample Trigger',
+      configured: false,
+    },
+  },
+];
+
+const initialEdges: Edge[] = [];
+
 interface WorkflowBuilderProps {
   workflowId?: string;
-  initialNodes?: Node[];
-  initialEdges?: Edge[];
-  onSave?: (nodes: Node[], edges: Edge[]) => void;
 }
 
-const WorkflowBuilder = ({ 
-  workflowId, 
-  initialNodes = [], 
-  initialEdges = [],
-  onSave 
-}: WorkflowBuilderProps) => {
+const WorkflowBuilderInner = ({ workflowId }: WorkflowBuilderProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [workflowName, setWorkflowName] = useState('Untitled Workflow');
@@ -83,8 +90,8 @@ const WorkflowBuilder = ({
       if (!type || !nodeName) return;
 
       const position = {
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
+        x: event.clientX - reactFlowBounds.left - 150,
+        y: event.clientY - reactFlowBounds.top - 50,
       };
 
       const newNode: Node = {
@@ -110,14 +117,14 @@ const WorkflowBuilder = ({
   const handleSave = async () => {
     try {
       // Convert ReactFlow nodes/edges to our workflow format
-      const workflowNodes: WorkflowNode[] = nodes.map(node => ({
+      const workflowNodes = nodes.map(node => ({
         id: node.id,
         type: node.type || 'default',
         position: node.position,
         data: node.data,
       }));
 
-      const workflowEdges: WorkflowEdge[] = edges.map(edge => ({
+      const workflowEdges = edges.map(edge => ({
         id: edge.id,
         source: edge.source,
         target: edge.target,
@@ -136,10 +143,6 @@ const WorkflowBuilder = ({
         await updateWorkflow(workflowId, workflowData);
       } else {
         await createWorkflow(workflowData);
-      }
-
-      if (onSave) {
-        onSave(nodes, edges);
       }
 
       toast({
@@ -224,9 +227,9 @@ const WorkflowBuilder = ({
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-gray-950">
       {/* Toolbar */}
-      <div className="h-16 bg-gray-900/50 backdrop-blur-xl border-b border-gray-700 flex items-center justify-between px-6">
+      <div className="h-16 bg-gray-900/90 backdrop-blur-xl border-b border-gray-700 flex items-center justify-between px-6 relative z-10">
         <div className="flex items-center gap-4">
           <Input
             value={workflowName}
@@ -300,8 +303,12 @@ const WorkflowBuilder = ({
           nodeTypes={nodeTypes}
           className="bg-gray-950"
           fitView
+          fitViewOptions={{ padding: 0.2 }}
+          defaultViewport={{ x: 0, y: 0, zoom: 1 }}
         >
-          <Controls className="bg-gray-800 border-gray-700" />
+          <Controls 
+            className="bg-gray-800 border-gray-700 [&>button]:bg-gray-800 [&>button]:border-gray-700 [&>button]:text-white [&>button:hover]:bg-gray-700" 
+          />
           <MiniMap 
             className="bg-gray-800 border-gray-700"
             nodeColor={(node) => {
@@ -313,12 +320,14 @@ const WorkflowBuilder = ({
                 default: return '#6b7280';
               }
             }}
+            maskColor="rgb(17, 24, 39, 0.8)"
           />
           <Background 
             variant={BackgroundVariant.Dots} 
             gap={20} 
             size={1} 
             color="#374151"
+            className="bg-gray-950"
           />
         </ReactFlow>
       </div>
@@ -334,10 +343,10 @@ const WorkflowBuilder = ({
   );
 };
 
-const WorkflowBuilderWrapper = (props: WorkflowBuilderProps) => (
+const WorkflowBuilder = (props: WorkflowBuilderProps) => (
   <ReactFlowProvider>
-    <WorkflowBuilder {...props} />
+    <WorkflowBuilderInner {...props} />
   </ReactFlowProvider>
 );
 
-export default WorkflowBuilderWrapper;
+export default WorkflowBuilder;

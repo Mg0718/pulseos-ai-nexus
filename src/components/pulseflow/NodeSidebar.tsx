@@ -63,7 +63,7 @@ const NodeSidebar = () => {
   };
 
   return (
-    <div className="w-80 bg-gray-900/50 backdrop-blur-xl border-r border-gray-700 p-4 overflow-y-auto">
+    <div className="w-80 bg-gray-900/90 backdrop-blur-xl border-r border-gray-700 p-4 overflow-y-auto flex-shrink-0">
       <div className="mb-6">
         <h3 className="text-white font-semibold text-lg mb-2">Node Library</h3>
         <p className="text-gray-400 text-sm">Drag nodes to the canvas to build your workflow</p>
