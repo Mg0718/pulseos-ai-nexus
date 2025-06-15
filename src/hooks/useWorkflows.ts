@@ -45,7 +45,7 @@ export const useWorkflows = () => {
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
-      setWorkflows(data as Workflow[] || []);
+      setWorkflows((data as any[])?.map(item => item as Workflow) || []);
     } catch (error: any) {
       toast({
         title: "Error fetching workflows",
@@ -73,13 +73,14 @@ export const useWorkflows = () => {
 
       if (error) throw error;
       
-      setWorkflows(prev => [data as Workflow, ...prev]);
+      const newWorkflow = data as any as Workflow;
+      setWorkflows(prev => [newWorkflow, ...prev]);
       toast({
         title: "Workflow created",
         description: "Your workflow has been created successfully.",
       });
       
-      return data as Workflow;
+      return newWorkflow;
     } catch (error: any) {
       toast({
         title: "Error creating workflow",
@@ -101,8 +102,9 @@ export const useWorkflows = () => {
 
       if (error) throw error;
       
-      setWorkflows(prev => prev.map(w => w.id === id ? data as Workflow : w));
-      return data as Workflow;
+      const updatedWorkflow = data as any as Workflow;
+      setWorkflows(prev => prev.map(w => w.id === id ? updatedWorkflow : w));
+      return updatedWorkflow;
     } catch (error: any) {
       toast({
         title: "Error updating workflow",

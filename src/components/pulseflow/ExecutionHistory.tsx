@@ -54,7 +54,7 @@ const ExecutionHistory = () => {
         .limit(50);
 
       if (error) throw error;
-      setExecutions(data as WorkflowExecution[] || []);
+      setExecutions((data as any[])?.map(item => item as WorkflowExecution) || []);
     } catch (error: any) {
       toast({
         title: "Error fetching executions",
