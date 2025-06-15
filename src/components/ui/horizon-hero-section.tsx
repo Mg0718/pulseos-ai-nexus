@@ -22,14 +22,30 @@ export const Component = () => {
   const [isReady, setIsReady] = useState(false);
   const totalSections = 2;
   
-  const threeRefs = useRef({
+  const threeRefs = useRef<{
+    scene: THREE.Scene | null;
+    camera: THREE.PerspectiveCamera | null;
+    renderer: THREE.WebGLRenderer | null;
+    stars: THREE.Points[];
+    nebula: THREE.Mesh | null;
+    mountains: THREE.Mesh[];
+    animationId: number | null;
+    targetCameraX: number;
+    targetCameraY: number;
+    targetCameraZ: number;
+    locations: number[];
+  }>({
     scene: null,
     camera: null,
     renderer: null,
     stars: [],
     nebula: null,
     mountains: [],
-    animationId: null
+    animationId: null,
+    targetCameraX: 0,
+    targetCameraY: 30,
+    targetCameraZ: 100,
+    locations: [],
   });
 
   // Initialize Three.js
