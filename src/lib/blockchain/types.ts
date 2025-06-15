@@ -2,7 +2,10 @@
 export interface PaymentContract {
   id: string;
   payee: string;
+  payer: string;
   totalAmount: string;
+  amount: string;
+  currency: string;
   milestones: PaymentMilestone[];
   createdAt: number;
   status: 'active' | 'completed' | 'cancelled';
@@ -19,10 +22,14 @@ export interface PaymentMilestone {
 
 export interface EscrowDetails {
   contractId: string;
+  contractAddress: string;
   amount: string;
+  balance: string;
   status: 'pending' | 'active' | 'released' | 'refunded';
   createdAt: number;
   terms: string;
+  releaseConditions: string;
+  disputeResolver: string;
 }
 
 export interface PaymentResult {

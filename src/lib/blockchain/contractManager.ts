@@ -19,12 +19,15 @@ export class ContractManager {
     const contract: PaymentContract = {
       id: `contract_${Date.now()}`,
       payee,
+      payer: 'default_payer',
       totalAmount,
+      amount: totalAmount,
+      currency: 'USD',
       milestones: milestones.map((milestone, index) => ({
         id: `milestone_${index + 1}`,
         ...milestone,
         status: 'pending' as const,
-        dueDate: milestone.dueDate instanceof Date ? milestone.dueDate.getTime() : milestone.dueDate
+        dueDate: typeof milestone.dueDate === 'number' ? milestone.dueDate : Date.now()
       })),
       createdAt: Date.now(),
       status: 'active'
@@ -38,10 +41,14 @@ export class ContractManager {
 
     const escrowDetails: EscrowDetails = {
       contractId,
+      contractAddress: `0x${Math.random().toString(16).substr(2, 40)}`,
       amount,
+      balance: amount,
       status: 'pending',
       createdAt: Date.now(),
-      terms: 'Standard escrow terms apply'
+      terms: 'Standard escrow terms apply',
+      releaseConditions: 'Payment upon milestone completion',
+      disputeResolver: 'Automated dispute resolution'
     };
 
     return escrowDetails;
@@ -97,10 +104,14 @@ export class ContractManager {
 
     const escrowDetails: EscrowDetails = {
       contractId,
+      contractAddress: `0x${Math.random().toString(16).substr(2, 40)}`,
       amount,
+      balance: '0',
       status: 'refunded',
       createdAt: Date.now(),
-      terms: 'Standard escrow terms apply'
+      terms: 'Standard escrow terms apply',
+      releaseConditions: 'Refund processed',
+      disputeResolver: 'Automated dispute resolution'
     };
 
     return escrowDetails;
@@ -112,7 +123,10 @@ export class ContractManager {
     const contract: PaymentContract = {
       id: contractId,
       payee: 'Payee Name',
+      payer: 'Payer Name',
       totalAmount: '10000',
+      amount: '10000',
+      currency: 'USD',
       milestones: [],
       createdAt: Date.now(),
       status: 'completed'

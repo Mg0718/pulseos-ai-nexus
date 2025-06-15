@@ -1,5 +1,6 @@
 
-import { PulsePayManager, PaymentContract, EscrowDetails, PaymentMilestone } from './pulsePay';
+import { PulsePayManager } from './pulsePay';
+import { PaymentContract, EscrowDetails, PaymentMilestone } from './types';
 import { ContractManager } from './contractManager';
 import { PaymentProcessor } from './paymentProcessor';
 import { AutomationManager } from './automationManager';
