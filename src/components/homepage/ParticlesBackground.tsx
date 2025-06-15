@@ -92,16 +92,11 @@ const ParticlesBackground = () => {
             random: true,
             speed: 1,
             straight: false,
-            attract: {
-              enable: true,
-              rotateX: 600,
-              rotateY: 1200,
-            },
           },
           number: {
             density: {
               enable: true,
-              area: 1000,
+              value_area: 1000,
             },
             value: 100,
           },
