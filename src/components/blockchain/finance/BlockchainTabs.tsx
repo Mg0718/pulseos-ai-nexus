@@ -10,6 +10,8 @@ import { TaxIntegration } from "../TaxIntegration";
 import { ComplianceMonitoring } from "../ComplianceMonitoring";
 import { BlockchainSecurityDashboard } from "../BlockchainSecurityDashboard";
 import PulsePayBlockchain from "../PulsePayBlockchain";
+import { CrossChainManagerComponent } from "../CrossChainManager";
+import { DeFiDashboard } from "../DeFiDashboard";
 import { OverviewTab } from "./OverviewTab";
 
 export const BlockchainTabs = () => {
@@ -20,7 +22,7 @@ export const BlockchainTabs = () => {
       transition={{ delay: 0.3 }}
     >
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-9 bg-white/10 backdrop-blur-xl border-white/20">
+        <TabsList className="grid w-full grid-cols-11 bg-white/10 backdrop-blur-xl border-white/20">
           <TabsTrigger value="overview" className="text-white data-[state=active]:bg-white/20">
             Overview
           </TabsTrigger>
@@ -47,6 +49,12 @@ export const BlockchainTabs = () => {
           </TabsTrigger>
           <TabsTrigger value="pulsepay" className="text-white data-[state=active]:bg-white/20">
             PulsePay
+          </TabsTrigger>
+          <TabsTrigger value="crosschain" className="text-white data-[state=active]:bg-white/20">
+            Cross-Chain
+          </TabsTrigger>
+          <TabsTrigger value="defi" className="text-white data-[state=active]:bg-white/20">
+            DeFi
           </TabsTrigger>
         </TabsList>
 
@@ -84,6 +92,14 @@ export const BlockchainTabs = () => {
 
         <TabsContent value="pulsepay" className="mt-6">
           <PulsePayBlockchain />
+        </TabsContent>
+
+        <TabsContent value="crosschain" className="mt-6">
+          <CrossChainManagerComponent />
+        </TabsContent>
+
+        <TabsContent value="defi" className="mt-6">
+          <DeFiDashboard />
         </TabsContent>
       </Tabs>
     </motion.div>
