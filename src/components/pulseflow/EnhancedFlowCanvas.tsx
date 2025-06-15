@@ -6,6 +6,7 @@ import NodeSidebar from './NodeSidebar';
 import WorkflowBuilder from './WorkflowBuilder';
 import WorkflowsList from './WorkflowsList';
 import ExecutionHistory from './ExecutionHistory';
+import FlowTemplates from './FlowTemplates';
 
 const EnhancedFlowCanvas = () => {
   const [activeTab, setActiveTab] = useState('builder');
@@ -98,5 +99,4 @@ const EnhancedFlowCanvas = () => {
   );
 };
 
-// Add import for FlowTemplates
-import FlowTemplates from './FlowTemplates';
+export default EnhancedFlowCanvas;

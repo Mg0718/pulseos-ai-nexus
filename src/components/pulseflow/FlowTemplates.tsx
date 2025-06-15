@@ -17,7 +17,8 @@ import {
   Star,
   Download,
   Eye,
-  Clock
+  Clock,
+  LucideIcon
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { workflowTemplates, getTemplateByCategory, getTemplateById } from './WorkflowTemplates';
@@ -70,7 +71,7 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
     });
   };
 
-  const getTemplateIcon = (category: string) => {
+  const getTemplateIcon = (category: string): LucideIcon => {
     switch (category) {
       case 'HR': return Users;
       case 'Finance': return DollarSign;
