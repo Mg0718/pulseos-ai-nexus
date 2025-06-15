@@ -53,7 +53,7 @@ const modules = [
     icon: MessageSquare,
     color: "bg-green-500",
     route: "/comms",
-    status: "Beta"
+    status: "Active"
   },
   {
     id: 4,
@@ -79,7 +79,7 @@ const modules = [
     description: "OKRs, AI nudges, progress tracking",
     icon: Target,
     color: "bg-orange-500",
-    route: "/performance",
+    route: "/people/okrs",
     status: "Active"
   },
   {
@@ -107,7 +107,7 @@ const modules = [
     icon: Zap,
     color: "bg-indigo-500",
     route: "/pulseflow",
-    status: "Beta"
+    status: "Active"
   },
   {
     id: 10,
@@ -125,7 +125,7 @@ const modules = [
     icon: FileText,
     color: "bg-pink-500",
     route: "/contracts",
-    status: "Coming Soon"
+    status: "Active"
   },
   {
     id: 12,
@@ -134,7 +134,7 @@ const modules = [
     icon: Wrench,
     color: "bg-teal-500",
     route: "/fieldops",
-    status: "Beta"
+    status: "Active"
   },
   {
     id: 13,

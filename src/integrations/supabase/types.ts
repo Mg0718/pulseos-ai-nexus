@@ -47,6 +47,66 @@ export type Database = {
           },
         ]
       }
+      assets: {
+        Row: {
+          asset_tag: string
+          assigned_to: string | null
+          category: string
+          created_at: string
+          id: string
+          location: string | null
+          manufacturer: string | null
+          model: string | null
+          name: string
+          notes: string | null
+          org_id: string | null
+          purchase_date: string | null
+          serial_number: string | null
+          status: string | null
+          updated_at: string
+          value: number | null
+          warranty_expiry: string | null
+        }
+        Insert: {
+          asset_tag: string
+          assigned_to?: string | null
+          category: string
+          created_at?: string
+          id?: string
+          location?: string | null
+          manufacturer?: string | null
+          model?: string | null
+          name: string
+          notes?: string | null
+          org_id?: string | null
+          purchase_date?: string | null
+          serial_number?: string | null
+          status?: string | null
+          updated_at?: string
+          value?: number | null
+          warranty_expiry?: string | null
+        }
+        Update: {
+          asset_tag?: string
+          assigned_to?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          location?: string | null
+          manufacturer?: string | null
+          model?: string | null
+          name?: string
+          notes?: string | null
+          org_id?: string | null
+          purchase_date?: string | null
+          serial_number?: string | null
+          status?: string | null
+          updated_at?: string
+          value?: number | null
+          warranty_expiry?: string | null
+        }
+        Relationships: []
+      }
       audit_events: {
         Row: {
           created_at: string | null
@@ -196,6 +256,93 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_messages: {
+        Row: {
+          ai_enhanced: boolean | null
+          content: string
+          created_at: string
+          id: string
+          message_type: string | null
+          metadata: Json | null
+          parent_message_id: string | null
+          room_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          ai_enhanced?: boolean | null
+          content: string
+          created_at?: string
+          id?: string
+          message_type?: string | null
+          metadata?: Json | null
+          parent_message_id?: string | null
+          room_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          ai_enhanced?: boolean | null
+          content?: string
+          created_at?: string
+          id?: string
+          message_type?: string | null
+          metadata?: Json | null
+          parent_message_id?: string | null
+          room_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_parent_message_id_fkey"
+            columns: ["parent_message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_rooms: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          org_id: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          org_id?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          org_id?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       compensation_history: {
         Row: {
           change_reason: string | null
@@ -327,6 +474,98 @@ export type Database = {
           provider_name?: string
           provider_type?: string
           status?: string | null
+        }
+        Relationships: []
+      }
+      contract_approvals: {
+        Row: {
+          approved_at: string | null
+          approver_id: string | null
+          comments: string | null
+          contract_id: string | null
+          created_at: string
+          id: string
+          status: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approver_id?: string | null
+          comments?: string | null
+          contract_id?: string | null
+          created_at?: string
+          id?: string
+          status: string
+        }
+        Update: {
+          approved_at?: string | null
+          approver_id?: string | null
+          comments?: string | null
+          contract_id?: string | null
+          created_at?: string
+          id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_approvals_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contracts: {
+        Row: {
+          ai_summary: string | null
+          assigned_to: string | null
+          contract_type: string
+          created_at: string
+          created_by: string | null
+          currency: string | null
+          expiry_date: string | null
+          file_path: string | null
+          id: string
+          key_terms: Json | null
+          org_id: string | null
+          status: string | null
+          title: string
+          updated_at: string
+          value: number | null
+        }
+        Insert: {
+          ai_summary?: string | null
+          assigned_to?: string | null
+          contract_type: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          expiry_date?: string | null
+          file_path?: string | null
+          id?: string
+          key_terms?: Json | null
+          org_id?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string
+          value?: number | null
+        }
+        Update: {
+          ai_summary?: string | null
+          assigned_to?: string | null
+          contract_type?: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          expiry_date?: string | null
+          file_path?: string | null
+          id?: string
+          key_terms?: Json | null
+          org_id?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+          value?: number | null
         }
         Relationships: []
       }
@@ -730,6 +969,39 @@ export type Database = {
         }
         Relationships: []
       }
+      industry_templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          industry: string
+          is_active: boolean | null
+          modules: Json | null
+          name: string
+          template_config: Json
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          industry: string
+          is_active?: boolean | null
+          modules?: Json | null
+          name: string
+          template_config?: Json
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          industry?: string
+          is_active?: boolean | null
+          modules?: Json | null
+          name?: string
+          template_config?: Json
+        }
+        Relationships: []
+      }
       innovation_ideas: {
         Row: {
           created_at: string
@@ -770,6 +1042,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      integration_configs: {
+        Row: {
+          config: Json
+          created_at: string
+          credentials: Json | null
+          id: string
+          last_sync: string | null
+          org_id: string | null
+          service_name: string
+          service_type: string
+          status: string | null
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          credentials?: Json | null
+          id?: string
+          last_sync?: string | null
+          org_id?: string | null
+          service_name: string
+          service_type: string
+          status?: string | null
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          credentials?: Json | null
+          id?: string
+          last_sync?: string | null
+          org_id?: string | null
+          service_name?: string
+          service_type?: string
+          status?: string | null
+        }
+        Relationships: []
       }
       invoices: {
         Row: {
@@ -842,6 +1150,53 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      maintenance_logs: {
+        Row: {
+          asset_id: string | null
+          completed_date: string | null
+          cost: number | null
+          created_at: string
+          description: string
+          id: string
+          maintenance_type: string
+          performed_by: string | null
+          scheduled_date: string | null
+          status: string | null
+        }
+        Insert: {
+          asset_id?: string | null
+          completed_date?: string | null
+          cost?: number | null
+          created_at?: string
+          description: string
+          id?: string
+          maintenance_type: string
+          performed_by?: string | null
+          scheduled_date?: string | null
+          status?: string | null
+        }
+        Update: {
+          asset_id?: string | null
+          completed_date?: string | null
+          cost?: number | null
+          created_at?: string
+          description?: string
+          id?: string
+          maintenance_type?: string
+          performed_by?: string | null
+          scheduled_date?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "maintenance_logs_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {
@@ -980,6 +1335,50 @@ export type Database = {
           },
         ]
       }
+      okr_nudges: {
+        Row: {
+          acknowledged_at: string | null
+          ai_generated: boolean | null
+          content: string
+          created_at: string
+          delivered_at: string | null
+          id: string
+          nudge_type: string
+          okr_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          ai_generated?: boolean | null
+          content: string
+          created_at?: string
+          delivered_at?: string | null
+          id?: string
+          nudge_type: string
+          okr_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          acknowledged_at?: string | null
+          ai_generated?: boolean | null
+          content?: string
+          created_at?: string
+          delivered_at?: string | null
+          id?: string
+          nudge_type?: string
+          okr_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "okr_nudges_okr_id_fkey"
+            columns: ["okr_id"]
+            isOneToOne: false
+            referencedRelation: "okrs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       okrs: {
         Row: {
           created_at: string
@@ -1039,6 +1438,86 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      onboarding_sessions: {
+        Row: {
+          completed_at: string | null
+          current_step: number | null
+          id: string
+          session_data: Json | null
+          started_at: string
+          status: string | null
+          user_id: string | null
+          workflow_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          current_step?: number | null
+          id?: string
+          session_data?: Json | null
+          started_at?: string
+          status?: string | null
+          user_id?: string | null
+          workflow_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          current_step?: number | null
+          id?: string
+          session_data?: Json | null
+          started_at?: string
+          status?: string | null
+          user_id?: string | null
+          workflow_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_sessions_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_workflows: {
+        Row: {
+          ai_config: Json | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          org_id: string | null
+          updated_at: string
+          workflow_config: Json
+        }
+        Insert: {
+          ai_config?: Json | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          org_id?: string | null
+          updated_at?: string
+          workflow_config?: Json
+        }
+        Update: {
+          ai_config?: Json | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          org_id?: string | null
+          updated_at?: string
+          workflow_config?: Json
+        }
+        Relationships: []
       }
       payroll: {
         Row: {
@@ -1492,6 +1971,47 @@ export type Database = {
           },
         ]
       }
+      sync_logs: {
+        Row: {
+          completed_at: string | null
+          error_details: string | null
+          id: string
+          integration_id: string | null
+          records_processed: number | null
+          started_at: string
+          status: string
+          sync_type: string
+        }
+        Insert: {
+          completed_at?: string | null
+          error_details?: string | null
+          id?: string
+          integration_id?: string | null
+          records_processed?: number | null
+          started_at?: string
+          status: string
+          sync_type: string
+        }
+        Update: {
+          completed_at?: string | null
+          error_details?: string | null
+          id?: string
+          integration_id?: string | null
+          records_processed?: number | null
+          started_at?: string
+          status?: string
+          sync_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_logs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integration_configs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       team_members: {
         Row: {
           id: string
@@ -1554,6 +2074,44 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      template_deployments: {
+        Row: {
+          created_at: string
+          deployed_at: string | null
+          deployment_config: Json | null
+          id: string
+          org_id: string | null
+          status: string | null
+          template_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          deployed_at?: string | null
+          deployment_config?: Json | null
+          id?: string
+          org_id?: string | null
+          status?: string | null
+          template_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          deployed_at?: string | null
+          deployment_config?: Json | null
+          id?: string
+          org_id?: string | null
+          status?: string | null
+          template_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "template_deployments_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "industry_templates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       time_entries: {
         Row: {
