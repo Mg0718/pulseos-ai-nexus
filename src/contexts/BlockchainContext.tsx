@@ -11,6 +11,7 @@ interface BlockchainContextType {
   isWalletConnected: boolean;
   walletAddress: string | null;
   connectWallet: () => Promise<void>;
+  isMetaMaskInstalled: boolean;
   
   // Identity management
   userDID: string | null;
@@ -48,6 +49,7 @@ export const BlockchainProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [userDID, setUserDID] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
   
   const web3Provider = Web3Provider.getInstance();
   const identityManager = new IdentityManager();
@@ -55,8 +57,14 @@ export const BlockchainProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const sessionLogger = new BlockchainSessionLogger();
 
   useEffect(() => {
-    // Check if wallet was previously connected
-    checkWalletConnection();
+    // Check if MetaMask is installed
+    if (typeof window !== 'undefined' && window.ethereum && window.ethereum.isMetaMask) {
+      setIsMetaMaskInstalled(true);
+      // Check if wallet was previously connected
+      checkWalletConnection();
+    } else {
+      setIsMetaMaskInstalled(false);
+    }
   }, []);
 
   const checkWalletConnection = async () => {
@@ -80,6 +88,10 @@ export const BlockchainProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   const connectWallet = async () => {
+    if (!isMetaMaskInstalled) {
+      toast.error('MetaMask not detected. Please install MetaMask.');
+      return;
+    }
     try {
       setLoading(true);
       const { address, isConnected } = await web3Provider.connectWallet();
@@ -255,6 +267,7 @@ export const BlockchainProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     isWalletConnected,
     walletAddress,
     connectWallet,
+    isMetaMaskInstalled,
     userDID,
     generateIdentity,
     authenticateWithZK,

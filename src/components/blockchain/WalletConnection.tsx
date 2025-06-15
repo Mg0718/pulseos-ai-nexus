@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Wallet, Shield, Key, CheckCircle2 } from "lucide-react";
+import { Wallet, Shield, Key, CheckCircle2, AlertTriangle, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,8 @@ export const WalletConnection = () => {
     userDID,
     connectWallet,
     generateIdentity,
-    loading
+    loading,
+    isMetaMaskInstalled,
   } = useBlockchain();
 
   const formatAddress = (address: string) => {
@@ -35,7 +36,23 @@ export const WalletConnection = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {!isWalletConnected ? (
+          {!isMetaMaskInstalled ? (
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 mx-auto bg-yellow-500/10 rounded-full flex items-center justify-center">
+                <AlertTriangle className="w-8 h-8 text-yellow-400" />
+              </div>
+              <p className="text-white/70">
+                MetaMask not detected. Please install the MetaMask extension to continue.
+              </p>
+              <Button
+                onClick={() => window.open('https://metamask.io/download/', '_blank')}
+                className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Install MetaMask
+              </Button>
+            </div>
+          ) : !isWalletConnected ? (
             <div className="text-center space-y-4">
               <div className="w-16 h-16 mx-auto bg-white/10 rounded-full flex items-center justify-center">
                 <Wallet className="w-8 h-8 text-white/70" />

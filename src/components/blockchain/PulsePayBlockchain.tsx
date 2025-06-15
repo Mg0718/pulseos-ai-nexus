@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Shield, Clock, DollarSign, FileCheck, Zap } from "lucide-react";
@@ -10,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useBlockchain } from "@/contexts/BlockchainContext";
 
 export const PulsePayBlockchain = () => {
-  const { isWalletConnected, createPaymentContract, setupEscrow, loading } = useBlockchain();
+  const { isWalletConnected, createPaymentContract, setupEscrow, loading, isMetaMaskInstalled } = useBlockchain();
   
   const [contractForm, setContractForm] = useState({
     payee: '',
@@ -121,7 +120,14 @@ export const PulsePayBlockchain = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {!isWalletConnected ? (
+            {!isMetaMaskInstalled ? (
+              <div className="text-center py-8">
+                <p className="text-white/70 mb-4">Please install MetaMask to create smart contracts</p>
+                <Badge className="bg-red-500/20 text-red-300 border-red-500/30">
+                  MetaMask Not Installed
+                </Badge>
+              </div>
+            ) : !isWalletConnected ? (
               <div className="text-center py-8">
                 <p className="text-white/70 mb-4">Connect your wallet to create smart contracts</p>
                 <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">

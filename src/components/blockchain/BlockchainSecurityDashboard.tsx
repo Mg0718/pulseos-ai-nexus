@@ -14,7 +14,8 @@ export const BlockchainSecurityDashboard = () => {
     getSecurityAuditTrail,
     processBlockchainPayment,
     processBlockchainPayroll,
-    loading 
+    loading,
+    isMetaMaskInstalled,
   } = useBlockchain();
 
   const [securityMetrics, setSecurityMetrics] = useState({
@@ -200,7 +201,14 @@ export const BlockchainSecurityDashboard = () => {
             <CardTitle className="text-white">Blockchain Security Controls</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {!isWalletConnected ? (
+            {!isMetaMaskInstalled ? (
+              <div className="text-center py-4">
+                <p className="text-white/70 mb-4">Please install MetaMask to access blockchain security features</p>
+                <Badge className="bg-red-500/20 text-red-300 border-red-500/30">
+                  MetaMask Not Installed
+                </Badge>
+              </div>
+            ) : !isWalletConnected ? (
               <div className="text-center py-4">
                 <p className="text-white/70 mb-4">Connect your wallet to access blockchain security features</p>
                 <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
