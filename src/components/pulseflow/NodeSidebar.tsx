@@ -1,113 +1,142 @@
+
+import { useState } from 'react';
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, Filter, Clock, GitBranch } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { 
+  Zap, 
+  GitBranch, 
+  Filter, 
+  Clock, 
+  Plus,
+  Mail,
+  Database,
+  Webhook,
+  MessageSquare,
+  FileText,
+  Calendar
+} from "lucide-react";
 
 const nodeCategories = [
   {
-    title: "Triggers",
+    name: "Triggers",
     icon: Zap,
-    color: "bg-purple-500",
+    color: "text-purple-400",
     nodes: [
-      { id: "employee_created", label: "New Employee", description: "When a new employee is added" },
-      { id: "invoice_due", label: "Invoice Due", description: "When an invoice is due" },
-      { id: "schedule", label: "Schedule", description: "Run on a schedule" },
-      { id: "webhook", label: "Webhook", description: "External trigger" },
+      { type: "trigger", name: "Webhook", icon: Webhook, description: "HTTP webhook trigger" },
+      { type: "trigger", name: "Schedule", icon: Calendar, description: "Time-based trigger" },
+      { type: "trigger", name: "Email", icon: Mail, description: "Email received trigger" },
+      { type: "trigger", name: "Database", icon: Database, description: "Database change trigger" },
     ]
   },
   {
-    title: "Actions",
+    name: "Actions",
     icon: GitBranch,
-    color: "bg-green-500",
+    color: "text-green-400",
     nodes: [
-      { id: "send_email", label: "Send Email", description: "Send notification email" },
-      { id: "create_task", label: "Create Task", description: "Create a new task" },
-      { id: "update_record", label: "Update Record", description: "Update database record" },
-      { id: "slack_message", label: "Slack Message", description: "Send Slack notification" },
+      { type: "action", name: "Send Email", icon: Mail, description: "Send email message" },
+      { type: "action", name: "Create Record", icon: Database, description: "Create database record" },
+      { type: "action", name: "Send Message", icon: MessageSquare, description: "Send chat message" },
+      { type: "action", name: "Generate Document", icon: FileText, description: "Create document" },
     ]
   },
   {
-    title: "Conditions",
+    name: "Logic",
     icon: Filter,
-    color: "bg-orange-500",
+    color: "text-orange-400",
     nodes: [
-      { id: "if_condition", label: "If/Else", description: "Conditional logic" },
-      { id: "filter", label: "Filter", description: "Filter data" },
-      { id: "compare", label: "Compare", description: "Compare values" },
+      { type: "condition", name: "If/Then", icon: Filter, description: "Conditional logic" },
+      { type: "delay", name: "Wait", icon: Clock, description: "Delay execution" },
     ]
-  },
-  {
-    title: "Utilities",
-    icon: Clock,
-    color: "bg-blue-500",
-    nodes: [
-      { id: "delay", label: "Delay", description: "Wait for a period" },
-      { id: "transform", label: "Transform", description: "Transform data" },
-      { id: "loop", label: "Loop", description: "Repeat actions" },
-    ]
-  },
+  }
 ];
 
 const NodeSidebar = () => {
-  const onDragStart = (event: React.DragEvent<HTMLDivElement>, nodeType: string, nodeData: any) => {
+  const [expandedCategory, setExpandedCategory] = useState<string | null>("Triggers");
+
+  const onDragStart = (event: React.DragEvent, nodeType: string, nodeName: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
-    event.dataTransfer.setData('application/nodedata', JSON.stringify(nodeData));
+    event.dataTransfer.setData('nodeName', nodeName);
     event.dataTransfer.effectAllowed = 'move';
   };
 
   return (
-    <div className="w-80 bg-white/10 border-r border-white/20 backdrop-blur-sm p-4 overflow-y-auto">
+    <div className="w-80 bg-white/5 backdrop-blur-xl border-r border-white/20 p-4 overflow-y-auto">
       <div className="mb-6">
-        <h3 className="text-white font-semibold text-lg mb-2">Flow Components</h3>
-        <p className="text-white/70 text-sm">Drag components to build your workflow</p>
+        <h3 className="text-white font-semibold text-lg mb-2">Node Library</h3>
+        <p className="text-white/60 text-sm">Drag nodes to the canvas to build your workflow</p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {nodeCategories.map((category, categoryIndex) => (
           <motion.div
-            key={category.title}
+            key={category.name}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: categoryIndex * 0.1 }}
           >
-            <div className="flex items-center gap-2 mb-3">
-              <div className={`w-6 h-6 ${category.color} rounded-md flex items-center justify-center`}>
-                <category.icon className="w-4 h-4 text-white" />
-              </div>
-              <h4 className="text-white font-medium">{category.title}</h4>
-            </div>
-            
-            <div className="space-y-2">
-              {category.nodes.map((node, nodeIndex) => (
-                <motion.div
-                  key={node.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: (categoryIndex * 0.1) + (nodeIndex * 0.05) }}
-                  className="group"
+            <Card className="bg-white/10 border-white/20 backdrop-blur-sm">
+              <CardHeader className="pb-3">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-between p-0 h-auto text-white hover:bg-white/10"
+                  onClick={() => setExpandedCategory(
+                    expandedCategory === category.name ? null : category.name
+                  )}
                 >
-                  <Card 
-                    draggable
-                    onDragStart={(e) => onDragStart(e, category.title.toLowerCase().slice(0, -1), node)}
-                    className="bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-200 cursor-grab active:cursor-grabbing"
-                  >
-                    <CardContent className="p-3">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 ${category.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                          <category.icon className="w-4 h-4 text-white" />
+                  <div className="flex items-center gap-3">
+                    <category.icon className={`w-5 h-5 ${category.color}`} />
+                    <CardTitle className="text-white text-base">{category.name}</CardTitle>
+                  </div>
+                  <Badge variant="outline" className="border-white/20 text-white/60">
+                    {category.nodes.length}
+                  </Badge>
+                </Button>
+              </CardHeader>
+              
+              {expandedCategory === category.name && (
+                <CardContent className="pt-0">
+                  <Separator className="mb-3 bg-white/10" />
+                  <div className="space-y-2">
+                    {category.nodes.map((node, nodeIndex) => (
+                      <motion.div
+                        key={`${node.type}-${node.name}`}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: nodeIndex * 0.05 }}
+                        draggable
+                        onDragStart={(e) => onDragStart(e, node.type, node.name)}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200 cursor-grab active:cursor-grabbing border border-white/10 hover:border-white/20"
+                      >
+                        <div className={`w-8 h-8 rounded-md flex items-center justify-center ${
+                          node.type === 'trigger' ? 'bg-purple-600/20' :
+                          node.type === 'action' ? 'bg-green-600/20' :
+                          'bg-orange-600/20'
+                        }`}>
+                          <node.icon className="w-4 h-4 text-white" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h5 className="text-white font-medium text-sm">{node.label}</h5>
-                          <p className="text-white/60 text-xs truncate">{node.description}</p>
+                        <div className="flex-1">
+                          <p className="text-white font-medium text-sm">{node.name}</p>
+                          <p className="text-white/60 text-xs">{node.description}</p>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
+                        <Plus className="w-4 h-4 text-white/40" />
+                      </motion.div>
+                    ))}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
           </motion.div>
         ))}
+      </div>
+
+      <div className="mt-6 p-4 rounded-lg bg-purple-600/20 border border-purple-500/30">
+        <h4 className="text-white font-medium mb-2">Quick Tip</h4>
+        <p className="text-purple-200 text-sm">
+          Drag any node from above onto the canvas to add it to your workflow. Connect nodes by dragging from the connection points.
+        </p>
       </div>
     </div>
   );

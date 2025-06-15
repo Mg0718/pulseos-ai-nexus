@@ -1,103 +1,188 @@
 
-import { useState } from "react";
+import { useState } from 'react';
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Play, Copy, Star, Users, Clock, Zap } from "lucide-react";
+import { 
+  Search, 
+  Filter, 
+  Users, 
+  DollarSign, 
+  Mail, 
+  Calendar,
+  FileText,
+  Zap,
+  Star,
+  Download,
+  Eye,
+  Clock
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const templates = [
   {
     id: 1,
     name: "Employee Onboarding",
-    description: "Automated workflow for new employee setup including account creation, email setup, and welcome sequence",
+    description: "Automate the complete employee onboarding process from welcome email to account setup",
     category: "HR",
-    popularity: 4.8,
-    uses: 234,
-    estimatedTime: "2 hours",
-    nodes: 8,
-    preview: "New Employee → Create Accounts → Send Welcome Email → Assign Mentor → Schedule Training",
-    tags: ["Popular", "HR", "Automation"]
+    icon: Users,
+    color: "bg-blue-600",
+    complexity: "Medium",
+    estimatedTime: "30 min",
+    rating: 4.8,
+    downloads: 1247,
+    steps: [
+      "New employee trigger",
+      "Send welcome email",
+      "Create accounts",
+      "Schedule orientation",
+      "Send equipment checklist"
+    ],
+    integrations: ["Gmail", "Slack", "BambooHR", "Office 365"]
   },
   {
     id: 2,
-    name: "Invoice Reminder",
-    description: "Send automated reminders for overdue invoices with escalation",
+    name: "Invoice Processing",
+    description: "Smart invoice approval workflow with automatic routing and payment processing",
     category: "Finance",
-    popularity: 4.6,
-    uses: 187,
-    estimatedTime: "30 mins",
-    nodes: 6,
-    preview: "Invoice Overdue → Wait 7 Days → Send Reminder → Wait 7 Days → Escalate",
-    tags: ["Finance", "Automation"]
+    icon: DollarSign,
+    color: "bg-green-600",
+    complexity: "Advanced",
+    estimatedTime: "45 min",
+    rating: 4.9,
+    downloads: 892,
+    steps: [
+      "Invoice received",
+      "Extract data with AI",
+      "Route for approval",
+      "Process payment",
+      "Update accounting"
+    ],
+    integrations: ["QuickBooks", "Stripe", "DocuSign", "Slack"]
   },
   {
     id: 3,
-    name: "Leave Approval",
-    description: "Multi-step leave request approval with manager notifications",
-    category: "HR",
-    popularity: 4.7,
-    uses: 156,
-    estimatedTime: "1 hour",
-    nodes: 7,
-    preview: "Leave Request → Manager Approval → HR Review → Calendar Update → Notification",
-    tags: ["HR", "Approval"]
+    name: "Customer Support Ticket",
+    description: "Route and escalate support tickets based on priority and department",
+    category: "Support",
+    icon: Mail,
+    color: "bg-purple-600",
+    complexity: "Simple",
+    estimatedTime: "15 min",
+    rating: 4.6,
+    downloads: 2156,
+    steps: [
+      "Ticket received",
+      "Categorize with AI",
+      "Assign to agent",
+      "Set priority",
+      "Send confirmation"
+    ],
+    integrations: ["Zendesk", "Intercom", "Slack", "Teams"]
   },
   {
     id: 4,
-    name: "Customer Support Ticket",
-    description: "Route support tickets based on priority and assign to teams",
-    category: "Support",
-    popularity: 4.5,
-    uses: 123,
-    estimatedTime: "45 mins",
-    nodes: 9,
-    preview: "New Ticket → Priority Check → Route to Team → SLA Timer → Escalation",
-    tags: ["Support", "Routing"]
+    name: "Meeting Scheduler",
+    description: "Automatically schedule meetings and send calendar invites with availability checks",
+    category: "Productivity",
+    icon: Calendar,
+    color: "bg-orange-600",
+    complexity: "Medium",
+    estimatedTime: "25 min",
+    rating: 4.7,
+    downloads: 634,
+    steps: [
+      "Meeting request",
+      "Check availability",
+      "Find optimal time",
+      "Send calendar invite",
+      "Set up meeting room"
+    ],
+    integrations: ["Google Calendar", "Outlook", "Zoom", "Teams"]
   },
   {
     id: 5,
-    name: "Weekly Report Generation",
-    description: "Generate and distribute weekly reports to stakeholders",
-    category: "Analytics",
-    popularity: 4.4,
-    uses: 98,
-    estimatedTime: "1.5 hours",
-    nodes: 5,
-    preview: "Schedule Weekly → Collect Data → Generate Report → Send to Stakeholders",
-    tags: ["Analytics", "Reporting"]
+    name: "Document Approval",
+    description: "Multi-stage document review and approval process with version control",
+    category: "Legal",
+    icon: FileText,
+    color: "bg-indigo-600",
+    complexity: "Advanced",
+    estimatedTime: "40 min",
+    rating: 4.5,
+    downloads: 423,
+    steps: [
+      "Document submitted",
+      "Route to reviewers",
+      "Collect feedback",
+      "Consolidate changes",
+      "Final approval"
+    ],
+    integrations: ["DocuSign", "SharePoint", "Google Drive", "Slack"]
   },
   {
     id: 6,
-    name: "Project Milestone Alert",
-    description: "Alert team when project milestones are reached or overdue",
-    category: "Project Management",
-    popularity: 4.3,
-    uses: 76,
-    estimatedTime: "1 hour",
-    nodes: 6,
-    preview: "Milestone Due → Check Status → Send Alert → Update Dashboard",
-    tags: ["Projects", "Alerts"]
+    name: "Lead Qualification",
+    description: "Score and qualify leads automatically based on behavior and demographics",
+    category: "Sales",
+    icon: Zap,
+    color: "bg-yellow-600",
+    complexity: "Medium",
+    estimatedTime: "35 min",
+    rating: 4.8,
+    downloads: 756,
+    steps: [
+      "Lead captured",
+      "Score lead",
+      "Enrich data",
+      "Assign to sales",
+      "Send follow-up"
+    ],
+    integrations: ["Salesforce", "HubSpot", "Marketo", "LinkedIn"]
   }
 ];
+
+const categories = ["All", "HR", "Finance", "Support", "Productivity", "Legal", "Sales"];
+const complexityLevels = ["All", "Simple", "Medium", "Advanced"];
 
 const FlowTemplates = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const categories = ["All", "HR", "Finance", "Support", "Analytics", "Project Management"];
+  const [selectedComplexity, setSelectedComplexity] = useState("All");
+  const [hoveredTemplate, setHoveredTemplate] = useState<number | null>(null);
+  const { toast } = useToast();
 
   const filteredTemplates = templates.filter(template => {
     const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          template.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "All" || template.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesComplexity = selectedComplexity === "All" || template.complexity === selectedComplexity;
+    
+    return matchesSearch && matchesCategory && matchesComplexity;
   });
 
-  const useTemplate = (template: any) => {
-    console.log("Using template:", template);
-    // TODO: Load template into canvas
+  const handleUseTemplate = (template: any) => {
+    toast({
+      title: "Template Loading",
+      description: `Loading "${template.name}" template to the canvas...`,
+    });
+    
+    // Simulate loading template
+    setTimeout(() => {
+      toast({
+        title: "Template Loaded",
+        description: `"${template.name}" is now ready for customization.`,
+      });
+    }, 2000);
+  };
+
+  const handlePreviewTemplate = (template: any) => {
+    toast({
+      title: "Template Preview",
+      description: `Opening preview for "${template.name}"...`,
+    });
   };
 
   return (
@@ -105,128 +190,186 @@ const FlowTemplates = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white">Flow Templates</h2>
-          <p className="text-white/70">Pre-built workflows to get you started quickly</p>
+          <h2 className="text-2xl font-bold text-white mb-2">Workflow Templates</h2>
+          <p className="text-white/70">Choose from pre-built automation templates to get started quickly</p>
         </div>
-        <Button className="bg-purple-600 hover:bg-purple-700">
-          <Star className="w-4 h-4 mr-2" />
-          Browse Community
-        </Button>
+        <Badge className="bg-purple-600/20 text-purple-300 border-purple-600/30 w-fit">
+          {filteredTemplates.length} Templates
+        </Badge>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
-          <Input
-            placeholder="Search templates..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/40"
-          />
-        </div>
-        <div className="flex gap-2 overflow-x-auto">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant={selectedCategory === category ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory(category)}
-              className={
-                selectedCategory === category
-                  ? "bg-purple-600 hover:bg-purple-700 whitespace-nowrap"
-                  : "border-white/20 text-white hover:bg-white/10 whitespace-nowrap"
-              }
-            >
-              {category}
-            </Button>
-          ))}
-        </div>
-      </div>
+      {/* Filters */}
+      <Card className="bg-white/10 border-white/20 backdrop-blur-sm">
+        <CardContent className="p-6">
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* Search */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/60" />
+              <Input
+                placeholder="Search templates..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60"
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex gap-2 flex-wrap">
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(category)}
+                  className={selectedCategory === category 
+                    ? "bg-purple-600 hover:bg-purple-700 text-white" 
+                    : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+                  }
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
+
+            {/* Complexity Filter */}
+            <div className="flex gap-2">
+              {complexityLevels.map((complexity) => (
+                <Button
+                  key={complexity}
+                  variant={selectedComplexity === complexity ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedComplexity(complexity)}
+                  className={selectedComplexity === complexity 
+                    ? "bg-purple-600 hover:bg-purple-700 text-white" 
+                    : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+                  }
+                >
+                  <Filter className="w-3 h-3 mr-1" />
+                  {complexity}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Templates Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredTemplates.map((template, index) => (
           <motion.div
             key={template.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
+            onHoverStart={() => setHoveredTemplate(template.id)}
+            onHoverEnd={() => setHoveredTemplate(null)}
           >
-            <Card className="bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-white text-lg mb-2">{template.name}</CardTitle>
-                    <p className="text-white/70 text-sm mb-3">{template.description}</p>
-                    <div className="flex items-center gap-2 mb-3">
-                      {template.tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="outline"
-                          className="border-white/20 text-white/80 text-xs"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
+            <Card className="bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group h-full">
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between mb-3">
+                  <div className={`w-12 h-12 ${template.color} rounded-xl flex items-center justify-center transition-transform duration-300 ${hoveredTemplate === template.id ? 'scale-110' : ''}`}>
+                    <template.icon className="w-6 h-6 text-white" />
                   </div>
-                  <div className="flex items-center gap-1 text-yellow-400">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="text-sm">{template.popularity}</span>
+                  <div className="flex items-center gap-2">
+                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                    <span className="text-white text-sm">{template.rating}</span>
                   </div>
                 </div>
+                
+                <div className="flex items-center gap-2 mb-2">
+                  <CardTitle className="text-white text-lg group-hover:text-purple-300 transition-colors">
+                    {template.name}
+                  </CardTitle>
+                  <Badge 
+                    variant="outline" 
+                    className="border-white/20 text-white/60 text-xs"
+                  >
+                    {template.category}
+                  </Badge>
+                </div>
+                
+                <CardDescription className="text-white/70">
+                  {template.description}
+                </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {/* Flow Preview */}
-                  <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                    <div className="text-white/60 text-xs mb-1">Flow Preview:</div>
-                    <div className="text-white text-sm font-mono">{template.preview}</div>
-                  </div>
 
-                  {/* Stats */}
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-1 text-white/60 text-xs mb-1">
-                        <Users className="w-3 h-3" />
-                        Uses
-                      </div>
-                      <div className="text-white font-medium">{template.uses}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-1 text-white/60 text-xs mb-1">
-                        <Clock className="w-3 h-3" />
-                        Setup Time
-                      </div>
-                      <div className="text-white font-medium">{template.estimatedTime}</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-1 text-white/60 text-xs mb-1">
-                        <Zap className="w-3 h-3" />
-                        Nodes
-                      </div>
-                      <div className="text-white font-medium">{template.nodes}</div>
-                    </div>
+              <CardContent className="space-y-4">
+                {/* Stats */}
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-1 text-white/60">
+                    <Clock className="w-3 h-3" />
+                    {template.estimatedTime}
                   </div>
+                  <div className="flex items-center gap-1 text-white/60">
+                    <Download className="w-3 h-3" />
+                    {template.downloads}
+                  </div>
+                  <Badge 
+                    className={
+                      template.complexity === 'Simple' ? 'bg-green-500/20 text-green-300 border-green-500/30' :
+                      template.complexity === 'Medium' ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30' :
+                      'bg-red-500/20 text-red-300 border-red-500/30'
+                    }
+                  >
+                    {template.complexity}
+                  </Badge>
+                </div>
 
-                  {/* Actions */}
-                  <div className="flex gap-3">
-                    <Button
-                      onClick={() => useTemplate(template)}
-                      className="flex-1 bg-purple-600 hover:bg-purple-700"
-                    >
-                      <Play className="w-4 h-4 mr-2" />
-                      Use Template
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-white/20 text-white hover:bg-white/10"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </Button>
+                {/* Steps Preview */}
+                <div>
+                  <p className="text-white/80 text-sm font-medium mb-2">Workflow Steps:</p>
+                  <div className="space-y-1">
+                    {template.steps.slice(0, 3).map((step, idx) => (
+                      <div key={idx} className="flex items-center gap-2 text-sm text-white/60">
+                        <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                        {step}
+                      </div>
+                    ))}
+                    {template.steps.length > 3 && (
+                      <p className="text-purple-300 text-xs">+{template.steps.length - 3} more steps</p>
+                    )}
                   </div>
+                </div>
+
+                {/* Integrations */}
+                <div>
+                  <p className="text-white/80 text-sm font-medium mb-2">Integrations:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {template.integrations.slice(0, 3).map((integration) => (
+                      <Badge 
+                        key={integration}
+                        className="bg-white/10 text-white/70 border-white/20 text-xs"
+                      >
+                        {integration}
+                      </Badge>
+                    ))}
+                    {template.integrations.length > 3 && (
+                      <Badge className="bg-purple-600/20 text-purple-300 border-purple-600/30 text-xs">
+                        +{template.integrations.length - 3}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePreviewTemplate(template)}
+                    className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
+                  >
+                    <Eye className="w-3 h-3 mr-1" />
+                    Preview
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => handleUseTemplate(template)}
+                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
+                  >
+                    <Download className="w-3 h-3 mr-1" />
+                    Use Template
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -235,13 +378,15 @@ const FlowTemplates = () => {
       </div>
 
       {filteredTemplates.length === 0 && (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Search className="w-8 h-8 text-white/40" />
-          </div>
-          <h3 className="text-xl font-bold text-white mb-2">No templates found</h3>
-          <p className="text-white/70">Try adjusting your search or filter criteria</p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-12"
+        >
+          <Filter className="w-12 h-12 text-white/40 mx-auto mb-4" />
+          <h3 className="text-white text-lg font-medium mb-2">No templates found</h3>
+          <p className="text-white/60">Try adjusting your search criteria or filters</p>
+        </motion.div>
       )}
     </div>
   );
