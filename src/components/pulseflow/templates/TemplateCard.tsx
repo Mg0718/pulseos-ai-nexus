@@ -33,7 +33,7 @@ const TemplateCard = ({
   const [hoveredTemplate, setHoveredTemplate] = useState<string | null>(null);
   const IconComponent = getTemplateIcon(template.category);
   const colorClass = getTemplateColor(template.category);
-  const remainingNodesCount = template.nodes.length - 3;
+  const remainingNodesCount = Math.max(0, template.nodes.length - 3);
 
   return (
     <motion.div
@@ -96,8 +96,8 @@ const TemplateCard = ({
                   {node.data.label}
                 </div>
               ))}
-              {template.nodes.length > 3 && (
-                <p className="text-purple-300 text-xs">+{String(remainingNodesCount)} more steps</p>
+              {remainingNodesCount > 0 && (
+                <p className="text-purple-300 text-xs">+{remainingNodesCount.toString()} more steps</p>
               )}
             </div>
           </div>

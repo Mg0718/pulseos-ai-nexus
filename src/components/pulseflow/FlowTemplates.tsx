@@ -1,64 +1,82 @@
 
 import { useState } from 'react';
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
-import { workflowTemplates, WorkflowTemplate } from './WorkflowTemplates';
-import WorkflowPreviewModal from './WorkflowPreviewModal';
-import TemplateCard from './templates/TemplateCard';
+import { WorkflowTemplates, WorkflowTemplate } from './WorkflowTemplates';
 import TemplateFilters from './templates/TemplateFilters';
-import EmptyTemplateState from './templates/EmptyTemplateState';
-import { getTemplateIcon, getTemplateColor, categories } from './templates/templateUtils';
+import TemplateCard from './templates/TemplateCard';
+import WorkflowPreviewModal from './WorkflowPreviewModal';
+import { 
+  Mail, 
+  Database, 
+  Webhook, 
+  MessageSquare, 
+  Calendar, 
+  FileText, 
+  Users, 
+  ShoppingCart,
+  LucideIcon 
+} from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-interface FlowTemplatesProps {
-  onUseTemplate?: (templateId: string) => void;
-}
-
-const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+const FlowTemplates = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [previewTemplate, setPreviewTemplate] = useState<WorkflowTemplate | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const { toast } = useToast();
 
-  const filteredTemplates = workflowTemplates.filter(template => {
+  const categories = ['All', ...Array.from(new Set(WorkflowTemplates.map(t => t.category)))];
+
+  const filteredTemplates = WorkflowTemplates.filter(template => {
     const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          template.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || template.category === selectedCategory;
-    
+    const matchesCategory = selectedCategory === 'All' || template.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const handleUseTemplate = (template: WorkflowTemplate) => {
-    if (onUseTemplate) {
-      onUseTemplate(template.id);
+  const getTemplateIcon = (category: string): LucideIcon => {
+    switch (category) {
+      case 'Communication': return Mail;
+      case 'Data Processing': return Database;
+      case 'Integration': return Webhook;
+      case 'Customer Support': return MessageSquare;
+      case 'Project Management': return Calendar;
+      case 'Content': return FileText;
+      case 'HR': return Users;
+      case 'E-commerce': return ShoppingCart;
+      default: return Database;
     }
-    
-    toast({
-      title: "Template Loading",
-      description: `Loading "${template.name}" template to the canvas...`,
-    });
-    
-    setIsPreviewOpen(false);
   };
 
-  const handlePreviewTemplate = (template: WorkflowTemplate) => {
+  const getTemplateColor = (category: string): string => {
+    switch (category) {
+      case 'Communication': return 'bg-blue-600';
+      case 'Data Processing': return 'bg-green-600';
+      case 'Integration': return 'bg-purple-600';
+      case 'Customer Support': return 'bg-orange-600';
+      case 'Project Management': return 'bg-red-600';
+      case 'Content': return 'bg-yellow-600';
+      case 'HR': return 'bg-pink-600';
+      case 'E-commerce': return 'bg-indigo-600';
+      default: return 'bg-gray-600';
+    }
+  };
+
+  const handlePreview = (template: WorkflowTemplate) => {
     setPreviewTemplate(template);
     setIsPreviewOpen(true);
   };
 
+  const handleUseTemplate = (template: WorkflowTemplate) => {
+    toast({
+      title: "Template loaded",
+      description: `"${template.name}" template has been loaded into the workflow builder.`,
+    });
+    // Navigate to builder with template
+    window.location.href = `/pulseflow?template=${template.id}`;
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-white mb-2">Workflow Templates</h2>
-          <p className="text-white/70">Choose from pre-built automation templates to get started quickly</p>
-        </div>
-        <Badge className="bg-purple-600/20 text-purple-300 border-purple-600/30 w-fit">
-          {filteredTemplates.length} Templates
-        </Badge>
-      </div>
-
       {/* Filters */}
       <TemplateFilters
         searchTerm={searchTerm}
@@ -69,23 +87,19 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
       />
 
       {/* Templates Grid */}
-      {filteredTemplates.length === 0 ? (
-        <EmptyTemplateState />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredTemplates.map((template, index) => (
-            <TemplateCard
-              key={template.id}
-              template={template}
-              index={index}
-              onPreview={handlePreviewTemplate}
-              onUseTemplate={handleUseTemplate}
-              getTemplateIcon={getTemplateIcon}
-              getTemplateColor={getTemplateColor}
-            />
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {filteredTemplates.map((template, index) => (
+          <TemplateCard
+            key={template.id}
+            template={template}
+            index={index}
+            onPreview={handlePreview}
+            onUseTemplate={handleUseTemplate}
+            getTemplateIcon={getTemplateIcon}
+            getTemplateColor={getTemplateColor}
+          />
+        ))}
+      </div>
 
       {/* Preview Modal */}
       <WorkflowPreviewModal

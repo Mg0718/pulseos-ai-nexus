@@ -43,7 +43,7 @@ const WorkflowPreviewModal = ({ isOpen, onClose, template, onUseTemplate }: Work
     }
   };
 
-  const remainingNodesCount = template.nodes.length - 3;
+  const remainingNodesCount = Math.max(0, template.nodes.length - 3);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -136,8 +136,8 @@ const WorkflowPreviewModal = ({ isOpen, onClose, template, onUseTemplate }: Work
                     </div>
                   );
                 })}
-                {template.nodes.length > 3 && (
-                  <p className="text-purple-300 text-xs">+{String(remainingNodesCount)} more steps</p>
+                {remainingNodesCount > 0 && (
+                  <p className="text-purple-300 text-xs">+{remainingNodesCount.toString()} more steps</p>
                 )}
               </div>
             </ScrollArea>
