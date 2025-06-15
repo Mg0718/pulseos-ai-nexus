@@ -25,25 +25,15 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = isSignUp 
-        ? await signUp(email, password, fullName)
-        : await signIn(email, password);
-
-      if (error) {
+      if (isSignUp) {
+        await signUp(email, password, fullName);
         toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
+          title: "Success",
+          description: "Account created successfully! Please check your email to verify your account.",
         });
       } else {
-        if (isSignUp) {
-          toast({
-            title: "Success",
-            description: "Account created successfully! Please check your email to verify your account.",
-          });
-        } else {
-          navigate("/");
-        }
+        await signIn(email, password);
+        navigate("/dashboard");
       }
     } catch (error: any) {
       toast({

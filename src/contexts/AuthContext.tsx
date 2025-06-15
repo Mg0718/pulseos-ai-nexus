@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setLoading(false);
 
         // Create demo data for new users
-        if (event === 'SIGNED_UP' && session?.user) {
+        if (event === 'SIGNED_IN' && session?.user) {
           console.log('New user signed up, creating demo data...');
           await createDemoData(session.user.id);
         }
