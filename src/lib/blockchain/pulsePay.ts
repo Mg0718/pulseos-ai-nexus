@@ -1,3 +1,4 @@
+
 import { Web3Provider } from './web3Provider';
 import { BLOCKCHAIN_CONFIG, PULSE_TOKEN_CONFIG } from './config';
 
@@ -5,15 +6,17 @@ export interface PaymentContract {
   id: string;
   payer: string;
   payee: string;
+  totalAmount: string;
   amount: string;
   currency: string;
   milestones: PaymentMilestone[];
-  status: 'pending' | 'active' | 'completed' | 'disputed';
+  status: 'active' | 'completed' | 'cancelled';
   createdAt: number;
 }
 
 export interface PaymentMilestone {
   id: string;
+  name: string;
   description: string;
   amount: string;
   dueDate: number;
@@ -22,9 +25,14 @@ export interface PaymentMilestone {
 }
 
 export interface EscrowDetails {
+  contractId: string;
   contractAddress: string;
+  amount: string;
   balance: string;
-  releaseConditions: string[];
+  status: 'pending' | 'active' | 'released' | 'refunded';
+  createdAt: number;
+  terms: string;
+  releaseConditions: string;
   disputeResolver: string;
 }
 
@@ -50,6 +58,7 @@ export class PulsePayManager {
         id: `contract_${Date.now()}`,
         payer,
         payee,
+        totalAmount,
         amount: totalAmount,
         currency: 'USDC', // Using stablecoin for stability
         milestones: milestones.map((milestone, index) => ({
@@ -57,7 +66,7 @@ export class PulsePayManager {
           id: `milestone_${index + 1}`,
           status: 'pending' as const
         })),
-        status: 'pending',
+        status: 'active',
         createdAt: Date.now()
       };
 
@@ -82,13 +91,14 @@ export class PulsePayManager {
       const escrowAddress = `0x${Math.random().toString(16).substring(2, 42)}`;
       
       const escrow: EscrowDetails = {
+        contractId,
         contractAddress: escrowAddress,
+        amount,
         balance: amount,
-        releaseConditions: [
-          'milestone_completion_verified',
-          'both_parties_agree',
-          'dispute_resolved'
-        ],
+        status: 'pending',
+        createdAt: Date.now(),
+        terms: 'Standard escrow terms apply',
+        releaseConditions: 'Payment upon milestone completion',
         disputeResolver: BLOCKCHAIN_CONFIG.CONTRACTS.GOVERNANCE
       };
 
@@ -165,6 +175,7 @@ export class PulsePayManager {
           id: 'contract_123',
           payer: userAddress,
           payee: '0xrecipient123',
+          totalAmount: '5000',
           amount: '5000',
           currency: 'USDC',
           milestones: [],

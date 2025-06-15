@@ -1,9 +1,10 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Web3Provider } from '@/lib/blockchain/web3Provider';
 import { IdentityManager } from '@/lib/blockchain/identity';
 import { EnhancedBlockchainPulsePay } from '@/lib/blockchain/enhancedPulsePay';
 import { BlockchainSessionLogger, LoginSession } from '@/lib/blockchain/sessionLogger';
-import { PaymentContract, EscrowDetails, PaymentMilestone } from '@/lib/blockchain/pulsePay';
+import { PaymentContract, EscrowDetails, PaymentMilestone } from '@/lib/blockchain/types';
 import { toast } from 'sonner';
 
 interface BlockchainContextType {
