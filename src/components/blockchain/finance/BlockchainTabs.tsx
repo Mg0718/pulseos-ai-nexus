@@ -15,6 +15,7 @@ import { DeFiDashboard } from "../DeFiDashboard";
 import { EnhancedTaxIntegration } from "../EnhancedTaxIntegration";
 import { EnhancedComplianceDashboard } from "../../compliance/EnhancedComplianceDashboard";
 import { CrossBorderValidator } from "../../compliance/CrossBorderValidator";
+import { ExecutiveDashboard } from "../../enterprise/ExecutiveDashboard";
 import { OverviewTab } from "./OverviewTab";
 
 export const BlockchainTabs = () => {
@@ -25,9 +26,12 @@ export const BlockchainTabs = () => {
       transition={{ delay: 0.3 }}
     >
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-12 bg-white/10 backdrop-blur-xl border-white/20">
+        <TabsList className="grid w-full grid-cols-13 bg-white/10 backdrop-blur-xl border-white/20">
           <TabsTrigger value="overview" className="text-white data-[state=active]:bg-white/20">
             Overview
+          </TabsTrigger>
+          <TabsTrigger value="executive" className="text-white data-[state=active]:bg-white/20">
+            Executive
           </TabsTrigger>
           <TabsTrigger value="multisig" className="text-white data-[state=active]:bg-white/20">
             Multi-Sig
@@ -66,6 +70,10 @@ export const BlockchainTabs = () => {
 
         <TabsContent value="overview" className="mt-6">
           <OverviewTab />
+        </TabsContent>
+
+        <TabsContent value="executive" className="mt-6">
+          <ExecutiveDashboard />
         </TabsContent>
 
         <TabsContent value="multisig" className="mt-6">
