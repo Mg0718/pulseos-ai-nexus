@@ -32,7 +32,7 @@ export class EnhancedBlockchainPulsePay extends PulsePayManager {
     return this.storageService.executeSmartContract(contractData);
   }
 
-  // Contract management methods
+  // Override parent methods to use new type definitions
   async createPaymentContract(
     payee: string, 
     totalAmount: string, 
@@ -45,6 +45,7 @@ export class EnhancedBlockchainPulsePay extends PulsePayManager {
     return this.contractManager.setupEscrow(contractId, amount);
   }
 
+  // Additional contract management methods
   async processMilestonePayment(contractId: string, milestoneId: string): Promise<PaymentMilestone> {
     return this.contractManager.processMilestonePayment(contractId, milestoneId);
   }
