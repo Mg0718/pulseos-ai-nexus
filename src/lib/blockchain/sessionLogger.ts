@@ -1,4 +1,3 @@
-
 import { Web3Provider } from './web3Provider';
 import { BLOCKCHAIN_CONFIG } from './config';
 
@@ -193,7 +192,7 @@ export class BlockchainSessionLogger {
     return this.createBlockchainHash(signatureData);
   }
 
-  private async storeOnIPFS(data: any): Promise<string> {
+  public async storeOnIPFS(data: any): Promise<string> {
     // Simulate IPFS storage
     const hash = `Qm${Math.random().toString(36).substring(2, 15)}`;
     console.log('Stored on IPFS:', hash, data);

@@ -1,4 +1,3 @@
-
 import { Web3Provider } from './web3Provider';
 import { BLOCKCHAIN_CONFIG, PULSE_TOKEN_CONFIG } from './config';
 
@@ -30,7 +29,7 @@ export interface EscrowDetails {
 }
 
 export class PulsePayManager {
-  private web3Provider: Web3Provider;
+  protected web3Provider: Web3Provider;
 
   constructor() {
     this.web3Provider = Web3Provider.getInstance();

@@ -3,6 +3,7 @@ import { Web3Provider } from '@/lib/blockchain/web3Provider';
 import { IdentityManager } from '@/lib/blockchain/identity';
 import { EnhancedBlockchainPulsePay } from '@/lib/blockchain/enhancedPulsePay';
 import { BlockchainSessionLogger, LoginSession } from '@/lib/blockchain/sessionLogger';
+import { PaymentContract, EscrowDetails, PaymentMilestone } from '@/lib/blockchain/pulsePay';
 import { toast } from 'sonner';
 
 interface BlockchainContextType {
@@ -23,6 +24,10 @@ interface BlockchainContextType {
   // Enhanced PulsePay
   processBlockchainPayment: (payee: string, amount: string, currency?: string) => Promise<any>;
   processBlockchainPayroll: (employees: any[]) => Promise<any>;
+  
+  // PulsePay Contract Management
+  createPaymentContract: (payee: string, totalAmount: string, milestones: Omit<PaymentMilestone, 'id' | 'status'>[]) => Promise<PaymentContract>;
+  setupEscrow: (contractId: string, amount: string) => Promise<EscrowDetails>;
   
   // General
   loading: boolean;
@@ -208,6 +213,44 @@ export const BlockchainProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   };
 
+  const createPaymentContract = async (payee: string, totalAmount: string, milestones: Omit<PaymentMilestone, 'id' | 'status'>[]) => {
+    if (!isWalletConnected) {
+      toast.error('Please connect your wallet first');
+      throw new Error('Wallet not connected');
+    }
+
+    try {
+      setLoading(true);
+      const contract = await enhancedPulsePay.createPaymentContract(payee, totalAmount, milestones);
+      toast.success('Payment contract created successfully!');
+      return contract;
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to create payment contract');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const setupEscrow = async (contractId: string, amount: string) => {
+    if (!isWalletConnected) {
+      toast.error('Please connect your wallet first');
+      throw new Error('Wallet not connected');
+    }
+
+    try {
+      setLoading(true);
+      const escrowDetails = await enhancedPulsePay.setupEscrow(contractId, amount);
+      toast.success('Escrow setup successfully!');
+      return escrowDetails;
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to set up escrow');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const value = {
     isWalletConnected,
     walletAddress,
@@ -219,6 +262,8 @@ export const BlockchainProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     getSecurityAuditTrail,
     processBlockchainPayment,
     processBlockchainPayroll,
+    createPaymentContract,
+    setupEscrow,
     loading
   };
 

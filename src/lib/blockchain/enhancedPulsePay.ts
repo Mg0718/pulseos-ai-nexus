@@ -1,4 +1,3 @@
-
 import { PulsePayManager } from './pulsePay';
 import { BlockchainSessionLogger } from './sessionLogger';
 import { Web3Provider } from './web3Provider';
@@ -14,12 +13,10 @@ export interface BlockchainPaymentDecision {
 
 export class EnhancedBlockchainPulsePay extends PulsePayManager {
   private sessionLogger: BlockchainSessionLogger;
-  private web3Provider: Web3Provider;
 
   constructor() {
     super();
     this.sessionLogger = new BlockchainSessionLogger();
-    this.web3Provider = Web3Provider.getInstance();
   }
 
   // Blockchain makes the decision, payment processor executes
