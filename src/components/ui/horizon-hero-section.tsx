@@ -3,9 +3,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,15 +26,10 @@ export const Component = () => {
     scene: null,
     camera: null,
     renderer: null,
-    composer: null,
     stars: [],
     nebula: null,
     mountains: [],
-    animationId: null,
-    targetCameraX: 0,
-    targetCameraY: 30,
-    targetCameraZ: 100,
-    locations: []
+    animationId: null
   });
 
   // Initialize Three.js
@@ -69,19 +61,6 @@ export const Component = () => {
       refs.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       refs.renderer.toneMapping = THREE.ACESFilmicToneMapping;
       refs.renderer.toneMappingExposure = 0.5;
-
-      // Post-processing
-      refs.composer = new EffectComposer(refs.renderer);
-      const renderPass = new RenderPass(refs.scene, refs.camera);
-      refs.composer.addPass(renderPass);
-
-      const bloomPass = new UnrealBloomPass(
-        new THREE.Vector2(window.innerWidth, window.innerHeight),
-        0.8,
-        0.4,
-        0.85
-      );
-      refs.composer.addPass(bloomPass);
 
       // Create scene elements
       createStarField();
@@ -371,8 +350,8 @@ export const Component = () => {
         mountain.position.y = 50 + (Math.cos(time * 0.15) * 1 * parallaxFactor);
       });
 
-      if (refs.composer) {
-        refs.composer.render();
+      if (refs.renderer) {
+        refs.renderer.render(refs.scene, refs.camera);
       }
     };
 
@@ -381,11 +360,10 @@ export const Component = () => {
     // Handle resize
     const handleResize = () => {
       const { current: refs } = threeRefs;
-      if (refs.camera && refs.renderer && refs.composer) {
+      if (refs.camera && refs.renderer) {
         refs.camera.aspect = window.innerWidth / window.innerHeight;
         refs.camera.updateProjectionMatrix();
         refs.renderer.setSize(window.innerWidth, window.innerHeight);
-        refs.composer.setSize(window.innerWidth, window.innerHeight);
       }
     };
 
@@ -522,7 +500,7 @@ export const Component = () => {
       refs.targetCameraX = currentPos.x + (nextPos.x - currentPos.x) * sectionProgress;
       refs.targetCameraY = currentPos.y + (nextPos.y - currentPos.y) * sectionProgress;
       refs.targetCameraZ = currentPos.z + (nextPos.z - currentPos.z) * sectionProgress;
-
+      
       refs.mountains.forEach((mountain, i) => {
         const speed = 1 + i * 0.9;
         const targetZ = mountain.userData.baseZ + scrollY * speed * 0.5;
@@ -545,14 +523,6 @@ export const Component = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [totalSections]);
 
-  const splitTitle = (text) => {
-    return text.split('').map((char, i) => (
-      <span key={i} className="title-char">
-        {char}
-      </span>
-    ));
-  };
-
   return (
     <div ref={containerRef} className="relative w-full">
       <style>{`
@@ -561,9 +531,9 @@ export const Component = () => {
           width: 100%;
           height: 300vh;
           overflow: hidden;
-          background: linear-gradient(180deg, #000000 0%, #0a0a0f 50%, #1a1a2e 100%);
+          background: linear-gradient(180deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
         }
-        
+
         .hero-canvas {
           position: fixed;
           top: 0;
@@ -572,118 +542,114 @@ export const Component = () => {
           height: 100vh;
           z-index: 1;
         }
-        
+
         .side-menu {
           position: fixed;
-          top: 50px;
-          left: 50px;
+          top: 50%;
+          left: 2rem;
+          transform: translateY(-50%);
           z-index: 10;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 30px;
+          gap: 2rem;
         }
-        
+
         .menu-icon {
           display: flex;
           flex-direction: column;
           gap: 4px;
           cursor: pointer;
         }
-        
+
         .menu-icon span {
           width: 25px;
           height: 2px;
           background: white;
           transition: all 0.3s ease;
         }
-        
+
         .vertical-text {
           writing-mode: vertical-rl;
+          text-orientation: mixed;
           color: white;
-          font-size: 14px;
-          letter-spacing: 3px;
-          font-weight: 300;
+          font-size: 0.8rem;
+          letter-spacing: 0.2em;
+          opacity: 0.7;
         }
-        
+
         .hero-content {
           position: fixed;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
           text-align: center;
-          z-index: 10;
-          width: 100%;
-          max-width: 1200px;
+          z-index: 5;
+          pointer-events: none;
         }
-        
+
         .hero-title {
-          font-size: clamp(4rem, 12vw, 12rem);
+          font-size: clamp(4rem, 15vw, 12rem);
           font-weight: 900;
           color: white;
           margin: 0;
-          line-height: 0.9;
-          text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-          letter-spacing: -0.02em;
+          letter-spacing: 0.1em;
+          text-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
         }
-        
+
         .hero-subtitle {
-          margin-top: 30px;
-          font-size: clamp(1.2rem, 2.5vw, 2rem);
+          margin-top: 2rem;
+          font-size: clamp(1rem, 2vw, 1.5rem);
           color: rgba(255, 255, 255, 0.8);
-          line-height: 1.4;
-          font-weight: 300;
-          letter-spacing: 0.05em;
+          line-height: 1.6;
+          max-width: 600px;
         }
-        
+
         .subtitle-line {
-          margin: 0;
-          opacity: 0.9;
+          margin: 0.5rem 0;
         }
-        
+
         .scroll-progress {
           position: fixed;
-          bottom: 50px;
-          right: 50px;
-          z-index: 10;
+          bottom: 2rem;
+          right: 2rem;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 20px;
-        }
-        
-        .scroll-text {
+          gap: 1rem;
+          z-index: 10;
           color: white;
-          font-size: 12px;
-          letter-spacing: 2px;
-          font-weight: 300;
         }
-        
+
+        .scroll-text {
+          font-size: 0.8rem;
+          letter-spacing: 0.2em;
+          opacity: 0.7;
+        }
+
         .progress-track {
           width: 2px;
           height: 100px;
           background: rgba(255, 255, 255, 0.2);
           position: relative;
         }
-        
+
         .progress-fill {
-          background: white;
           height: 100%;
-          transition: width 0.3s ease;
+          background: white;
+          transition: width 0.1s ease;
         }
-        
+
         .section-counter {
-          color: white;
-          font-size: 14px;
-          font-weight: 300;
-          letter-spacing: 1px;
+          font-size: 0.8rem;
+          opacity: 0.7;
         }
-        
+
         .scroll-sections {
           position: relative;
-          z-index: 5;
+          z-index: 2;
         }
-        
+
         .content-section {
           height: 100vh;
           display: flex;
@@ -691,26 +657,26 @@ export const Component = () => {
           justify-content: center;
           align-items: center;
           text-align: center;
-          padding: 0 50px;
+          padding: 2rem;
         }
-        
+
         @media (max-width: 768px) {
-          .side-menu {
-            top: 30px;
-            left: 30px;
+          .hero-title {
+            font-size: clamp(2.5rem, 12vw, 6rem);
           }
           
-          .hero-content {
-            padding: 0 30px;
+          .hero-subtitle {
+            font-size: clamp(0.9rem, 4vw, 1.2rem);
+            padding: 0 1rem;
+          }
+          
+          .side-menu {
+            left: 1rem;
           }
           
           .scroll-progress {
-            bottom: 30px;
-            right: 30px;
-          }
-          
-          .content-section {
-            padding: 0 30px;
+            bottom: 1rem;
+            right: 1rem;
           }
         }
       `}</style>
@@ -728,12 +694,12 @@ export const Component = () => {
       </div>
 
       {/* Main content */}
-      <div className="hero-content cosmos-content">
+      <div className="hero-content">
         <h1 ref={titleRef} className="hero-title">
-          {splitTitle('HORIZON')}
+          HORIZON
         </h1>
         
-        <div ref={subtitleRef} className="hero-subtitle cosmos-subtitle">
+        <div ref={subtitleRef} className="hero-subtitle">
           <p className="subtitle-line">
             Where vision meets reality, 
           </p>
@@ -784,10 +750,10 @@ export const Component = () => {
           return (
             <section key={i} className="content-section">
               <h1 className="hero-title">
-                {splitTitle(titles[i+1] || 'DEFAULT')}
+                {titles[i+1] || 'DEFAULT'}
               </h1>
           
-              <div className="hero-subtitle cosmos-subtitle">
+              <div className="hero-subtitle">
                 <p className="subtitle-line">
                   {subtitles[i+1].line1}
                 </p>
