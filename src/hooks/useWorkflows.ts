@@ -40,12 +40,12 @@ export const useWorkflows = () => {
   const fetchWorkflows = async () => {
     try {
       const { data, error } = await supabase
-        .from('workflows')
+        .from('workflows' as any)
         .select('*')
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
-      setWorkflows(data || []);
+      setWorkflows(data as Workflow[] || []);
     } catch (error: any) {
       toast({
         title: "Error fetching workflows",
@@ -63,7 +63,7 @@ export const useWorkflows = () => {
       if (!user) throw new Error('User not authenticated');
 
       const { data, error } = await supabase
-        .from('workflows')
+        .from('workflows' as any)
         .insert([{
           ...workflow,
           user_id: user.id,
@@ -73,13 +73,13 @@ export const useWorkflows = () => {
 
       if (error) throw error;
       
-      setWorkflows(prev => [data, ...prev]);
+      setWorkflows(prev => [data as Workflow, ...prev]);
       toast({
         title: "Workflow created",
         description: "Your workflow has been created successfully.",
       });
       
-      return data;
+      return data as Workflow;
     } catch (error: any) {
       toast({
         title: "Error creating workflow",
@@ -93,7 +93,7 @@ export const useWorkflows = () => {
   const updateWorkflow = async (id: string, updates: Partial<Workflow>) => {
     try {
       const { data, error } = await supabase
-        .from('workflows')
+        .from('workflows' as any)
         .update(updates)
         .eq('id', id)
         .select()
@@ -101,8 +101,8 @@ export const useWorkflows = () => {
 
       if (error) throw error;
       
-      setWorkflows(prev => prev.map(w => w.id === id ? data : w));
-      return data;
+      setWorkflows(prev => prev.map(w => w.id === id ? data as Workflow : w));
+      return data as Workflow;
     } catch (error: any) {
       toast({
         title: "Error updating workflow",
@@ -116,7 +116,7 @@ export const useWorkflows = () => {
   const deleteWorkflow = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('workflows')
+        .from('workflows' as any)
         .delete()
         .eq('id', id);
 
@@ -140,7 +140,7 @@ export const useWorkflows = () => {
   const executeWorkflow = async (id: string, inputData?: any) => {
     try {
       const { data, error } = await supabase
-        .from('workflow_executions')
+        .from('workflow_executions' as any)
         .insert([{
           workflow_id: id,
           input_data: inputData,

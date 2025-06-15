@@ -39,9 +39,9 @@ const nodeTypes = {
 
 interface WorkflowBuilderProps {
   workflowId?: string;
-  initialNodes?: WorkflowNode[];
-  initialEdges?: WorkflowEdge[];
-  onSave?: (nodes: WorkflowNode[], edges: WorkflowEdge[]) => void;
+  initialNodes?: Node[];
+  initialEdges?: Edge[];
+  onSave?: (nodes: Node[], edges: Edge[]) => void;
 }
 
 const WorkflowBuilder = ({ 
@@ -50,8 +50,8 @@ const WorkflowBuilder = ({
   initialEdges = [],
   onSave 
 }: WorkflowBuilderProps) => {
-  const [nodes, setNodes, onNodesChange]: [Node[], (nodes: Node[]) => void, OnNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange]: [Edge[], (edges: Edge[]) => void, OnEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [workflowName, setWorkflowName] = useState('Untitled Workflow');
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
@@ -109,9 +109,25 @@ const WorkflowBuilder = ({
 
   const handleSave = async () => {
     try {
+      // Convert ReactFlow nodes/edges to our workflow format
+      const workflowNodes: WorkflowNode[] = nodes.map(node => ({
+        id: node.id,
+        type: node.type || 'default',
+        position: node.position,
+        data: node.data,
+      }));
+
+      const workflowEdges: WorkflowEdge[] = edges.map(edge => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+        sourceHandle: edge.sourceHandle || undefined,
+        targetHandle: edge.targetHandle || undefined,
+      }));
+
       const workflowData = {
         name: workflowName,
-        flow_definition: { nodes, edges },
+        flow_definition: { nodes: workflowNodes, edges: workflowEdges },
         status: 'draft' as const,
         version: 1,
       };

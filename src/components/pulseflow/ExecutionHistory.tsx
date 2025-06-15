@@ -45,7 +45,7 @@ const ExecutionHistory = () => {
   const fetchExecutions = async () => {
     try {
       const { data, error } = await supabase
-        .from('workflow_executions')
+        .from('workflow_executions' as any)
         .select(`
           *,
           workflows:workflow_id (name)
@@ -54,7 +54,7 @@ const ExecutionHistory = () => {
         .limit(50);
 
       if (error) throw error;
-      setExecutions(data || []);
+      setExecutions(data as WorkflowExecution[] || []);
     } catch (error: any) {
       toast({
         title: "Error fetching executions",
