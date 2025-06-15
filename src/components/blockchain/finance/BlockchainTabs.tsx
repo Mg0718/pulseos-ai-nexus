@@ -12,6 +12,9 @@ import { BlockchainSecurityDashboard } from "../BlockchainSecurityDashboard";
 import PulsePayBlockchain from "../PulsePayBlockchain";
 import { CrossChainManagerComponent } from "../CrossChainManager";
 import { DeFiDashboard } from "../DeFiDashboard";
+import { EnhancedTaxIntegration } from "../EnhancedTaxIntegration";
+import { EnhancedComplianceDashboard } from "../../compliance/EnhancedComplianceDashboard";
+import { CrossBorderValidator } from "../../compliance/CrossBorderValidator";
 import { OverviewTab } from "./OverviewTab";
 
 export const BlockchainTabs = () => {
@@ -22,7 +25,7 @@ export const BlockchainTabs = () => {
       transition={{ delay: 0.3 }}
     >
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-11 bg-white/10 backdrop-blur-xl border-white/20">
+        <TabsList className="grid w-full grid-cols-12 bg-white/10 backdrop-blur-xl border-white/20">
           <TabsTrigger value="overview" className="text-white data-[state=active]:bg-white/20">
             Overview
           </TabsTrigger>
@@ -39,10 +42,13 @@ export const BlockchainTabs = () => {
             Invoices
           </TabsTrigger>
           <TabsTrigger value="tax" className="text-white data-[state=active]:bg-white/20">
-            Tax
+            Tax Pro
           </TabsTrigger>
           <TabsTrigger value="compliance" className="text-white data-[state=active]:bg-white/20">
-            Compliance
+            Compliance Pro
+          </TabsTrigger>
+          <TabsTrigger value="crossborder" className="text-white data-[state=active]:bg-white/20">
+            Cross-Border
           </TabsTrigger>
           <TabsTrigger value="security" className="text-white data-[state=active]:bg-white/20">
             Security
@@ -79,11 +85,15 @@ export const BlockchainTabs = () => {
         </TabsContent>
 
         <TabsContent value="tax" className="mt-6">
-          <TaxIntegration />
+          <EnhancedTaxIntegration />
         </TabsContent>
 
         <TabsContent value="compliance" className="mt-6">
-          <ComplianceMonitoring />
+          <EnhancedComplianceDashboard />
+        </TabsContent>
+
+        <TabsContent value="crossborder" className="mt-6">
+          <CrossBorderValidator />
         </TabsContent>
 
         <TabsContent value="security" className="mt-6">
