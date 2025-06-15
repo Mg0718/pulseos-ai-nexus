@@ -97,7 +97,7 @@ const TemplateCard = ({
                 </div>
               ))}
               {template.nodes.length > 3 && (
-                <p className="text-purple-300 text-xs">+{remainingNodesCount} more steps</p>
+                <p className="text-purple-300 text-xs">+{remainingNodesCount.toString()} more steps</p>
               )}
             </div>
           </div>
