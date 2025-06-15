@@ -17,14 +17,14 @@ export const useRealTimeEdgeFunctions = () => {
 
       toast({
         title: "Compliance Audit Complete",
-        description: `Audit score: ${data.compliance_score}%. Found ${data.audit_results.length} items.`,
+        description: `Audit score: ${data?.compliance_score || 0}%. Found ${data?.audit_results?.length || 0} items.`,
       });
 
       return data;
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Audit Failed",
-        description: error.message,
+        description: error?.message || "Unknown error occurred",
         variant: "destructive",
       });
       throw error;
@@ -42,14 +42,14 @@ export const useRealTimeEdgeFunctions = () => {
 
       toast({
         title: "Flow Executed",
-        description: `Flow completed in ${data.execution_time_ms}ms`,
+        description: `Flow completed in ${data?.execution_time_ms || 0}ms`,
       });
 
       return data;
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Flow Execution Failed",
-        description: error.message,
+        description: error?.message || "Unknown error occurred",
         variant: "destructive",
       });
       throw error;
@@ -67,14 +67,14 @@ export const useRealTimeEdgeFunctions = () => {
 
       toast({
         title: "Sync Complete",
-        description: `Processed ${data.records_processed} records`,
+        description: `Processed ${data?.records_processed || 0} records`,
       });
 
       return data;
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Sync Failed",
-        description: error.message,
+        description: error?.message || "Unknown error occurred",
         variant: "destructive",
       });
       throw error;
@@ -90,7 +90,7 @@ export const useRealTimeEdgeFunctions = () => {
 
       if (error) throw error;
       return data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Presence update failed:', error);
       throw error;
     }
@@ -98,54 +98,66 @@ export const useRealTimeEdgeFunctions = () => {
 
   // Set up real-time listeners
   useEffect(() => {
-    // Listen for audit events
-    const auditChannel = supabase
-      .channel('audit_events')
-      .on('postgres_changes', 
-        { event: 'INSERT', schema: 'public', table: 'audit_events' },
-        (payload) => {
-          const event = payload.new;
-          if (event.severity === 'high' || event.severity === 'critical') {
-            toast({
-              title: "Critical Compliance Issue",
-              description: event.description,
-              variant: "destructive",
-            });
-          }
-        }
-      )
-      .subscribe();
+    let auditChannel: any;
+    let tasksChannel: any;
+    let presenceChannel: any;
 
-    // Listen for compliance tasks
-    const tasksChannel = supabase
-      .channel('compliance_tasks')
-      .on('postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'compliance_tasks' },
-        (payload) => {
-          const task = payload.new;
-          if (task.priority === 'urgent' || task.priority === 'high') {
-            toast({
-              title: "New High Priority Task",
-              description: task.title,
-            });
+    try {
+      // Listen for audit events
+      auditChannel = supabase
+        .channel('audit_events')
+        .on('postgres_changes', 
+          { event: 'INSERT', schema: 'public', table: 'audit_events' },
+          (payload) => {
+            const event = payload.new;
+            if (event.severity === 'high' || event.severity === 'critical') {
+              toast({
+                title: "Critical Compliance Issue",
+                description: event.description,
+                variant: "destructive",
+              });
+            }
           }
-        }
-      )
-      .subscribe();
+        )
+        .subscribe();
 
-    // Listen for presence updates
-    const presenceChannel = supabase
-      .channel('presence_updates')
-      .on('broadcast', { event: 'presence_change' }, (payload) => {
-        console.log('Presence updated:', payload);
-        // Update UI accordingly
-      })
-      .subscribe();
+      // Listen for compliance tasks
+      tasksChannel = supabase
+        .channel('compliance_tasks')
+        .on('postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'compliance_tasks' },
+          (payload) => {
+            const task = payload.new;
+            if (task.priority === 'urgent' || task.priority === 'high') {
+              toast({
+                title: "New High Priority Task",
+                description: task.title,
+              });
+            }
+          }
+        )
+        .subscribe();
+
+      // Listen for presence updates
+      presenceChannel = supabase
+        .channel('presence_updates')
+        .on('broadcast', { event: 'presence_change' }, (payload) => {
+          console.log('Presence updated:', payload);
+          // Update UI accordingly
+        })
+        .subscribe();
+    } catch (error) {
+      console.error('Error setting up real-time listeners:', error);
+    }
 
     return () => {
-      supabase.removeChannel(auditChannel);
-      supabase.removeChannel(tasksChannel);
-      supabase.removeChannel(presenceChannel);
+      try {
+        if (auditChannel) supabase.removeChannel(auditChannel);
+        if (tasksChannel) supabase.removeChannel(tasksChannel);
+        if (presenceChannel) supabase.removeChannel(presenceChannel);
+      } catch (error) {
+        console.error('Error cleaning up channels:', error);
+      }
     };
   }, [toast]);
 
