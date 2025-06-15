@@ -1,7 +1,7 @@
 
 import { Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Users, UserPlus, Calendar, MessageSquare, Heart, Settings, User, Bell } from "lucide-react";
+import { Users, UserPlus, Calendar, MessageSquare, Heart, Settings, User, Bell, Clock, Gift, Target, Star, FileText } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -13,9 +13,14 @@ import { useState, useEffect } from "react";
 const navigationItems = [
   { icon: UserPlus, label: "Onboarding", path: "/people/onboarding", badge: 2 },
   { icon: Users, label: "Teams", path: "/people/teams", badge: null },
+  { icon: Clock, label: "Time Tracking", path: "/people/time-tracking", badge: null },
   { icon: Calendar, label: "Leave", path: "/people/leaves", badge: 3 },
+  { icon: Gift, label: "Benefits", path: "/people/benefits", badge: null },
+  { icon: Star, label: "Performance", path: "/people/performance", badge: 1 },
+  { icon: Target, label: "OKRs", path: "/people/okrs", badge: null },
   { icon: MessageSquare, label: "Feedback", path: "/people/feedback", badge: 1 },
   { icon: Heart, label: "Morale", path: "/people/morale", badge: null },
+  { icon: FileText, label: "Documents", path: "/people/documents", badge: 2 },
   { icon: User, label: "Profiles", path: "/people/profiles", badge: null },
   { icon: Settings, label: "Settings", path: "/people/settings", badge: null },
 ];
@@ -42,7 +47,7 @@ const PeopleLayout = () => {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-white">People & TeamOps</h1>
-                <p className="text-white/60 text-sm">HR Management</p>
+                <p className="text-white/60 text-sm">HRIS++ Management</p>
               </div>
             </div>
 
@@ -71,7 +76,7 @@ const PeopleLayout = () => {
             </div>
 
             {/* Navigation */}
-            <nav className="space-y-2">
+            <nav className="space-y-2 max-h-96 overflow-y-auto">
               {navigationItems.map((item) => {
                 const isActive = location.pathname === item.path;
                 return (

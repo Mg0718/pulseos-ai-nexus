@@ -91,6 +91,192 @@ export type Database = {
           },
         ]
       }
+      benefits: {
+        Row: {
+          category: string
+          cost: number | null
+          created_at: string
+          description: string | null
+          employer_contribution_percent: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          provider: string | null
+        }
+        Insert: {
+          category: string
+          cost?: number | null
+          created_at?: string
+          description?: string | null
+          employer_contribution_percent?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          provider?: string | null
+        }
+        Update: {
+          category?: string
+          cost?: number | null
+          created_at?: string
+          description?: string | null
+          employer_contribution_percent?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          provider?: string | null
+        }
+        Relationships: []
+      }
+      compensation_history: {
+        Row: {
+          change_reason: string | null
+          created_at: string
+          created_by: string
+          currency: string | null
+          effective_date: string
+          id: string
+          notes: string | null
+          salary: number
+          user_id: string
+        }
+        Insert: {
+          change_reason?: string | null
+          created_at?: string
+          created_by: string
+          currency?: string | null
+          effective_date: string
+          id?: string
+          notes?: string | null
+          salary: number
+          user_id: string
+        }
+        Update: {
+          change_reason?: string | null
+          created_at?: string
+          created_by?: string
+          currency?: string | null
+          effective_date?: string
+          id?: string
+          notes?: string | null
+          salary?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compensation_history_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compensation_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      document_acknowledgments: {
+        Row: {
+          acknowledged_at: string
+          document_id: string
+          id: string
+          ip_address: unknown | null
+          user_id: string
+        }
+        Insert: {
+          acknowledged_at?: string
+          document_id: string
+          id?: string
+          ip_address?: unknown | null
+          user_id: string
+        }
+        Update: {
+          acknowledged_at?: string
+          document_id?: string
+          id?: string
+          ip_address?: unknown | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_acknowledgments_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_acknowledgments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          created_at: string
+          description: string | null
+          document_type: string
+          file_path: string
+          file_size: number | null
+          id: string
+          is_confidential: boolean | null
+          mime_type: string | null
+          requires_acknowledgment: boolean | null
+          title: string
+          uploaded_by: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          document_type: string
+          file_path: string
+          file_size?: number | null
+          id?: string
+          is_confidential?: boolean | null
+          mime_type?: string | null
+          requires_acknowledgment?: boolean | null
+          title: string
+          uploaded_by: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          document_type?: string
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          is_confidential?: boolean | null
+          mime_type?: string | null
+          requires_acknowledgment?: boolean | null
+          title?: string
+          uploaded_by?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feedback_entries: {
         Row: {
           content: string
@@ -316,6 +502,66 @@ export type Database = {
           },
         ]
       }
+      okrs: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          key_results: Json
+          objective: string
+          progress_percentage: number | null
+          quarter: string
+          status: string | null
+          team_id: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key_results: Json
+          objective: string
+          progress_percentage?: number | null
+          quarter: string
+          status?: string | null
+          team_id?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key_results?: Json
+          objective?: string
+          progress_percentage?: number | null
+          quarter?: string
+          status?: string | null
+          team_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "okrs_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "okrs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       performance_goals: {
         Row: {
           created_at: string
@@ -362,6 +608,72 @@ export type Database = {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      performance_reviews: {
+        Row: {
+          competency_rating: number | null
+          created_at: string
+          development_plan: string | null
+          due_date: string | null
+          feedback: string | null
+          goals_achievement_rating: number | null
+          id: string
+          overall_rating: number | null
+          review_period_end: string
+          review_period_start: string
+          reviewer_id: string
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          competency_rating?: number | null
+          created_at?: string
+          development_plan?: string | null
+          due_date?: string | null
+          feedback?: string | null
+          goals_achievement_rating?: number | null
+          id?: string
+          overall_rating?: number | null
+          review_period_end: string
+          review_period_start: string
+          reviewer_id: string
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          competency_rating?: number | null
+          created_at?: string
+          development_plan?: string | null
+          due_date?: string | null
+          feedback?: string | null
+          goals_achievement_rating?: number | null
+          id?: string
+          overall_rating?: number | null
+          review_period_end?: string
+          review_period_start?: string
+          reviewer_id?: string
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "performance_reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "performance_reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -488,6 +800,101 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      time_entries: {
+        Row: {
+          break_duration: number | null
+          clock_in: string
+          clock_out: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          overtime_hours: number | null
+          status: string | null
+          total_hours: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          break_duration?: number | null
+          clock_in: string
+          clock_out?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          overtime_hours?: number | null
+          status?: string | null
+          total_hours?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          break_duration?: number | null
+          clock_in?: string
+          clock_out?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          overtime_hours?: number | null
+          status?: string | null
+          total_hours?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "time_entries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_benefits: {
+        Row: {
+          benefit_id: string
+          created_at: string
+          employee_contribution: number | null
+          enrollment_date: string
+          id: string
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          benefit_id: string
+          created_at?: string
+          employee_contribution?: number | null
+          enrollment_date?: string
+          id?: string
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          benefit_id?: string
+          created_at?: string
+          employee_contribution?: number | null
+          enrollment_date?: string
+          id?: string
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_benefits_benefit_id_fkey"
+            columns: ["benefit_id"]
+            isOneToOne: false
+            referencedRelation: "benefits"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_benefits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
