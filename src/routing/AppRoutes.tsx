@@ -60,8 +60,8 @@ const AppRoutes = () => {
       <AuthProvider>
         <BlockchainProvider>
           <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<PublicRoute><PremiumHomepage /></PublicRoute>} />
+            {/* Public Routes - Homepage is now the default */}
+            <Route path="/" element={<PremiumHomepage />} />
             <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
 
             {/* Protected Routes */}
