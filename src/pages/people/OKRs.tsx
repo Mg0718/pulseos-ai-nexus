@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import PeopleLayout from "@/components/people/PeopleLayout";
-import OKRManagement from "@/components/people/okrs/OKRManagement";
+import { OKRManagement } from "@/components/people/okrs/OKRManagement"; // Fix: Named import
 import OKRNudges from "@/components/people/okrs/OKRNudges";
 import { useAuth } from "@/contexts/AuthContext";
 
