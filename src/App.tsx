@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -34,6 +35,7 @@ import Transactions from "./pages/finance/Transactions";
 import BillingModels from "./pages/finance/BillingModels";
 import FinanceAnalytics from "./pages/finance/FinanceAnalytics";
 import FinanceSettings from "./pages/finance/FinanceSettings";
+import BlockchainFinance from "./pages/finance/BlockchainFinance";
 
 const queryClient = new QueryClient();
 
@@ -167,6 +169,11 @@ const AppContent = () => {
         <Route path="/finance/settings" element={
           <ProtectedRoute>
             <FinanceSettings />
+          </ProtectedRoute>
+        } />
+        <Route path="/finance/blockchain" element={
+          <ProtectedRoute>
+            <BlockchainFinance />
           </ProtectedRoute>
         } />
         

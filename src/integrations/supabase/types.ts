@@ -47,6 +47,45 @@ export type Database = {
           },
         ]
       }
+      audit_events: {
+        Row: {
+          created_at: string | null
+          description: string
+          event_type: string
+          id: string
+          metadata: Json | null
+          org_id: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          org_id?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity: string
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          org_id?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
       automations: {
         Row: {
           action_config: Json
@@ -127,6 +166,36 @@ export type Database = {
         }
         Relationships: []
       }
+      channels: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          org_id: string | null
+          type: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          org_id?: string | null
+          type?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          org_id?: string | null
+          type?: string | null
+        }
+        Relationships: []
+      }
       compensation_history: {
         Row: {
           change_reason: string | null
@@ -177,6 +246,89 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      compliance_tasks: {
+        Row: {
+          assigned_to: string | null
+          audit_event_id: string | null
+          completed_at: string | null
+          created_at: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          org_id: string | null
+          priority: string | null
+          status: string | null
+          title: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          audit_event_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          org_id?: string | null
+          priority?: string | null
+          status?: string | null
+          title: string
+        }
+        Update: {
+          assigned_to?: string | null
+          audit_event_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          org_id?: string | null
+          priority?: string | null
+          status?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_tasks_audit_event_id_fkey"
+            columns: ["audit_event_id"]
+            isOneToOne: false
+            referencedRelation: "audit_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      connectors: {
+        Row: {
+          config: Json | null
+          created_at: string | null
+          id: string
+          last_sync_at: string | null
+          org_id: string | null
+          provider_name: string
+          provider_type: string
+          status: string | null
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string | null
+          id?: string
+          last_sync_at?: string | null
+          org_id?: string | null
+          provider_name: string
+          provider_type: string
+          status?: string | null
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string | null
+          id?: string
+          last_sync_at?: string | null
+          org_id?: string | null
+          provider_name?: string
+          provider_type?: string
+          status?: string | null
+        }
+        Relationships: []
       }
       document_acknowledgments: {
         Row: {
@@ -498,6 +650,86 @@ export type Database = {
         }
         Relationships: []
       }
+      flow_runs: {
+        Row: {
+          completed_at: string | null
+          error_message: string | null
+          execution_time_ms: number | null
+          flow_id: string
+          id: string
+          input_data: Json | null
+          output_data: Json | null
+          started_at: string | null
+          status: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          error_message?: string | null
+          execution_time_ms?: number | null
+          flow_id: string
+          id?: string
+          input_data?: Json | null
+          output_data?: Json | null
+          started_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          error_message?: string | null
+          execution_time_ms?: number | null
+          flow_id?: string
+          id?: string
+          input_data?: Json | null
+          output_data?: Json | null
+          started_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flow_runs_flow_id_fkey"
+            columns: ["flow_id"]
+            isOneToOne: false
+            referencedRelation: "flows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flows: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          flow_definition: Json
+          id: string
+          name: string
+          org_id: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          flow_definition: Json
+          id?: string
+          name: string
+          org_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          flow_definition?: Json
+          id?: string
+          name?: string
+          org_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       innovation_ideas: {
         Row: {
           created_at: string
@@ -610,6 +842,57 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      messages: {
+        Row: {
+          channel_id: string
+          content: string
+          created_at: string | null
+          id: string
+          message_type: string | null
+          metadata: Json | null
+          thread_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          channel_id: string
+          content: string
+          created_at?: string | null
+          id?: string
+          message_type?: string | null
+          metadata?: Json | null
+          thread_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          channel_id?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          message_type?: string | null
+          metadata?: Json | null
+          thread_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       morale_entries: {
         Row: {
@@ -1048,6 +1331,69 @@ export type Database = {
         }
         Relationships: []
       }
+      policies: {
+        Row: {
+          category: string
+          content: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          name: string
+          org_id: string | null
+          status: string | null
+          updated_at: string | null
+          version: string | null
+        }
+        Insert: {
+          category: string
+          content: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name: string
+          org_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string
+          org_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Relationships: []
+      }
+      presence_status: {
+        Row: {
+          id: string
+          last_seen: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          last_seen?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          last_seen?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1107,6 +1453,44 @@ export type Database = {
           workspace_type?: string | null
         }
         Relationships: []
+      }
+      sync_jobs: {
+        Row: {
+          completed_at: string | null
+          connector_id: string
+          error_message: string | null
+          id: string
+          records_processed: number | null
+          started_at: string | null
+          status: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          connector_id: string
+          error_message?: string | null
+          id?: string
+          records_processed?: number | null
+          started_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          connector_id?: string
+          error_message?: string | null
+          id?: string
+          records_processed?: number | null
+          started_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_jobs_connector_id_fkey"
+            columns: ["connector_id"]
+            isOneToOne: false
+            referencedRelation: "connectors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       team_members: {
         Row: {
