@@ -1,10 +1,14 @@
 
 import { motion } from "framer-motion";
-import { Wallet, Shield, Zap, TrendingUp, Lock, Activity } from "lucide-react";
+import { Wallet, Shield, Zap, TrendingUp, Lock, Activity, Users, Brain } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WalletConnection } from "@/components/blockchain/WalletConnection";
 import { PulsePayBlockchain } from "@/components/blockchain/PulsePayBlockchain";
 import { BlockchainSecurityDashboard } from "@/components/blockchain/BlockchainSecurityDashboard";
+import { MultiSigWallet } from "@/components/blockchain/MultiSigWallet";
+import { RiskAnalytics } from "@/components/blockchain/RiskAnalytics";
+import { ComplianceMonitoring } from "@/components/blockchain/ComplianceMonitoring";
 import { BlockchainProvider } from "@/contexts/BlockchainContext";
 
 const BlockchainFinance = () => {
@@ -28,10 +32,22 @@ const BlockchainFinance = () => {
       color: "from-purple-500 to-violet-500"
     },
     {
-      icon: Zap,
-      title: "Hack-Proof Architecture",
-      description: "Data remains secure even if payment processors are compromised",
+      icon: Users,
+      title: "Multi-Signature Security",
+      description: "High-value transactions require multiple approvals for enhanced security",
       color: "from-orange-500 to-red-500"
+    },
+    {
+      icon: Brain,
+      title: "ML Fraud Detection",
+      description: "AI-powered real-time fraud detection and risk analytics",
+      color: "from-pink-500 to-purple-500"
+    },
+    {
+      icon: TrendingUp,
+      title: "Compliance Automation",
+      description: "Automated GDPR, SOC2, PCI-DSS compliance monitoring",
+      color: "from-cyan-500 to-blue-500"
     }
   ];
 
@@ -44,14 +60,14 @@ const BlockchainFinance = () => {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8"
           >
-            <h1 className="text-4xl font-bold text-white mb-2">Blockchain Finance</h1>
+            <h1 className="text-4xl font-bold text-white mb-2">Enhanced Blockchain Finance</h1>
             <p className="text-white/70 text-lg">
-              Advanced blockchain integration with secure payment processing and immutable audit trails
+              Advanced blockchain integration with multi-sig security, ML fraud detection, and automated compliance
             </p>
           </motion.div>
 
-          {/* Features Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Enhanced Features Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
@@ -72,78 +88,97 @@ const BlockchainFinance = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            {/* Wallet Connection */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <WalletConnection />
-            </motion.div>
-
-            {/* PulsePay Blockchain */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="lg:col-span-2"
-            >
-              <PulsePayBlockchain />
-            </motion.div>
-          </div>
-
-          {/* Blockchain Security Dashboard */}
+          {/* Enhanced Blockchain Features Tabs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mb-8"
+            transition={{ delay: 0.3 }}
           >
-            <BlockchainSecurityDashboard />
-          </motion.div>
+            <Tabs defaultValue="overview" className="w-full">
+              <TabsList className="grid w-full grid-cols-6 bg-white/10 backdrop-blur-xl border-white/20">
+                <TabsTrigger value="overview" className="text-white data-[state=active]:bg-white/20">
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger value="multisig" className="text-white data-[state=active]:bg-white/20">
+                  Multi-Sig
+                </TabsTrigger>
+                <TabsTrigger value="risk" className="text-white data-[state=active]:bg-white/20">
+                  Risk Analytics
+                </TabsTrigger>
+                <TabsTrigger value="compliance" className="text-white data-[state=active]:bg-white/20">
+                  Compliance
+                </TabsTrigger>
+                <TabsTrigger value="security" className="text-white data-[state=active]:bg-white/20">
+                  Security
+                </TabsTrigger>
+                <TabsTrigger value="pulsepay" className="text-white data-[state=active]:bg-white/20">
+                  PulsePay
+                </TabsTrigger>
+              </TabsList>
 
-          {/* Enhanced Implementation Status */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-              <CardHeader>
-                <CardTitle className="text-white">🚀 Enhanced Blockchain Implementation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="text-white font-semibold mb-2">Phase 1: Security Foundation ✅</h4>
-                    <ul className="text-white/70 text-sm space-y-1">
-                      <li>• Immutable login session logging</li>
-                      <li>• Blockchain-based risk analysis</li>
-                      <li>• Cryptographic audit trails</li>
-                      <li>• IPFS integration for data storage</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-2">Phase 2: Payment Intelligence ✅</h4>
-                    <ul className="text-white/70 text-sm space-y-1">
-                      <li>• Blockchain decision engine for payments</li>
-                      <li>• Automated payroll with blockchain oversight</li>
-                      <li>• Processor agnostic architecture</li>
-                      <li>• Complete transaction hashing</li>
-                    </ul>
+              <TabsContent value="overview" className="mt-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <WalletConnection />
+                  <div className="lg:col-span-2">
+                    <Card className="bg-white/10 backdrop-blur-xl border-white/20">
+                      <CardHeader>
+                        <CardTitle className="text-white">🚀 Phase 1: Enhanced Security & Compliance</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <h4 className="text-white font-semibold mb-2">Multi-Signature Integration ✅</h4>
+                            <ul className="text-white/70 text-sm space-y-1">
+                              <li>• High-value transaction approval workflows</li>
+                              <li>• 2-of-3 multi-signature security</li>
+                              <li>• Automated threshold management</li>
+                              <li>• Real-time approval notifications</li>
+                            </ul>
+                          </div>
+                          <div>
+                            <h4 className="text-white font-semibold mb-2">Advanced Risk Analytics ✅</h4>
+                            <ul className="text-white/70 text-sm space-y-1">
+                              <li>• ML-powered fraud detection</li>
+                              <li>• Real-time transaction monitoring</li>
+                              <li>• Behavioral anomaly detection</li>
+                              <li>• Automated compliance scoring</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div className="mt-4 p-4 bg-white/5 rounded-lg border border-white/10">
+                          <p className="text-white/80 text-sm">
+                            <strong>Enterprise Security:</strong> Phase 1 implementation provides military-grade security 
+                            with multi-signature wallets, ML-powered fraud detection, and automated compliance monitoring. 
+                            Investment attractiveness: <strong className="text-green-400">10/10</strong> - 
+                            Industry-leading security architecture.
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
-                <div className="mt-4 p-4 bg-white/5 rounded-lg border border-white/10">
-                  <p className="text-white/80 text-sm">
-                    <strong>Security Architecture:</strong> Your data remains completely secure with blockchain-managed 
-                    decisions and immutable audit trails. Even if Stripe or Razorpay are compromised, your financial 
-                    decisions and audit data remain protected on the blockchain. Investment attractiveness: 
-                    <strong className="text-green-400"> 10/10</strong> - Revolutionary approach to financial security.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+              </TabsContent>
+
+              <TabsContent value="multisig" className="mt-6">
+                <MultiSigWallet />
+              </TabsContent>
+
+              <TabsContent value="risk" className="mt-6">
+                <RiskAnalytics />
+              </TabsContent>
+
+              <TabsContent value="compliance" className="mt-6">
+                <ComplianceMonitoring />
+              </TabsContent>
+
+              <TabsContent value="security" className="mt-6">
+                <BlockchainSecurityDashboard />
+              </TabsContent>
+
+              <TabsContent value="pulsepay" className="mt-6">
+                <PulsePayBlockchain />
+              </TabsContent>
+            </Tabs>
           </motion.div>
         </div>
       </div>
