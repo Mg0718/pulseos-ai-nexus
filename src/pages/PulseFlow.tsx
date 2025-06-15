@@ -11,7 +11,7 @@ import {
   Activity,
   Clock,
   History,
-  FileTemplate
+  File
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -103,7 +103,7 @@ const PulseFlow = () => {
                 value="templates"
                 className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
               >
-                <FileTemplate className="w-4 h-4 mr-2" />
+                <File className="w-4 h-4 mr-2" />
                 Templates
               </TabsTrigger>
               <TabsTrigger 
