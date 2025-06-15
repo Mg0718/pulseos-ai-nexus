@@ -125,7 +125,7 @@ export class RegulatoryEngine {
             description: 'Encrypt cardholder data',
             category: 'data_security',
             severity: 'critical',
-            status: 'at_risk',
+            status: 'not_met',
             evidence: [],
             nextReview: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             automatedCheck: true
