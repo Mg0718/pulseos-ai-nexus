@@ -10,7 +10,7 @@ import {
   Settings, 
   Zap, 
   RefreshCw, 
-  FileText, 
+  File, 
   Wrench, 
   Building2, 
   Shield, 
@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
+import FloatingSidebar from "@/components/FloatingSidebar";
 
 const modules = [
   {
@@ -107,7 +108,8 @@ const modules = [
     icon: Zap,
     color: "bg-indigo-500",
     route: "/pulseflow",
-    status: "Active"
+    status: "Active",
+    featured: true
   },
   {
     id: 10,
@@ -122,7 +124,7 @@ const modules = [
     id: 11,
     title: "PulseContracts",
     description: "AI contract parsing, approval workflows",
-    icon: FileText,
+    icon: File,
     color: "bg-pink-500",
     route: "/contracts",
     status: "Active"
@@ -184,6 +186,9 @@ const PulseOS = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Floating Sidebar */}
+      <FloatingSidebar />
+
       {/* Header */}
       <motion.header 
         initial={{ y: -100, opacity: 0 }}
@@ -193,7 +198,7 @@ const PulseOS = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 ml-20">
                 <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
                   <Brain className="w-6 h-6 text-white" />
                 </div>
@@ -257,6 +262,62 @@ const PulseOS = () => {
           </div>
         </motion.div>
 
+        {/* Featured Module - PulseFlow */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-12"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-2xl font-bold text-white">Featured: PulseFlow</h3>
+            <Badge className="bg-purple-600/20 text-purple-300 border-purple-600/30">
+              New
+            </Badge>
+          </div>
+          
+          <Card className="bg-gradient-to-r from-purple-600/20 to-indigo-600/20 border-purple-500/30 backdrop-blur-sm hover:from-purple-600/30 hover:to-indigo-600/30 transition-all duration-300">
+            <CardHeader>
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-indigo-500 rounded-2xl flex items-center justify-center">
+                  <Zap className="w-8 h-8 text-white" />
+                </div>
+                <div className="flex-1">
+                  <CardTitle className="text-white text-2xl">Visual Workflow Automation</CardTitle>
+                  <CardDescription className="text-purple-200 text-lg">
+                    Build powerful automations with drag-and-drop simplicity
+                  </CardDescription>
+                </div>
+                <Button asChild className="bg-purple-600 hover:bg-purple-700">
+                  <Link to="/pulseflow">
+                    Launch Builder
+                    <ChevronRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-white/5 rounded-lg">
+                  <GitBranch className="w-6 h-6 text-purple-400 mx-auto mb-2" />
+                  <p className="text-white font-medium">Actions</p>
+                  <p className="text-purple-200 text-sm">Email, Slack, Database</p>
+                </div>
+                <div className="text-center p-4 bg-white/5 rounded-lg">
+                  <Filter className="w-6 h-6 text-orange-400 mx-auto mb-2" />
+                  <p className="text-white font-medium">Conditions</p>
+                  <p className="text-purple-200 text-sm">Smart Logic</p>
+                </div>
+                <div className="text-center p-4 bg-white/5 rounded-lg">
+                  <Clock className="w-6 h-6 text-blue-400 mx-auto mb-2" />
+                  <p className="text-white font-medium">Triggers</p>
+                  <p className="text-purple-200 text-sm">Schedule & Events</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Modules Grid */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -265,7 +326,7 @@ const PulseOS = () => {
           className="mb-12"
         >
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-bold text-white">PulseOS Modules</h3>
+            <h3 className="text-2xl font-bold text-white">All PulseOS Modules</h3>
             <Button className="bg-purple-600 hover:bg-purple-700">
               <Sparkles className="w-4 h-4 mr-2" />
               AI Setup Wizard
@@ -273,7 +334,7 @@ const PulseOS = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {modules.map((module, index) => (
+            {modules.filter(module => !module.featured).map((module, index) => (
               <motion.div
                 key={module.id}
                 initial={{ opacity: 0, y: 30 }}
