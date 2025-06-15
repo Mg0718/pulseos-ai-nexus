@@ -50,7 +50,7 @@ const nodeCategories = [
 ];
 
 const NodeSidebar = () => {
-  const onDragStart = (event: React.DragEvent, nodeType: string, nodeData: any) => {
+  const onDragStart = (event: React.DragEvent<HTMLDivElement>, nodeType: string, nodeData: any) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.setData('application/nodedata', JSON.stringify(nodeData));
     event.dataTransfer.effectAllowed = 'move';
