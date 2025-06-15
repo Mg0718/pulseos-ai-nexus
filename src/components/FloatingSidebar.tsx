@@ -12,7 +12,10 @@ import {
   Settings,
   LogOut,
   Menu,
-  X
+  X,
+  Home,
+  Zap,
+  Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -20,12 +23,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Link, useLocation } from "react-router-dom";
 
 const sidebarItems = [
-  { icon: Users, label: "Teams", path: "/teams" },
-  { icon: MessageSquare, label: "Communications", path: "/comms" },
+  { icon: Home, label: "Dashboard", path: "/dashboard" },
+  { icon: Users, label: "People & TeamOps", path: "/people/dashboard" },
+  { icon: DollarSign, label: "Finance", path: "/finance/dashboard" },
   { icon: BarChart3, label: "Analytics", path: "/analytics" },
-  { icon: DollarSign, label: "Finance", path: "/finance" },
-  { icon: Target, label: "Performance", path: "/performance" },
-  { icon: Lightbulb, label: "Innovation", path: "/innovation" },
+  { icon: Lightbulb, label: "Innovation Hub", path: "/innovation-hub" },
+  { icon: Zap, label: "PulseFlow", path: "/pulseflow" },
+  { icon: Shield, label: "Admin", path: "/admin" },
   { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
@@ -132,7 +136,9 @@ const FloatingSidebar = () => {
               <div className="flex-1 p-6 overflow-y-auto">
                 <nav className="space-y-2">
                   {sidebarItems.map((item, index) => {
-                    const isActive = location.pathname === item.path;
+                    const isActive = location.pathname === item.path || 
+                      (item.path === "/people/dashboard" && location.pathname.startsWith("/people")) ||
+                      (item.path === "/finance/dashboard" && location.pathname.startsWith("/finance"));
                     return (
                       <motion.div
                         key={item.path}

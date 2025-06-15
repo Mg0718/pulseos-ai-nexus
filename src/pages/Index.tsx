@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
@@ -43,7 +44,7 @@ const modules = [
     description: "Smart onboarding, org charts, leave tracking",
     icon: Users,
     color: "bg-blue-500",
-    route: "/teams",
+    route: "/people/dashboard",
     status: "Active"
   },
   {
@@ -70,7 +71,7 @@ const modules = [
     description: "Payroll, billing, Rule of 40 tracking",
     icon: DollarSign,
     color: "bg-emerald-500",
-    route: "/finance",
+    route: "/finance/dashboard",
     status: "Active"
   },
   {
@@ -88,7 +89,7 @@ const modules = [
     description: "Internal innovation, AI-voting, hackathons",
     icon: Lightbulb,
     color: "bg-yellow-500",
-    route: "/innovation",
+    route: "/innovation-hub",
     status: "Active"
   },
   {
@@ -106,7 +107,7 @@ const modules = [
     description: "No-code automation builder",
     icon: Zap,
     color: "bg-indigo-500",
-    route: "/automation",
+    route: "/pulseflow",
     status: "Beta"
   },
   {
@@ -350,7 +351,7 @@ const PulseOS = () => {
                       <p className="text-white text-sm">{activity.action}</p>
                       <p className="text-gray-400 text-xs">by {activity.user} • {activity.time}</p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </CardContent>
