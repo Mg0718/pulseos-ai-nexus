@@ -28,10 +28,6 @@ export class EnhancedBlockchainPulsePay extends PulsePayManager {
     return this.storageService.storeOnIPFS(data);
   }
 
-  public async executeSmartContract(contractData: any): Promise<any> {
-    return this.storageService.executeSmartContract(contractData);
-  }
-
   // Override parent methods to use new type definitions
   async createPaymentContract(
     payee: string, 

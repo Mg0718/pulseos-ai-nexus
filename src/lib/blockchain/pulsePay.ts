@@ -1,4 +1,3 @@
-
 import { Web3Provider } from './web3Provider';
 import { BLOCKCHAIN_CONFIG, PULSE_TOKEN_CONFIG } from './config';
 
@@ -231,7 +230,7 @@ export class PulsePayManager {
     return `0x${Math.random().toString(16).substring(2, 42)}`;
   }
 
-  private async executeSmartContract(functionName: string, params: any[]): Promise<string> {
+  protected async executeSmartContract(functionName: string, params: any[]): Promise<string> {
     // Simulate smart contract execution
     console.log(`Executing ${functionName} with params:`, params);
     return `0x${Math.random().toString(16).substring(2, 66)}`; // Transaction hash

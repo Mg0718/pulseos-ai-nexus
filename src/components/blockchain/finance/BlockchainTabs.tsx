@@ -5,11 +5,11 @@ import { WalletConnection } from "../WalletConnection";
 import { MultiSigWallet } from "../MultiSigWallet";
 import { RiskAnalytics } from "../RiskAnalytics";
 import { AutomatedPayroll } from "../AutomatedPayroll";
-import { InvoiceAutomation } from "../InvoiceAutomation";
+import InvoiceAutomation from "../InvoiceAutomation";
 import { TaxIntegration } from "../TaxIntegration";
 import { ComplianceMonitoring } from "../ComplianceMonitoring";
 import { BlockchainSecurityDashboard } from "../BlockchainSecurityDashboard";
-import { PulsePayBlockchain } from "../PulsePayBlockchain";
+import PulsePayBlockchain from "../PulsePayBlockchain";
 import { OverviewTab } from "./OverviewTab";
 
 export const BlockchainTabs = () => {
