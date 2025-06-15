@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -146,7 +147,7 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
       {/* Templates Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredTemplates.map((template, index) => {
-          const IconComponent = getTemplateIcon(template.category);
+          const IconComponent: LucideIcon = getTemplateIcon(template.category);
           const colorClass = getTemplateColor(template.category);
           
           return (
