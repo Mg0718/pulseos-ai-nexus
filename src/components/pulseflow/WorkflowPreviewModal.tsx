@@ -1,15 +1,12 @@
 
-import { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Play, 
-  Clock, 
   ArrowRight, 
   CheckCircle, 
-  Mail, 
   Database,
   Timer,
   GitBranch
@@ -20,7 +17,7 @@ interface WorkflowPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   template: WorkflowTemplate | null;
-  onUseTemplate: (templateId: string) => void;
+  onUseTemplate: (template: WorkflowTemplate) => void;
 }
 
 const WorkflowPreviewModal = ({ isOpen, onClose, template, onUseTemplate }: WorkflowPreviewModalProps) => {
@@ -89,7 +86,7 @@ const WorkflowPreviewModal = ({ isOpen, onClose, template, onUseTemplate }: Work
 
             <div className="pt-4">
               <Button
-                onClick={() => onUseTemplate(template.id)}
+                onClick={() => onUseTemplate(template)}
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white"
               >
                 <Play className="w-4 h-4 mr-2" />
