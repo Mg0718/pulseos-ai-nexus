@@ -1,3 +1,4 @@
+
 import { Web3Provider } from './web3Provider';
 import { BLOCKCHAIN_CONFIG, PULSE_TOKEN_CONFIG } from './config';
 
@@ -236,7 +237,7 @@ export class PulsePayManager {
     return `0x${Math.random().toString(16).substring(2, 66)}`; // Transaction hash
   }
 
-  private async storeOnIPFS(data: any): Promise<string> {
+  protected async storeOnIPFS(data: any): Promise<string> {
     // Simulate IPFS storage
     const hash = `Qm${Math.random().toString(36).substring(2, 15)}`;
     console.log('Stored on IPFS:', hash);
