@@ -30,6 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import FloatingSidebar from "@/components/FloatingSidebar";
+import PulseFlowPlaceholder from "@/components/dashboard/PulseFlowPlaceholder";
 
 const modules = [
   {
@@ -279,46 +280,7 @@ const PulseOS = () => {
             </Badge>
           </div>
           
-          <Card className="bg-gradient-to-r from-purple-600/20 to-indigo-600/20 border-purple-500/30 backdrop-blur-sm hover:from-purple-600/30 hover:to-indigo-600/30 transition-all duration-300">
-            <CardHeader>
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-indigo-500 rounded-2xl flex items-center justify-center">
-                  <Zap className="w-8 h-8 text-white" />
-                </div>
-                <div className="flex-1">
-                  <CardTitle className="text-white text-2xl">Visual Workflow Automation</CardTitle>
-                  <CardDescription className="text-purple-200 text-lg">
-                    Build powerful automations with drag-and-drop simplicity
-                  </CardDescription>
-                </div>
-                <Button asChild className="bg-purple-600 hover:bg-purple-700">
-                  <Link to="/pulseflow">
-                    Launch Builder
-                    <ChevronRight className="w-4 h-4 ml-2" />
-                  </Link>
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-white/5 rounded-lg">
-                  <GitBranch className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                  <p className="text-white font-medium">Actions</p>
-                  <p className="text-purple-200 text-sm">Email, Slack, Database</p>
-                </div>
-                <div className="text-center p-4 bg-white/5 rounded-lg">
-                  <Filter className="w-6 h-6 text-orange-400 mx-auto mb-2" />
-                  <p className="text-white font-medium">Conditions</p>
-                  <p className="text-purple-200 text-sm">Smart Logic</p>
-                </div>
-                <div className="text-center p-4 bg-white/5 rounded-lg">
-                  <Clock className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-                  <p className="text-white font-medium">Triggers</p>
-                  <p className="text-purple-200 text-sm">Schedule & Events</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <PulseFlowPlaceholder />
         </motion.div>
 
         {/* Modules Grid */}
