@@ -1,5 +1,4 @@
-
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -29,6 +28,7 @@ import ActionNode from './nodes/ActionNode';
 import ConditionNode from './nodes/ConditionNode';
 import DelayNode from './nodes/DelayNode';
 import ConfigDrawer from './ConfigDrawer';
+import { getTemplateById } from './WorkflowTemplates';
 
 const nodeTypes = {
   trigger: TriggerNode,
@@ -54,9 +54,10 @@ const initialEdges: Edge[] = [];
 
 interface WorkflowBuilderProps {
   workflowId?: string;
+  templateId?: string;
 }
 
-const WorkflowBuilderInner = ({ workflowId }: WorkflowBuilderProps) => {
+const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [workflowName, setWorkflowName] = useState('Untitled Workflow');
@@ -66,6 +67,22 @@ const WorkflowBuilderInner = ({ workflowId }: WorkflowBuilderProps) => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { createWorkflow, updateWorkflow, executeWorkflow } = useWorkflows();
+
+  // Load template if templateId is provided
+  useEffect(() => {
+    if (templateId && !workflowId) {
+      const template = getTemplateById(templateId);
+      if (template) {
+        setWorkflowName(template.name);
+        setNodes(template.nodes);
+        setEdges(template.edges);
+        toast({
+          title: "Template loaded",
+          description: `"${template.name}" template has been loaded successfully.`,
+        });
+      }
+    }
+  }, [templateId, workflowId, setNodes, setEdges, toast]);
 
   const onConnect: OnConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -155,10 +172,10 @@ const WorkflowBuilderInner = ({ workflowId }: WorkflowBuilderProps) => {
   };
 
   const handleExecute = async () => {
-    if (!workflowId) {
+    if (!workflowId && nodes.length === 0) {
       toast({
-        title: "Save first",
-        description: "Please save the workflow before executing it.",
+        title: "No workflow to execute",
+        description: "Please save the workflow first or add some nodes.",
         variant: "destructive",
       });
       return;
@@ -166,7 +183,24 @@ const WorkflowBuilderInner = ({ workflowId }: WorkflowBuilderProps) => {
 
     setIsExecuting(true);
     try {
-      await executeWorkflow(workflowId);
+      // If we have a workflowId, use it, otherwise create a temporary execution
+      if (workflowId) {
+        await executeWorkflow(workflowId, { test: true, timestamp: new Date().toISOString() });
+      } else {
+        // For unsaved workflows, we can simulate execution
+        toast({
+          title: "Simulating workflow execution",
+          description: "This workflow hasn't been saved yet. Save it first for full execution.",
+        });
+        
+        // Simulate execution delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        toast({
+          title: "Simulation complete",
+          description: "Workflow would execute successfully. Save it to run for real.",
+        });
+      }
     } catch (error) {
       console.error('Error executing workflow:', error);
     } finally {

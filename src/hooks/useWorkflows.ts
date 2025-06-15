@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -141,28 +140,22 @@ export const useWorkflows = () => {
 
   const executeWorkflow = async (id: string, inputData?: any) => {
     try {
-      const { data, error } = await supabase
-        .from('workflow_executions' as any)
-        .insert([{
-          workflow_id: id,
-          input_data: inputData,
-          status: 'running',
-        }])
-        .select()
-        .single();
+      const { data, error } = await supabase.functions.invoke('execute-workflow', {
+        body: { workflowId: id, inputData }
+      });
 
       if (error) throw error;
-      
+
       toast({
         title: "Workflow execution started",
-        description: "Your workflow is now running.",
+        description: `Execution completed in ${data?.executionTime || 0}ms`,
       });
       
       return data;
     } catch (error: any) {
       toast({
         title: "Error executing workflow",
-        description: error.message,
+        description: error?.message || "Unknown error occurred",
         variant: "destructive",
       });
       throw error;

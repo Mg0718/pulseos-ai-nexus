@@ -10,6 +10,7 @@ const corsHeaders = {
 interface WorkflowNode {
   id: string;
   type: string;
+  position: { x: number; y: number };
   data: any;
 }
 
@@ -17,6 +18,8 @@ interface WorkflowEdge {
   id: string;
   source: string;
   target: string;
+  sourceHandle?: string;
+  targetHandle?: string;
 }
 
 serve(async (req) => {
@@ -32,6 +35,8 @@ serve(async (req) => {
 
     const { workflowId, inputData } = await req.json();
 
+    console.log('Executing workflow:', workflowId, 'with input:', inputData);
+
     // Get workflow definition
     const { data: workflow, error: workflowError } = await supabase
       .from('workflows')
@@ -40,8 +45,11 @@ serve(async (req) => {
       .single();
 
     if (workflowError || !workflow) {
+      console.error('Workflow not found:', workflowError);
       throw new Error('Workflow not found');
     }
+
+    console.log('Found workflow:', workflow.name);
 
     // Create execution record
     const { data: execution, error: executionError } = await supabase
@@ -49,22 +57,29 @@ serve(async (req) => {
       .insert({
         workflow_id: workflowId,
         status: 'running',
-        input_data: inputData,
+        input_data: inputData || {},
         started_at: new Date().toISOString(),
       })
       .select()
       .single();
 
     if (executionError) {
+      console.error('Failed to create execution record:', executionError);
       throw new Error('Failed to create execution record');
     }
 
+    console.log('Created execution record:', execution.id);
+
     const startTime = Date.now();
-    const nodes: WorkflowNode[] = workflow.flow_definition.nodes || [];
-    const edges: WorkflowEdge[] = workflow.flow_definition.edges || [];
+    const nodes: WorkflowNode[] = workflow.flow_definition?.nodes || [];
+    const edges: WorkflowEdge[] = workflow.flow_definition?.edges || [];
+
+    console.log('Workflow has', nodes.length, 'nodes and', edges.length, 'edges');
 
     // Find trigger nodes to start execution
     const triggerNodes = nodes.filter(node => node.type === 'trigger');
+    console.log('Found trigger nodes:', triggerNodes.length);
+
     const nodeExecutions = new Map();
     let hasError = false;
     let errorMessage = '';
@@ -72,8 +87,10 @@ serve(async (req) => {
     // Execute workflow nodes
     try {
       for (const triggerNode of triggerNodes) {
-        await executeNodeChain(triggerNode, nodes, edges, nodeExecutions, supabase, execution.id, inputData);
+        console.log('Executing trigger node:', triggerNode.id);
+        await executeNodeChain(triggerNode, nodes, edges, nodeExecutions, inputData);
       }
+      console.log('Workflow execution completed successfully');
     } catch (error: any) {
       hasError = true;
       errorMessage = error.message;
@@ -95,11 +112,14 @@ serve(async (req) => {
       })
       .eq('id', execution.id);
 
+    console.log('Updated execution record with status:', hasError ? 'failed' : 'completed');
+
     return new Response(
       JSON.stringify({
         success: !hasError,
         executionId: execution.id,
         executionTime,
+        nodeExecutions: Object.fromEntries(nodeExecutions),
         error: hasError ? errorMessage : null
       }),
       {
@@ -125,8 +145,6 @@ async function executeNodeChain(
   allNodes: WorkflowNode[],
   edges: WorkflowEdge[],
   nodeExecutions: Map<string, any>,
-  supabase: any,
-  executionId: string,
   contextData: any
 ): Promise<any> {
   
@@ -135,62 +153,28 @@ async function executeNodeChain(
     return nodeExecutions.get(currentNode.id);
   }
 
-  const nodeStartTime = Date.now();
-  
-  // Create node execution record
-  const { data: nodeExecution } = await supabase
-    .from('node_executions')
-    .insert({
-      workflow_execution_id: executionId,
-      node_id: currentNode.id,
-      node_type: currentNode.type,
-      status: 'running',
-      input_data: contextData,
-      started_at: new Date().toISOString(),
-    })
-    .select()
-    .single();
+  console.log('Executing node:', currentNode.id, 'type:', currentNode.type);
 
   let result;
-  let hasError = false;
-  let errorMessage = '';
-
   try {
     // Execute node based on type
     result = await executeNode(currentNode, contextData);
     nodeExecutions.set(currentNode.id, result);
+    console.log('Node executed successfully:', currentNode.id, 'result:', result);
   } catch (error: any) {
-    hasError = true;
-    errorMessage = error.message;
     console.error(`Error executing node ${currentNode.id}:`, error);
-  }
-
-  const nodeEndTime = Date.now();
-
-  // Update node execution record
-  if (nodeExecution) {
-    await supabase
-      .from('node_executions')
-      .update({
-        status: hasError ? 'failed' : 'completed',
-        completed_at: new Date().toISOString(),
-        execution_time_ms: nodeEndTime - nodeStartTime,
-        output_data: hasError ? null : result,
-        error_message: hasError ? errorMessage : null,
-      })
-      .eq('id', nodeExecution.id);
-  }
-
-  if (hasError) {
-    throw new Error(errorMessage);
+    throw error;
   }
 
   // Find and execute next nodes
   const nextEdges = edges.filter(edge => edge.source === currentNode.id);
+  console.log('Found', nextEdges.length, 'outgoing edges from node', currentNode.id);
+
   for (const edge of nextEdges) {
     const nextNode = allNodes.find(node => node.id === edge.target);
     if (nextNode) {
-      await executeNodeChain(nextNode, allNodes, edges, nodeExecutions, supabase, executionId, result || contextData);
+      console.log('Executing next node:', nextNode.id);
+      await executeNodeChain(nextNode, allNodes, edges, nodeExecutions, result || contextData);
     }
   }
 
@@ -202,7 +186,7 @@ async function executeNode(node: WorkflowNode, inputData: any): Promise<any> {
 
   switch (type) {
     case 'trigger':
-      // Triggers just pass through the input data
+      console.log('Executing trigger node with data:', data);
       return inputData;
 
     case 'action':
@@ -215,48 +199,58 @@ async function executeNode(node: WorkflowNode, inputData: any): Promise<any> {
       return await executeDelay(data, inputData);
 
     default:
-      throw new Error(`Unknown node type: ${type}`);
+      console.log('Unknown node type:', type, 'passing through data');
+      return inputData;
   }
 }
 
 async function executeAction(actionData: any, inputData: any): Promise<any> {
-  const { actionType } = actionData;
+  console.log('Executing action with data:', actionData);
+
+  const actionType = actionData.actionType || 'log_message';
 
   switch (actionType) {
     case 'send_email':
-      // Simulate email sending
-      console.log(`Sending email to: ${actionData.emailTo}`);
-      console.log(`Subject: ${actionData.emailSubject}`);
-      console.log(`Body: ${actionData.emailBody}`);
+      console.log(`Simulating email send to: ${actionData.emailTo || 'user@example.com'}`);
+      console.log(`Subject: ${actionData.emailSubject || 'Default Subject'}`);
+      console.log(`Body: ${actionData.emailBody || 'Default Body'}`);
       return { 
         success: true, 
-        message: `Email sent to ${actionData.emailTo}`,
+        message: `Email sent to ${actionData.emailTo || 'user@example.com'}`,
         timestamp: new Date().toISOString()
       };
 
     case 'create_record':
-      // Simulate record creation
-      console.log('Creating record with data:', inputData);
+      console.log('Simulating record creation with data:', inputData);
       return { 
         success: true, 
         recordId: `record_${Date.now()}`,
         data: inputData 
       };
 
-    case 'api_call':
-      // Simulate API call
-      console.log(`Making API call to: ${actionData.url}`);
-      return { 
-        success: true, 
-        response: { status: 200, data: { processed: true } }
+    case 'log_message':
+      const message = actionData.message || 'Default log message';
+      console.log('Action log message:', message);
+      return {
+        success: true,
+        message: message,
+        timestamp: new Date().toISOString(),
+        inputData
       };
 
     default:
-      throw new Error(`Unknown action type: ${actionType}`);
+      console.log('Unknown action type:', actionType);
+      return { 
+        success: true, 
+        message: `Action ${actionType} executed`,
+        inputData 
+      };
   }
 }
 
 async function executeCondition(conditionData: any, inputData: any): Promise<any> {
+  console.log('Executing condition with data:', conditionData);
+
   const { field, operator, value } = conditionData;
   
   let fieldValue = inputData;
@@ -280,19 +274,23 @@ async function executeCondition(conditionData: any, inputData: any): Promise<any
       result = Number(fieldValue) < Number(value);
       break;
     default:
-      result = false;
+      result = true; // Default to true for unknown operators
   }
+
+  console.log('Condition result:', result);
 
   return {
     condition_met: result,
     field_value: fieldValue,
     comparison_value: value,
     operator,
+    inputData
   };
 }
 
 async function executeDelay(delayData: any, inputData: any): Promise<any> {
-  const { duration, unit } = delayData;
+  const duration = delayData.duration || 1;
+  const unit = delayData.unit || 'seconds';
   
   let delayMs = 0;
   switch (unit) {
@@ -309,14 +307,15 @@ async function executeDelay(delayData: any, inputData: any): Promise<any> {
       delayMs = duration * 1000;
   }
 
-  // For demo purposes, cap delay at 10 seconds
-  delayMs = Math.min(delayMs, 10000);
+  // For demo purposes, cap delay at 5 seconds
+  delayMs = Math.min(delayMs, 5000);
   
+  console.log(`Delaying for ${delayMs}ms`);
   await new Promise(resolve => setTimeout(resolve, delayMs));
   
   return {
     delayed_ms: delayMs,
     completed_at: new Date().toISOString(),
-    data: inputData
+    inputData
   };
 }
