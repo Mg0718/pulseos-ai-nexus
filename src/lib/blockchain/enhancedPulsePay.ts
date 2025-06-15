@@ -1,357 +1,89 @@
+
 import { PulsePayManager, PaymentContract, EscrowDetails, PaymentMilestone } from './pulsePay';
+import { ContractManager } from './contractManager';
+import { PaymentProcessor } from './paymentProcessor';
+import { AutomationManager } from './automationManager';
+import { TaxOptimizer } from './taxOptimizer';
+import { BlockchainStorageService } from './storageService';
 
 export class EnhancedBlockchainPulsePay extends PulsePayManager {
+  private contractManager: ContractManager;
+  private paymentProcessor: PaymentProcessor;
+  private automationManager: AutomationManager;
+  private taxOptimizer: TaxOptimizer;
+  private storageService: BlockchainStorageService;
+
   constructor() {
     super();
+    this.contractManager = new ContractManager();
+    this.paymentProcessor = new PaymentProcessor();
+    this.automationManager = new AutomationManager();
+    this.taxOptimizer = new TaxOptimizer();
+    this.storageService = new BlockchainStorageService();
   }
 
-  // Override protected methods to make them public
+  // Expose storage service methods publicly
   public async storeOnIPFS(data: any): Promise<string> {
-    // Mock implementation for IPFS storage
-    console.log('Storing data on IPFS:', data);
-    return `ipfs_hash_${Date.now()}`;
+    return this.storageService.storeOnIPFS(data);
   }
 
   public async executeSmartContract(contractData: any): Promise<any> {
-    // Mock implementation for smart contract execution
-    console.log('Executing smart contract:', contractData);
-    return {
-      contractAddress: `0x${Math.random().toString(16).substr(2, 40)}`,
-      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
-      gasUsed: '21000',
-      status: 'success'
-    };
+    return this.storageService.executeSmartContract(contractData);
   }
 
-  async createPaymentContract(payee: string, totalAmount: string, milestones: Omit<PaymentMilestone, 'id' | 'status'>[]): Promise<PaymentContract> {
-    console.log(`Creating payment contract for ${payee} with total amount ${totalAmount}`);
-
-    const contract: PaymentContract = {
-      id: `contract_${Date.now()}`,
-      payee,
-      totalAmount,
-      milestones: milestones.map((milestone, index) => ({
-        id: `milestone_${index + 1}`,
-        ...milestone,
-        status: 'pending',
-        dueDate: milestone.dueDate.getTime()
-      })),
-      createdAt: Date.now(),
-      status: 'active'
-    };
-
-    return contract;
+  // Contract management methods
+  async createPaymentContract(
+    payee: string, 
+    totalAmount: string, 
+    milestones: Omit<PaymentMilestone, 'id' | 'status'>[]
+  ): Promise<PaymentContract> {
+    return this.contractManager.createPaymentContract(payee, totalAmount, milestones);
   }
 
   async setupEscrow(contractId: string, amount: string): Promise<EscrowDetails> {
-    console.log(`Setting up escrow for contract ${contractId} with amount ${amount}`);
-
-    const escrowDetails: EscrowDetails = {
-      contractId,
-      amount,
-      status: 'pending',
-      createdAt: Date.now(),
-      terms: 'Standard escrow terms apply'
-    };
-
-    return escrowDetails;
+    return this.contractManager.setupEscrow(contractId, amount);
   }
 
   async processMilestonePayment(contractId: string, milestoneId: string): Promise<PaymentMilestone> {
-    console.log(`Processing milestone payment ${milestoneId} for contract ${contractId}`);
-
-    const milestone: PaymentMilestone = {
-      id: milestoneId,
-      name: 'Milestone Payment',
-      description: 'Payment for completed milestone',
-      dueDate: Date.now(),
-      amount: '5000',
-      status: 'completed'
-    };
-
-    return milestone;
+    return this.contractManager.processMilestonePayment(contractId, milestoneId);
   }
 
   async disputeMilestone(contractId: string, milestoneId: string, reason: string): Promise<PaymentMilestone> {
-    console.log(`Disputing milestone ${milestoneId} for contract ${contractId} with reason: ${reason}`);
-
-    const milestone: PaymentMilestone = {
-      id: milestoneId,
-      name: 'Milestone Payment',
-      description: 'Payment for completed milestone',
-      dueDate: Date.now(),
-      amount: '5000',
-      status: 'disputed'
-    };
-
-    return milestone;
+    return this.contractManager.disputeMilestone(contractId, milestoneId, reason);
   }
 
   async resolveDispute(contractId: string, milestoneId: string, resolution: string): Promise<PaymentMilestone> {
-    console.log(`Resolving dispute for milestone ${milestoneId} of contract ${contractId} with resolution: ${resolution}`);
-
-    const milestone: PaymentMilestone = {
-      id: milestoneId,
-      name: 'Milestone Payment',
-      description: 'Payment for completed milestone',
-      dueDate: Date.now(),
-      amount: '5000',
-      status: 'completed'
-    };
-
-    return milestone;
+    return this.contractManager.resolveDispute(contractId, milestoneId, resolution);
   }
 
   async processRefund(contractId: string, amount: string): Promise<EscrowDetails> {
-    console.log(`Processing refund of ${amount} for contract ${contractId}`);
-
-    const escrowDetails: EscrowDetails = {
-      contractId,
-      amount,
-      status: 'refunded',
-      createdAt: Date.now(),
-      terms: 'Standard escrow terms apply'
-    };
-
-    return escrowDetails;
+    return this.contractManager.processRefund(contractId, amount);
   }
 
   async terminateContract(contractId: string): Promise<PaymentContract> {
-    console.log(`Terminating contract ${contractId}`);
-
-    const contract: PaymentContract = {
-      id: contractId,
-      payee: 'Payee Name',
-      totalAmount: '10000',
-      milestones: [],
-      createdAt: Date.now(),
-      status: 'completed'
-    };
-
-    return contract;
+    return this.contractManager.terminateContract(contractId);
   }
 
+  // Payment processing methods
   async processBlockchainManagedPayment(payee: string, amount: string, currency: string = 'USD') {
-    console.log(`Processing blockchain payment: ${amount} ${currency} to ${payee}`);
-    
-    try {
-      const paymentData = {
-        payee,
-        amount: parseFloat(amount),
-        currency,
-        timestamp: new Date().toISOString(),
-        type: 'blockchain_payment',
-        status: 'processing'
-      };
-
-      // Store payment data on IPFS
-      const ipfsHash = await this.storeOnIPFS(paymentData);
-      
-      const result = {
-        transactionId: `tx_${Date.now()}`,
-        status: 'completed',
-        amount,
-        currency,
-        payee,
-        timestamp: new Date().toISOString(),
-        ipfsHash,
-        blockchainNetwork: 'Ethereum',
-        gasUsed: '21000',
-        transactionFee: '0.002 ETH'
-      };
-
-      console.log('Blockchain payment processed:', result);
-      return result;
-    } catch (error) {
-      console.error('Blockchain payment failed:', error);
-      throw new Error('Failed to process blockchain payment');
-    }
+    return this.paymentProcessor.processBlockchainManagedPayment(payee, amount, currency);
   }
 
   async processBlockchainPayroll(employees: any[]) {
-    console.log(`Processing blockchain payroll for ${employees.length} employees`);
-    
-    try {
-      const results = {
-        successful: [] as any[],
-        failed: [] as any[]
-      };
-
-      for (const employee of employees) {
-        try {
-          const paymentData = {
-            employeeId: employee.id,
-            name: employee.name,
-            amount: employee.salary,
-            currency: 'USD',
-            timestamp: new Date().toISOString(),
-            type: 'payroll_payment',
-            status: 'processing'
-          };
-
-          // Store payroll data on IPFS
-          const ipfsHash = await this.storeOnIPFS(paymentData);
-
-          const result = {
-            employeeId: employee.id,
-            name: employee.name,
-            amount: employee.salary,
-            transactionId: `payroll_${Date.now()}_${employee.id}`,
-            status: 'completed',
-            timestamp: new Date().toISOString(),
-            ipfsHash,
-            blockchainNetwork: 'Ethereum'
-          };
-
-          results.successful.push(result);
-        } catch (error) {
-          results.failed.push({
-            employeeId: employee.id,
-            name: employee.name,
-            error: error instanceof Error ? error.message : 'Unknown error'
-          });
-        }
-      }
-
-      console.log('Blockchain payroll processed:', results);
-      return results;
-    } catch (error) {
-      console.error('Blockchain payroll failed:', error);
-      throw new Error('Failed to process blockchain payroll');
-    }
+    return this.paymentProcessor.processBlockchainPayroll(employees);
   }
 
+  // Automation methods
   async processAutomatedPayroll(payrollData: any) {
-    console.log('Processing automated payroll with smart contracts');
-    
-    try {
-      const contractData = {
-        type: 'automated_payroll',
-        employees: payrollData.employees,
-        schedule: payrollData.schedule,
-        bonusRules: payrollData.bonusRules,
-        taxRules: payrollData.taxRules,
-        timestamp: new Date().toISOString()
-      };
-
-      // Execute smart contract for automated payroll
-      const contractResult = await this.executeSmartContract(contractData);
-      
-      // Store contract data on IPFS
-      const ipfsHash = await this.storeOnIPFS(contractData);
-
-      return {
-        contractId: `payroll_contract_${Date.now()}`,
-        status: 'deployed',
-        employees: payrollData.employees.length,
-        nextExecution: payrollData.schedule.nextRun,
-        ipfsHash,
-        contractResult
-      };
-    } catch (error) {
-      console.error('Automated payroll setup failed:', error);
-      throw new Error('Failed to setup automated payroll');
-    }
+    return this.automationManager.processAutomatedPayroll(payrollData);
   }
 
   async processInvoiceAutomation(invoiceData: any) {
-    console.log('Processing invoice automation with smart contracts');
-    
-    try {
-      const contractData = {
-        type: 'invoice_automation',
-        amount: invoiceData.amount,
-        vendor: invoiceData.vendor,
-        approvalRules: invoiceData.approvalRules,
-        paymentTerms: invoiceData.paymentTerms,
-        timestamp: new Date().toISOString()
-      };
-
-      // Execute smart contract for invoice automation
-      const contractResult = await this.executeSmartContract(contractData);
-      
-      // Store contract data on IPFS
-      const ipfsHash = await this.storeOnIPFS(contractData);
-
-      return {
-        contractId: `invoice_contract_${Date.now()}`,
-        status: 'active',
-        amount: invoiceData.amount,
-        vendor: invoiceData.vendor,
-        autoApproval: invoiceData.approvalRules.autoApprove,
-        ipfsHash,
-        contractResult
-      };
-    } catch (error) {
-      console.error('Invoice automation setup failed:', error);
-      throw new Error('Failed to setup invoice automation');
-    }
+    return this.automationManager.processInvoiceAutomation(invoiceData);
   }
 
+  // Tax optimization methods
   async calculateTaxOptimization(transactionData: any) {
-    console.log('Calculating tax optimization for blockchain transactions');
-    
-    try {
-      const taxData = {
-        jurisdiction: transactionData.jurisdiction,
-        amount: transactionData.amount,
-        transactionType: transactionData.type,
-        timestamp: new Date().toISOString(),
-        optimizations: []
-      };
-
-      // Mock tax calculation logic
-      const taxRate = this.getTaxRate(transactionData.jurisdiction, transactionData.type);
-      const optimizedRate = this.getOptimizedTaxRate(transactionData);
-      
-      taxData.optimizations = [
-        {
-          type: 'jurisdiction_routing',
-          savings: (taxRate - optimizedRate) * transactionData.amount / 100,
-          description: 'Optimal jurisdiction selection'
-        },
-        {
-          type: 'timing_optimization',
-          savings: transactionData.amount * 0.02,
-          description: 'Transaction timing optimization'
-        }
-      ];
-
-      return {
-        originalTax: taxRate * transactionData.amount / 100,
-        optimizedTax: optimizedRate * transactionData.amount / 100,
-        totalSavings: taxData.optimizations.reduce((sum, opt) => sum + opt.savings, 0),
-        optimizations: taxData.optimizations,
-        recommendations: this.getTaxRecommendations(transactionData)
-      };
-    } catch (error) {
-      console.error('Tax optimization calculation failed:', error);
-      throw new Error('Failed to calculate tax optimization');
-    }
-  }
-
-  private getTaxRate(jurisdiction: string, type: string): number {
-    // Mock tax rates
-    const rates: { [key: string]: { [key: string]: number } } = {
-      'US': { 'payment': 25, 'payroll': 30, 'invoice': 21 },
-      'EU': { 'payment': 20, 'payroll': 35, 'invoice': 19 },
-      'UK': { 'payment': 20, 'payroll': 32, 'invoice': 20 }
-    };
-    return rates[jurisdiction]?.[type] || 25;
-  }
-
-  private getOptimizedTaxRate(transactionData: any): number {
-    // Mock optimization logic
-    const baseRate = this.getTaxRate(transactionData.jurisdiction, transactionData.type);
-    return Math.max(baseRate * 0.85, 15); // 15% reduction with 15% minimum
-  }
-
-  private getTaxRecommendations(transactionData: any): string[] {
-    return [
-      'Consider processing during off-peak hours for better rates',
-      'Bundle similar transactions for volume discounts',
-      'Utilize cross-border optimization routes',
-      'Schedule payments for optimal tax periods'
-    ];
+    return this.taxOptimizer.calculateTaxOptimization(transactionData);
   }
 }
