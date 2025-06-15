@@ -19,7 +19,10 @@ import {
   Brain,
   TrendingUp,
   Calendar,
-  Bell
+  Bell,
+  GitBranch,
+  Filter,
+  Clock
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

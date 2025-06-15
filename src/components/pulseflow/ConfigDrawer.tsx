@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -209,7 +208,7 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
                   </div>
                   <div>
                     <h3 className="text-white font-semibold">Configure Node</h3>
-                    <p className="text-white/70 text-sm">{node?.data?.label || 'Node Configuration'}</p>
+                    <p className="text-white/70 text-sm">{String(node?.data?.label) || 'Node Configuration'}</p>
                   </div>
                 </div>
                 <Button

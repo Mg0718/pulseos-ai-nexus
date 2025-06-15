@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -85,11 +84,13 @@ const NodeSidebar = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: (categoryIndex * 0.1) + (nodeIndex * 0.05) }}
-                  draggable
-                  onDragStart={(e) => onDragStart(e, category.title.toLowerCase().slice(0, -1), node)}
                   className="group"
                 >
-                  <Card className="bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-200 cursor-grab active:cursor-grabbing">
+                  <Card 
+                    draggable
+                    onDragStart={(e) => onDragStart(e, category.title.toLowerCase().slice(0, -1), node)}
+                    className="bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-200 cursor-grab active:cursor-grabbing"
+                  >
                     <CardContent className="p-3">
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 ${category.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
