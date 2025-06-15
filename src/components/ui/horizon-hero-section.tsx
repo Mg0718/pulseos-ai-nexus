@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
@@ -331,15 +330,19 @@ export const Component = () => {
       const time = Date.now() * 0.001;
 
       // Update stars
-      refs.stars.forEach((starField, i) => {
-        if (starField.material.uniforms) {
-          starField.material.uniforms.time.value = time;
+      refs.stars.forEach((starField) => {
+        const material = starField.material as THREE.ShaderMaterial;
+        if (material.uniforms) {
+          material.uniforms.time.value = time;
         }
       });
 
       // Update nebula
-      if (refs.nebula && refs.nebula.material.uniforms) {
-        refs.nebula.material.uniforms.time.value = time * 0.5;
+      if (refs.nebula) {
+        const material = refs.nebula.material as THREE.ShaderMaterial;
+        if (material.uniforms) {
+          material.uniforms.time.value = time * 0.5;
+        }
       }
 
       // Smooth camera movement with easing
@@ -395,20 +398,28 @@ export const Component = () => {
 
       window.removeEventListener('resize', handleResize);
 
+      const disposeMaterial = (material: THREE.Material | THREE.Material[]) => {
+        if (Array.isArray(material)) {
+          material.forEach(m => m.dispose());
+        } else if (material) {
+          material.dispose();
+        }
+      };
+
       // Dispose Three.js resources
       refs.stars.forEach(starField => {
         starField.geometry.dispose();
-        starField.material.dispose();
+        if (starField.material) disposeMaterial(starField.material);
       });
 
       refs.mountains.forEach(mountain => {
         mountain.geometry.dispose();
-        mountain.material.dispose();
+        if (mountain.material) disposeMaterial(mountain.material);
       });
 
       if (refs.nebula) {
         refs.nebula.geometry.dispose();
-        refs.nebula.material.dispose();
+        if (refs.nebula.material) disposeMaterial(refs.nebula.material);
       }
 
       if (refs.renderer) {
