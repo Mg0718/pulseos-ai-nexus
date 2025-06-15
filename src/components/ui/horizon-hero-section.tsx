@@ -555,7 +555,7 @@ export const Component = () => {
 
   return (
     <div ref={containerRef} className="relative w-full">
-      <style jsx>{`
+      <style>{`
         .hero-container {
           position: relative;
           width: 100%;

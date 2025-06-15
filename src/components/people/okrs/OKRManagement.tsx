@@ -68,10 +68,11 @@ export const OKRManagement = () => {
       
       if (error) throw error;
       
-      // Transform the data to match our interface
+      // Transform the data to match our interface with proper type safety
       const transformedOkrs: OKR[] = data?.map(item => ({
         ...item,
-        key_results: Array.isArray(item.key_results) ? item.key_results as KeyResult[] : []
+        key_results: Array.isArray(item.key_results) ? 
+          (item.key_results as unknown as KeyResult[]) : []
       })) || [];
       
       setOkrs(transformedOkrs);
