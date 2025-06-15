@@ -148,7 +148,7 @@ const Auth = () => {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="alex@pulseos.com"
+                    placeholder="user@pulseos.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/40"
@@ -164,6 +164,7 @@ const Auth = () => {
                   <Input
                     id="password"
                     type="password"
+                    placeholder="admin@123"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/40"
