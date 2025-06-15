@@ -277,6 +277,51 @@ export type Database = {
           },
         ]
       }
+      employees: {
+        Row: {
+          active: boolean | null
+          base_salary: number | null
+          bonuses: number | null
+          country: string | null
+          created_at: string
+          currency: string | null
+          deductions: number | null
+          id: string
+          name: string
+          org_id: string | null
+          role: string | null
+          user_id: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          base_salary?: number | null
+          bonuses?: number | null
+          country?: string | null
+          created_at?: string
+          currency?: string | null
+          deductions?: number | null
+          id?: string
+          name: string
+          org_id?: string | null
+          role?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          base_salary?: number | null
+          bonuses?: number | null
+          country?: string | null
+          created_at?: string
+          currency?: string | null
+          deductions?: number | null
+          id?: string
+          name?: string
+          org_id?: string | null
+          role?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       feedback_entries: {
         Row: {
           content: string
@@ -375,6 +420,84 @@ export type Database = {
           },
         ]
       }
+      finance_settings: {
+        Row: {
+          created_at: string
+          default_currency: string | null
+          footer_note: string | null
+          id: string
+          invoice_logo_url: string | null
+          org_id: string | null
+          razorpay_key: string | null
+          stripe_key: string | null
+          tax_percentage: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          default_currency?: string | null
+          footer_note?: string | null
+          id?: string
+          invoice_logo_url?: string | null
+          org_id?: string | null
+          razorpay_key?: string | null
+          stripe_key?: string | null
+          tax_percentage?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          default_currency?: string | null
+          footer_note?: string | null
+          id?: string
+          invoice_logo_url?: string | null
+          org_id?: string | null
+          razorpay_key?: string | null
+          stripe_key?: string | null
+          tax_percentage?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      financial_metrics: {
+        Row: {
+          calculated_at: string
+          expenses: number | null
+          growth_rate: number | null
+          id: string
+          month: string
+          net_profit: number | null
+          org_id: string | null
+          revenue: number | null
+          roic: number | null
+          rule_of_40: number | null
+        }
+        Insert: {
+          calculated_at?: string
+          expenses?: number | null
+          growth_rate?: number | null
+          id?: string
+          month: string
+          net_profit?: number | null
+          org_id?: string | null
+          revenue?: number | null
+          roic?: number | null
+          rule_of_40?: number | null
+        }
+        Update: {
+          calculated_at?: string
+          expenses?: number | null
+          growth_rate?: number | null
+          id?: string
+          month?: string
+          net_profit?: number | null
+          org_id?: string | null
+          revenue?: number | null
+          roic?: number | null
+          rule_of_40?: number | null
+        }
+        Relationships: []
+      }
       innovation_ideas: {
         Row: {
           created_at: string
@@ -415,6 +538,78 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      invoices: {
+        Row: {
+          amount: number
+          client_email: string
+          client_id: string | null
+          client_name: string
+          created_at: string
+          created_by: string | null
+          currency: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          invoice_number: string
+          issued_date: string | null
+          items: Json | null
+          notes: string | null
+          org_id: string | null
+          payment_url: string | null
+          status: string | null
+          subtotal: number
+          tax: number | null
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          client_email: string
+          client_id?: string | null
+          client_name: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          invoice_number: string
+          issued_date?: string | null
+          items?: Json | null
+          notes?: string | null
+          org_id?: string | null
+          payment_url?: string | null
+          status?: string | null
+          subtotal?: number
+          tax?: number | null
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          client_email?: string
+          client_id?: string | null
+          client_name?: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          invoice_number?: string
+          issued_date?: string | null
+          items?: Json | null
+          notes?: string | null
+          org_id?: string | null
+          payment_url?: string | null
+          status?: string | null
+          subtotal?: number
+          tax?: number | null
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       morale_entries: {
         Row: {
@@ -562,6 +757,101 @@ export type Database = {
           },
         ]
       }
+      payroll: {
+        Row: {
+          base_salary: number
+          bonus: number | null
+          created_at: string
+          currency: string | null
+          deductions: number | null
+          employee_id: string
+          gross_salary: number
+          id: string
+          net_salary: number
+          pay_period: string | null
+          status: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          base_salary?: number
+          bonus?: number | null
+          created_at?: string
+          currency?: string | null
+          deductions?: number | null
+          employee_id: string
+          gross_salary?: number
+          id?: string
+          net_salary?: number
+          pay_period?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          base_salary?: number
+          bonus?: number | null
+          created_at?: string
+          currency?: string | null
+          deductions?: number | null
+          employee_id?: string
+          gross_salary?: number
+          id?: string
+          net_salary?: number
+          pay_period?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      payroll_runs: {
+        Row: {
+          created_at: string
+          employee_id: string | null
+          gross_salary: number
+          id: string
+          month: string
+          net_salary: number
+          org_id: string | null
+          payslip_url: string | null
+          processed_at: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string
+          employee_id?: string | null
+          gross_salary: number
+          id?: string
+          month: string
+          net_salary: number
+          org_id?: string | null
+          payslip_url?: string | null
+          processed_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string
+          employee_id?: string | null
+          gross_salary?: number
+          id?: string
+          month?: string
+          net_salary?: number
+          org_id?: string | null
+          payslip_url?: string | null
+          processed_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_runs_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       performance_goals: {
         Row: {
           created_at: string
@@ -677,6 +967,86 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      plan_assignments: {
+        Row: {
+          active: boolean | null
+          assigned_by: string | null
+          created_at: string
+          end_date: string | null
+          id: string
+          org_id: string | null
+          plan_id: string | null
+          start_date: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          assigned_by?: string | null
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          org_id?: string | null
+          plan_id?: string | null
+          start_date?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          assigned_by?: string | null
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          org_id?: string | null
+          plan_id?: string | null
+          start_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_assignments_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plans: {
+        Row: {
+          base_price: number | null
+          created_at: string
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          name: string
+          price_per_user: number | null
+          type: string
+          usage_price: number | null
+          usage_unit: string | null
+        }
+        Insert: {
+          base_price?: number | null
+          created_at?: string
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          price_per_user?: number | null
+          type: string
+          usage_price?: number | null
+          usage_unit?: string | null
+        }
+        Update: {
+          base_price?: number | null
+          created_at?: string
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          price_per_user?: number | null
+          type?: string
+          usage_price?: number | null
+          usage_unit?: string | null
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -851,6 +1221,62 @@ export type Database = {
           },
         ]
       }
+      transactions: {
+        Row: {
+          amount: number
+          client_id: string | null
+          created_at: string
+          currency: string | null
+          id: string
+          invoice_id: string | null
+          org_id: string | null
+          payment_method: string | null
+          razorpay_payment_id: string | null
+          receipt_url: string | null
+          status: string | null
+          stripe_payment_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          client_id?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          invoice_id?: string | null
+          org_id?: string | null
+          payment_method?: string | null
+          razorpay_payment_id?: string | null
+          receipt_url?: string | null
+          status?: string | null
+          stripe_payment_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          client_id?: string | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          invoice_id?: string | null
+          org_id?: string | null
+          payment_method?: string | null
+          razorpay_payment_id?: string | null
+          receipt_url?: string | null
+          status?: string | null
+          stripe_payment_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_benefits: {
         Row: {
           benefit_id: string
@@ -901,7 +1327,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_financial_metrics: {
+        Args: { org_uuid: string; target_month: string }
+        Returns: undefined
+      }
     }
     Enums: {
       team_role: "owner" | "admin" | "member"

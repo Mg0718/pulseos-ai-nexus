@@ -30,6 +30,10 @@ import PeopleSettings from "./pages/people/Settings";
 import FinanceDashboard from "./pages/finance/Dashboard";
 import Payroll from "./pages/finance/Payroll";
 import Invoices from "./pages/finance/Invoices";
+import Transactions from "./pages/finance/Transactions";
+import BillingModels from "./pages/finance/BillingModels";
+import FinanceAnalytics from "./pages/finance/FinanceAnalytics";
+import FinanceSettings from "./pages/finance/FinanceSettings";
 
 const queryClient = new QueryClient();
 
@@ -143,6 +147,26 @@ const AppContent = () => {
         <Route path="/finance/invoices" element={
           <ProtectedRoute>
             <Invoices />
+          </ProtectedRoute>
+        } />
+        <Route path="/finance/transactions" element={
+          <ProtectedRoute>
+            <Transactions />
+          </ProtectedRoute>
+        } />
+        <Route path="/finance/billing-models" element={
+          <ProtectedRoute>
+            <BillingModels />
+          </ProtectedRoute>
+        } />
+        <Route path="/finance/analytics" element={
+          <ProtectedRoute>
+            <FinanceAnalytics />
+          </ProtectedRoute>
+        } />
+        <Route path="/finance/settings" element={
+          <ProtectedRoute>
+            <FinanceSettings />
           </ProtectedRoute>
         } />
         
