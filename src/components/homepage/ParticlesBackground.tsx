@@ -23,43 +23,65 @@ const ParticlesBackground = () => {
     <Particles
       className="absolute inset-0 pointer-events-none"
       id="tsparticles"
+      init={particlesInit}
+      loaded={particlesLoaded}
       options={{
         background: {
           color: {
             value: "transparent",
           },
         },
-        fpsLimit: 60,
+        fpsLimit: 120,
         interactivity: {
           events: {
             onClick: {
-              enable: false,
+              enable: true,
+              mode: "push",
             },
             onHover: {
               enable: true,
-              mode: "repulse",
+              mode: ["attract", "connect"],
             },
             resize: {
               enable: true
             },
           },
           modes: {
+            attract: {
+              distance: 200,
+              duration: 0.4,
+              factor: 5,
+            },
+            connect: {
+              distance: 150,
+              links: {
+                opacity: 0.3,
+              },
+              radius: 60,
+            },
+            push: {
+              quantity: 4,
+            },
             repulse: {
-              distance: 100,
+              distance: 200,
               duration: 0.4,
             },
           },
         },
         particles: {
           color: {
-            value: "#ffffff",
+            value: ["#6F2DBD", "#A663CC", "#B298DC", "#B9FAF8"],
           },
           links: {
             color: "#ffffff",
             distance: 150,
             enable: true,
-            opacity: 0.05,
+            opacity: 0.1,
             width: 1,
+            triangles: {
+              enable: true,
+              opacity: 0.05,
+            },
           },
           move: {
             direction: "none",
@@ -67,24 +89,47 @@ const ParticlesBackground = () => {
             outModes: {
               default: "bounce",
             },
-            random: false,
-            speed: 0.5,
+            random: true,
+            speed: 1,
             straight: false,
+            attract: {
+              enable: true,
+              rotateX: 600,
+              rotateY: 1200,
+            },
           },
           number: {
             density: {
               enable: true,
+              area: 1000,
             },
-            value: 50,
+            value: 100,
           },
           opacity: {
-            value: 0.1,
+            value: { min: 0.1, max: 0.5 },
+            animation: {
+              enable: true,
+              speed: 3,
+              sync: false,
+            },
           },
           shape: {
-            type: "circle",
+            type: ["circle", "triangle", "star"],
           },
           size: {
-            value: { min: 1, max: 2 },
+            value: { min: 1, max: 4 },
+            animation: {
+              enable: true,
+              speed: 20,
+              sync: false,
+            },
+          },
+          twinkle: {
+            particles: {
+              enable: true,
+              frequency: 0.05,
+              opacity: 1,
+            },
           },
         },
         detectRetina: true,
