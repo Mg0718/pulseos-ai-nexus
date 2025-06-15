@@ -1,4 +1,3 @@
-
 export interface CostOptimization {
   id: string;
   type: 'gas_optimization' | 'route_optimization' | 'timing_optimization' | 'aggregation';
@@ -45,7 +44,6 @@ export class MLCostIntelligence {
 
   constructor() {
     this.initializeBenchmarks();
-    this.generateOptimizations();
   }
 
   private initializeBenchmarks() {
