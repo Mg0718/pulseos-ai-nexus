@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { 
   X, 
   Save, 
-  Test, 
+  Beaker,
   Settings, 
   Zap, 
   GitBranch, 
@@ -107,12 +107,12 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
         return (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="triggerType" className="text-white">Trigger Type</Label>
+              <Label htmlFor="triggerType" className="text-gray-300">Trigger Type</Label>
               <Select value={config.triggerType || ''} onValueChange={(value) => setConfig({...config, triggerType: value})}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                <SelectTrigger className="bg-gray-800 border-gray-700 text-gray-200">
                   <SelectValue placeholder="Select trigger type" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-900 border-white/20">
+                <SelectContent className="bg-gray-800 border-gray-700">
                   <SelectItem value="webhook">Webhook</SelectItem>
                   <SelectItem value="schedule">Schedule</SelectItem>
                   <SelectItem value="email">Email</SelectItem>
@@ -123,28 +123,28 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
             
             {config.triggerType === 'webhook' && (
               <div>
-                <Label htmlFor="webhookUrl" className="text-white">Webhook URL</Label>
+                <Label htmlFor="webhookUrl" className="text-gray-300">Webhook URL</Label>
                 <Input
                   id="webhookUrl"
                   value={config.webhookUrl || ''}
                   onChange={(e) => setConfig({...config, webhookUrl: e.target.value})}
                   placeholder="https://api.example.com/webhook"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                  className="bg-gray-800 border-gray-700 text-gray-200 placeholder:text-gray-400"
                 />
               </div>
             )}
             
             {config.triggerType === 'schedule' && (
               <div>
-                <Label htmlFor="schedule" className="text-white">Schedule</Label>
+                <Label htmlFor="schedule" className="text-gray-300">Schedule</Label>
                 <Input
                   id="schedule"
                   value={config.schedule || ''}
                   onChange={(e) => setConfig({...config, schedule: e.target.value})}
                   placeholder="0 9 * * *"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                  className="bg-gray-800 border-gray-700 text-gray-200 placeholder:text-gray-400"
                 />
-                <p className="text-white/60 text-sm mt-1">Cron expression format</p>
+                <p className="text-gray-400 text-sm mt-1">Cron expression format</p>
               </div>
             )}
           </div>
@@ -154,12 +154,12 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
         return (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="actionType" className="text-white">Action Type</Label>
+              <Label htmlFor="actionType" className="text-gray-300">Action Type</Label>
               <Select value={config.actionType || ''} onValueChange={(value) => setConfig({...config, actionType: value})}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                <SelectTrigger className="bg-gray-800 border-gray-700 text-gray-200">
                   <SelectValue placeholder="Select action type" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-900 border-white/20">
+                <SelectContent className="bg-gray-800 border-gray-700">
                   <SelectItem value="send_email">Send Email</SelectItem>
                   <SelectItem value="create_record">Create Record</SelectItem>
                   <SelectItem value="send_message">Send Message</SelectItem>
@@ -171,33 +171,33 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
             {config.actionType === 'send_email' && (
               <>
                 <div>
-                  <Label htmlFor="emailTo" className="text-white">To Email</Label>
+                  <Label htmlFor="emailTo" className="text-gray-300">To Email</Label>
                   <Input
                     id="emailTo"
                     value={config.emailTo || ''}
                     onChange={(e) => setConfig({...config, emailTo: e.target.value})}
                     placeholder="user@example.com"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                    className="bg-gray-800 border-gray-700 text-gray-200 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="emailSubject" className="text-white">Subject</Label>
+                  <Label htmlFor="emailSubject" className="text-gray-300">Subject</Label>
                   <Input
                     id="emailSubject"
                     value={config.emailSubject || ''}
                     onChange={(e) => setConfig({...config, emailSubject: e.target.value})}
                     placeholder="Email subject"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                    className="bg-gray-800 border-gray-700 text-gray-200 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="emailBody" className="text-white">Message</Label>
+                  <Label htmlFor="emailBody" className="text-gray-300">Message</Label>
                   <Textarea
                     id="emailBody"
                     value={config.emailBody || ''}
                     onChange={(e) => setConfig({...config, emailBody: e.target.value})}
                     placeholder="Email message content"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                    className="bg-gray-800 border-gray-700 text-gray-200 placeholder:text-gray-400"
                     rows={4}
                   />
                 </div>
@@ -210,22 +210,22 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
         return (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="field" className="text-white">Field to Check</Label>
+              <Label htmlFor="field" className="text-gray-300">Field to Check</Label>
               <Input
                 id="field"
                 value={config.field || ''}
                 onChange={(e) => setConfig({...config, field: e.target.value})}
                 placeholder="email"
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                className="bg-gray-800 border-gray-700 text-gray-200 placeholder:text-gray-400"
               />
             </div>
             <div>
-              <Label htmlFor="operator" className="text-white">Operator</Label>
+              <Label htmlFor="operator" className="text-gray-300">Operator</Label>
               <Select value={config.operator || ''} onValueChange={(value) => setConfig({...config, operator: value})}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                <SelectTrigger className="bg-gray-800 border-gray-700 text-gray-200">
                   <SelectValue placeholder="Select operator" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-900 border-white/20">
+                <SelectContent className="bg-gray-800 border-gray-700">
                   <SelectItem value="equals">Equals</SelectItem>
                   <SelectItem value="contains">Contains</SelectItem>
                   <SelectItem value="greater_than">Greater Than</SelectItem>
@@ -234,13 +234,13 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
               </Select>
             </div>
             <div>
-              <Label htmlFor="value" className="text-white">Value</Label>
+              <Label htmlFor="value" className="text-gray-300">Value</Label>
               <Input
                 id="value"
                 value={config.value || ''}
                 onChange={(e) => setConfig({...config, value: e.target.value})}
                 placeholder="comparison value"
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                className="bg-gray-800 border-gray-700 text-gray-200 placeholder:text-gray-400"
               />
             </div>
           </div>
@@ -250,23 +250,23 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
         return (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="duration" className="text-white">Duration</Label>
+              <Label htmlFor="duration" className="text-gray-300">Duration</Label>
               <Input
                 id="duration"
                 type="number"
                 value={config.duration || ''}
                 onChange={(e) => setConfig({...config, duration: e.target.value})}
                 placeholder="5"
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                className="bg-gray-800 border-gray-700 text-gray-200 placeholder:text-gray-400"
               />
             </div>
             <div>
-              <Label htmlFor="unit" className="text-white">Unit</Label>
+              <Label htmlFor="unit" className="text-gray-300">Unit</Label>
               <Select value={config.unit || ''} onValueChange={(value) => setConfig({...config, unit: value})}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                <SelectTrigger className="bg-gray-800 border-gray-700 text-gray-200">
                   <SelectValue placeholder="Select time unit" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-900 border-white/20">
+                <SelectContent className="bg-gray-800 border-gray-700">
                   <SelectItem value="seconds">Seconds</SelectItem>
                   <SelectItem value="minutes">Minutes</SelectItem>
                   <SelectItem value="hours">Hours</SelectItem>
@@ -278,7 +278,7 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
         );
 
       default:
-        return <p className="text-white/60">No configuration available for this node type.</p>;
+        return <p className="text-gray-400">No configuration available for this node type.</p>;
     }
   };
 
@@ -290,7 +290,7 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
           animate={{ x: 0 }}
           exit={{ x: 400 }}
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
-          className="fixed right-0 top-0 h-full w-96 bg-black/30 backdrop-blur-xl border-l border-white/20 z-50 overflow-y-auto"
+          className="fixed right-0 top-0 h-full w-96 bg-gray-950/80 backdrop-blur-xl border-l border-gray-700 z-50 overflow-y-auto"
         >
           <div className="p-6">
             {/* Header */}
@@ -299,16 +299,16 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
                 {node && renderNodeIcon(node.type)}
                 <div>
                   <h3 className="text-white font-semibold text-lg">
-                    {node?.data?.label || 'Configure Node'}
+                    {(node?.data?.label as string) || 'Configure Node'}
                   </h3>
-                  <p className="text-white/60 text-sm capitalize">{node?.type} Configuration</p>
+                  <p className="text-gray-400 text-sm capitalize">{node?.type} Configuration</p>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="text-white hover:bg-white/10"
+                className="text-gray-300 hover:bg-gray-700/50"
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -329,10 +329,10 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
               </div>
             )}
 
-            <Separator className="mb-6 bg-white/10" />
+            <Separator className="mb-6 bg-gray-700" />
 
             {/* Configuration Form */}
-            <Card className="bg-white/10 border-white/20 backdrop-blur-sm mb-6">
+            <Card className="bg-gray-800/40 border-gray-700 backdrop-blur-sm mb-6">
               <CardHeader>
                 <CardTitle className="text-white text-base">Configuration</CardTitle>
               </CardHeader>
@@ -369,9 +369,9 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
                 onClick={handleTest}
                 disabled={isLoading}
                 variant="outline"
-                className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
+                className="flex-1 bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
               >
-                <Test className="w-4 h-4 mr-2" />
+                <Beaker className="w-4 h-4 mr-2" />
                 {isLoading ? 'Testing...' : 'Test'}
               </Button>
               <Button
@@ -385,13 +385,13 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
             </div>
 
             {/* Advanced Settings */}
-            <Card className="bg-white/10 border-white/20 backdrop-blur-sm mt-6">
+            <Card className="bg-gray-800/40 border-gray-700 backdrop-blur-sm mt-6">
               <CardHeader>
                 <CardTitle className="text-white text-base">Advanced Settings</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="enabled" className="text-white">Enabled</Label>
+                  <Label htmlFor="enabled" className="text-gray-300">Enabled</Label>
                   <Switch
                     id="enabled"
                     checked={config.enabled !== false}
@@ -399,7 +399,7 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="retryOnFailure" className="text-white">Retry on Failure</Label>
+                  <Label htmlFor="retryOnFailure" className="text-gray-300">Retry on Failure</Label>
                   <Switch
                     id="retryOnFailure"
                     checked={config.retryOnFailure || false}
@@ -408,13 +408,13 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
                 </div>
                 {config.retryOnFailure && (
                   <div>
-                    <Label htmlFor="maxRetries" className="text-white">Max Retries</Label>
+                    <Label htmlFor="maxRetries" className="text-gray-300">Max Retries</Label>
                     <Input
                       id="maxRetries"
                       type="number"
                       value={config.maxRetries || '3'}
                       onChange={(e) => setConfig({...config, maxRetries: e.target.value})}
-                      className="bg-white/10 border-white/20 text-white"
+                      className="bg-gray-800 border-gray-700 text-gray-200"
                     />
                   </div>
                 )}

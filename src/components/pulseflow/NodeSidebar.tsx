@@ -63,10 +63,10 @@ const NodeSidebar = () => {
   };
 
   return (
-    <div className="w-80 bg-white/5 backdrop-blur-xl border-r border-white/20 p-4 overflow-y-auto">
+    <div className="w-80 bg-gray-900/50 backdrop-blur-xl border-r border-gray-700 p-4 overflow-y-auto">
       <div className="mb-6">
         <h3 className="text-white font-semibold text-lg mb-2">Node Library</h3>
-        <p className="text-white/60 text-sm">Drag nodes to the canvas to build your workflow</p>
+        <p className="text-gray-400 text-sm">Drag nodes to the canvas to build your workflow</p>
       </div>
 
       <div className="space-y-4">
@@ -77,11 +77,11 @@ const NodeSidebar = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: categoryIndex * 0.1 }}
           >
-            <Card className="bg-white/10 border-white/20 backdrop-blur-sm">
+            <Card className="bg-gray-800/40 border-gray-700 backdrop-blur-sm">
               <CardHeader className="pb-3">
                 <Button
                   variant="ghost"
-                  className="w-full justify-between p-0 h-auto text-white hover:bg-white/10"
+                  className="w-full justify-between p-0 h-auto text-white hover:bg-gray-700/50"
                   onClick={() => setExpandedCategory(
                     expandedCategory === category.name ? null : category.name
                   )}
@@ -90,7 +90,7 @@ const NodeSidebar = () => {
                     <category.icon className={`w-5 h-5 ${category.color}`} />
                     <CardTitle className="text-white text-base">{category.name}</CardTitle>
                   </div>
-                  <Badge variant="outline" className="border-white/20 text-white/60">
+                  <Badge variant="outline" className="border-gray-600 text-gray-400">
                     {category.nodes.length}
                   </Badge>
                 </Button>
@@ -98,7 +98,7 @@ const NodeSidebar = () => {
               
               {expandedCategory === category.name && (
                 <CardContent className="pt-0">
-                  <Separator className="mb-3 bg-white/10" />
+                  <Separator className="mb-3 bg-gray-700" />
                   <div className="space-y-2">
                     {category.nodes.map((node, nodeIndex) => (
                       <motion.div
@@ -107,8 +107,8 @@ const NodeSidebar = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: nodeIndex * 0.05 }}
                         draggable
-                        onDragStart={(e) => onDragStart(e, node.type, node.name)}
-                        className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200 cursor-grab active:cursor-grabbing border border-white/10 hover:border-white/20"
+                        onDragStart={(e: React.DragEvent) => onDragStart(e, node.type, node.name)}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 cursor-grab active:cursor-grabbing border border-gray-700 hover:border-gray-600"
                       >
                         <div className={`w-8 h-8 rounded-md flex items-center justify-center ${
                           node.type === 'trigger' ? 'bg-purple-600/20' :
@@ -119,9 +119,9 @@ const NodeSidebar = () => {
                         </div>
                         <div className="flex-1">
                           <p className="text-white font-medium text-sm">{node.name}</p>
-                          <p className="text-white/60 text-xs">{node.description}</p>
+                          <p className="text-gray-400 text-xs">{node.description}</p>
                         </div>
-                        <Plus className="w-4 h-4 text-white/40" />
+                        <Plus className="w-4 h-4 text-gray-500" />
                       </motion.div>
                     ))}
                   </div>
