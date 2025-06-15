@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
@@ -351,7 +350,7 @@ const PulseOS = () => {
                       <p className="text-white text-sm">{activity.action}</p>
                       <p className="text-gray-400 text-xs">by {activity.user} • {activity.time}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </CardContent>
