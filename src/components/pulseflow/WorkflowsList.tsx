@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +19,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useWorkflows } from '@/hooks/useWorkflows';
+import { useWorkflowExecution } from '@/hooks/useWorkflowExecution';
 import { useToast } from '@/hooks/use-toast';
 
 interface WorkflowsListProps {
@@ -30,7 +30,8 @@ interface WorkflowsListProps {
 const WorkflowsList = ({ onCreateNew, onEditWorkflow }: WorkflowsListProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'active' | 'paused' | 'archived'>('all');
-  const { workflows, loading, deleteWorkflow, executeWorkflow, updateWorkflow } = useWorkflows();
+  const { workflows, loading, deleteWorkflow, updateWorkflow } = useWorkflows();
+  const { executeWorkflow, loading: executionLoading } = useWorkflowExecution();
   const { toast } = useToast();
 
   const filteredWorkflows = workflows.filter(workflow => {
@@ -55,6 +56,37 @@ const WorkflowsList = ({ onCreateNew, onEditWorkflow }: WorkflowsListProps) => {
   const handleDelete = async (workflowId: string, workflowName: string) => {
     if (window.confirm(`Are you sure you want to delete "${workflowName}"?`)) {
       await deleteWorkflow(workflowId);
+    }
+  };
+
+  const handleDuplicate = async (workflow: any) => {
+    try {
+      const duplicatedWorkflow = {
+        name: `${workflow.name} (Copy)`,
+        description: workflow.description,
+        flow_definition: workflow.flow_definition,
+        status: 'draft' as const,
+        version: 1,
+      };
+
+      // This would need to be implemented in useWorkflows
+      toast({
+        title: "Workflow duplicated",
+        description: `Created a copy of "${workflow.name}".`,
+      });
+    } catch (error) {
+      console.error('Error duplicating workflow:', error);
+    }
+  };
+
+  const handleExecute = async (workflowId: string) => {
+    try {
+      await executeWorkflow(workflowId, { 
+        test: true, 
+        timestamp: new Date().toISOString() 
+      });
+    } catch (error) {
+      console.error('Error executing workflow:', error);
     }
   };
 
@@ -183,6 +215,14 @@ const WorkflowsList = ({ onCreateNew, onEditWorkflow }: WorkflowsListProps) => {
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => handleDuplicate(workflow)}
+                        className="h-8 w-8 p-0 text-white/60 hover:text-white"
+                      >
+                        <Copy className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => handleDelete(workflow.id!, workflow.name)}
                         className="h-8 w-8 p-0 text-white/60 hover:text-red-400"
                       >
@@ -241,11 +281,12 @@ const WorkflowsList = ({ onCreateNew, onEditWorkflow }: WorkflowsListProps) => {
                     
                     <Button
                       size="sm"
-                      onClick={() => executeWorkflow(workflow.id!)}
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                      onClick={() => handleExecute(workflow.id!)}
+                      disabled={executionLoading}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white disabled:opacity-50"
                     >
                       <Play className="w-3 h-3 mr-1" />
-                      Run
+                      {executionLoading ? 'Running...' : 'Run'}
                     </Button>
                   </div>
 

@@ -20,9 +20,10 @@ import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Save, Play, Pause, Copy, Download, Upload } from 'lucide-react';
+import { Save, Play, Pause, Copy, Download, Upload, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useWorkflows } from '@/hooks/useWorkflows';
+import { useWorkflowExecution } from '@/hooks/useWorkflowExecution';
 import TriggerNode from './nodes/TriggerNode';
 import ActionNode from './nodes/ActionNode';
 import ConditionNode from './nodes/ConditionNode';
@@ -63,10 +64,24 @@ const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) 
   const [workflowName, setWorkflowName] = useState('Untitled Workflow');
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
-  const [isExecuting, setIsExecuting] = useState(false);
+  const [currentWorkflowId, setCurrentWorkflowId] = useState<string | undefined>(workflowId);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { createWorkflow, updateWorkflow, executeWorkflow } = useWorkflows();
+  const { createWorkflow, updateWorkflow, workflows } = useWorkflows();
+  const { executeWorkflow, loading: executionLoading } = useWorkflowExecution();
+
+  // Load workflow if workflowId is provided
+  useEffect(() => {
+    if (workflowId && workflows.length > 0) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      if (workflow) {
+        setWorkflowName(workflow.name);
+        setNodes(workflow.flow_definition.nodes || []);
+        setEdges(workflow.flow_definition.edges || []);
+        setCurrentWorkflowId(workflowId);
+      }
+    }
+  }, [workflowId, workflows, setNodes, setEdges]);
 
   // Load template if templateId is provided
   useEffect(() => {
@@ -76,6 +91,7 @@ const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) 
         setWorkflowName(template.name);
         setNodes(template.nodes);
         setEdges(template.edges);
+        setCurrentWorkflowId(undefined);
         toast({
           title: "Template loaded",
           description: `"${template.name}" template has been loaded successfully.`,
@@ -133,7 +149,6 @@ const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) 
 
   const handleSave = async () => {
     try {
-      // Convert ReactFlow nodes/edges to our workflow format
       const workflowNodes = nodes.map(node => ({
         id: node.id,
         type: node.type || 'default',
@@ -156,10 +171,12 @@ const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) 
         version: 1,
       };
 
-      if (workflowId) {
-        await updateWorkflow(workflowId, workflowData);
+      if (currentWorkflowId) {
+        const updatedWorkflow = await updateWorkflow(currentWorkflowId, workflowData);
+        setCurrentWorkflowId(updatedWorkflow.id);
       } else {
-        await createWorkflow(workflowData);
+        const newWorkflow = await createWorkflow(workflowData);
+        setCurrentWorkflowId(newWorkflow.id);
       }
 
       toast({
@@ -172,7 +189,7 @@ const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) 
   };
 
   const handleExecute = async () => {
-    if (!workflowId && nodes.length === 0) {
+    if (!currentWorkflowId && nodes.length === 0) {
       toast({
         title: "No workflow to execute",
         description: "Please save the workflow first or add some nodes.",
@@ -181,35 +198,82 @@ const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) 
       return;
     }
 
-    setIsExecuting(true);
     try {
-      // If we have a workflowId, use it, otherwise create a temporary execution
-      if (workflowId) {
-        await executeWorkflow(workflowId, { test: true, timestamp: new Date().toISOString() });
-      } else {
-        // For unsaved workflows, we can simulate execution
-        toast({
-          title: "Simulating workflow execution",
-          description: "This workflow hasn't been saved yet. Save it first for full execution.",
+      if (currentWorkflowId) {
+        await executeWorkflow(currentWorkflowId, { 
+          test: true, 
+          timestamp: new Date().toISOString() 
         });
-        
-        // Simulate execution delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
+      } else {
         toast({
-          title: "Simulation complete",
-          description: "Workflow would execute successfully. Save it to run for real.",
+          title: "Save workflow first",
+          description: "Please save the workflow before executing it.",
+          variant: "destructive",
         });
       }
     } catch (error) {
       console.error('Error executing workflow:', error);
-    } finally {
-      setIsExecuting(false);
     }
   };
 
   const handleNodeUpdate = (updatedNode: Node) => {
     setNodes((nds) => nds.map((n) => (n.id === updatedNode.id ? updatedNode : n)));
+  };
+
+  const handleClear = () => {
+    if (window.confirm('Are you sure you want to clear the canvas? This will remove all nodes and connections.')) {
+      setNodes([]);
+      setEdges([]);
+      setWorkflowName('Untitled Workflow');
+      setCurrentWorkflowId(undefined);
+      toast({
+        title: "Canvas cleared",
+        description: "All nodes and connections have been removed.",
+      });
+    }
+  };
+
+  const handleDuplicate = async () => {
+    if (!currentWorkflowId) {
+      toast({
+        title: "Save workflow first",
+        description: "Please save the workflow before duplicating it.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const workflowNodes = nodes.map(node => ({
+        id: `${node.id}-copy`,
+        type: node.type || 'default',
+        position: { x: node.position.x + 50, y: node.position.y + 50 },
+        data: node.data,
+      }));
+
+      const workflowEdges = edges.map(edge => ({
+        id: `${edge.id}-copy`,
+        source: `${edge.source}-copy`,
+        target: `${edge.target}-copy`,
+        sourceHandle: edge.sourceHandle || undefined,
+        targetHandle: edge.targetHandle || undefined,
+      }));
+
+      const duplicatedWorkflow = {
+        name: `${workflowName} (Copy)`,
+        flow_definition: { nodes: workflowNodes, edges: workflowEdges },
+        status: 'draft' as const,
+        version: 1,
+      };
+
+      const newWorkflow = await createWorkflow(duplicatedWorkflow);
+      toast({
+        title: "Workflow duplicated",
+        description: `Created a copy of "${workflowName}".`,
+      });
+    } catch (error) {
+      console.error('Error duplicating workflow:', error);
+    }
   };
 
   const exportWorkflow = () => {
@@ -244,6 +308,7 @@ const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) 
         setWorkflowName(workflowData.name || 'Imported Workflow');
         setNodes(workflowData.nodes || []);
         setEdges(workflowData.edges || []);
+        setCurrentWorkflowId(undefined);
         
         toast({
           title: "Workflow imported",
@@ -262,7 +327,7 @@ const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) 
 
   return (
     <div className="h-full flex flex-col bg-gray-950">
-      {/* Toolbar */}
+      {/* Updated Toolbar with new functionality */}
       <div className="h-16 bg-gray-900/90 backdrop-blur-xl border-b border-gray-700 flex items-center justify-between px-6 relative z-10">
         <div className="flex items-center gap-4">
           <Input
@@ -274,6 +339,11 @@ const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) 
           <Badge variant="outline" className="border-gray-600 text-gray-400">
             {nodes.length} nodes, {edges.length} connections
           </Badge>
+          {currentWorkflowId && (
+            <Badge className="bg-green-600/20 text-green-300 border-green-600/30">
+              Saved
+            </Badge>
+          )}
         </div>
         
         <div className="flex items-center gap-3">
@@ -296,24 +366,29 @@ const WorkflowBuilderInner = ({ workflowId, templateId }: WorkflowBuilderProps) 
             Export
           </Button>
           
-          <Button variant="ghost" size="sm" className="text-gray-300">
+          <Button variant="ghost" size="sm" onClick={handleDuplicate} className="text-gray-300">
             <Copy className="w-4 h-4 mr-2" />
             Duplicate
+          </Button>
+
+          <Button variant="ghost" size="sm" onClick={handleClear} className="text-red-400 hover:bg-red-500/20">
+            <Trash2 className="w-4 h-4 mr-2" />
+            Clear
           </Button>
           
           <Button
             variant="ghost"
             size="sm"
             onClick={handleExecute}
-            disabled={isExecuting}
-            className="text-green-400 hover:bg-green-500/20"
+            disabled={executionLoading}
+            className="text-green-400 hover:bg-green-500/20 disabled:opacity-50"
           >
-            {isExecuting ? (
+            {executionLoading ? (
               <Pause className="w-4 h-4 mr-2" />
             ) : (
               <Play className="w-4 h-4 mr-2" />
             )}
-            {isExecuting ? 'Running...' : 'Execute'}
+            {executionLoading ? 'Running...' : 'Execute'}
           </Button>
           
           <Button onClick={handleSave} size="sm" className="bg-purple-600 hover:bg-purple-700">

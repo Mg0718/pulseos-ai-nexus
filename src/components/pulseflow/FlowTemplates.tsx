@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,7 +20,8 @@ import {
   LucideIcon
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { workflowTemplates, getTemplateByCategory, getTemplateById } from './WorkflowTemplates';
+import { workflowTemplates, getTemplateByCategory, getTemplateById, WorkflowTemplate } from './WorkflowTemplates';
+import WorkflowPreviewModal from './WorkflowPreviewModal';
 
 const categories = ["All", "HR", "Finance", "Support", "Productivity", "Legal", "Sales"];
 const complexityLevels = ["All", "Simple", "Medium", "Advanced"];
@@ -35,6 +35,8 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedComplexity, setSelectedComplexity] = useState("All");
   const [hoveredTemplate, setHoveredTemplate] = useState<string | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<WorkflowTemplate | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const { toast } = useToast();
 
   const filteredTemplates = workflowTemplates.filter(template => {
@@ -45,7 +47,7 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
     return matchesSearch && matchesCategory;
   });
 
-  const handleUseTemplate = (template: any) => {
+  const handleUseTemplate = (template: WorkflowTemplate) => {
     if (onUseTemplate) {
       onUseTemplate(template.id);
     }
@@ -55,20 +57,12 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
       description: `Loading "${template.name}" template to the canvas...`,
     });
     
-    // Simulate loading template
-    setTimeout(() => {
-      toast({
-        title: "Template Loaded",
-        description: `"${template.name}" is now ready for customization.`,
-      });
-    }, 1000);
+    setIsPreviewOpen(false);
   };
 
-  const handlePreviewTemplate = (template: any) => {
-    toast({
-      title: "Template Preview",
-      description: `"${template.name}" - ${template.nodes.length} nodes, ${template.edges.length} connections`,
-    });
+  const handlePreviewTemplate = (template: WorkflowTemplate) => {
+    setPreviewTemplate(template);
+    setIsPreviewOpen(true);
   };
 
   const getTemplateIcon = (category: string): LucideIcon => {
@@ -147,7 +141,7 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
       {/* Templates Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredTemplates.map((template, index) => {
-          const IconComponent: LucideIcon = getTemplateIcon(template.category);
+          const IconComponent = getTemplateIcon(template.category);
           const colorClass = getTemplateColor(template.category);
           
           return (
@@ -189,7 +183,6 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* Stats */}
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center gap-1 text-white/60">
                       <Clock className="w-3 h-3" />
@@ -204,7 +197,6 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
                     </Badge>
                   </div>
 
-                  {/* Steps Preview */}
                   <div>
                     <p className="text-white/80 text-sm font-medium mb-2">Workflow Steps:</p>
                     <div className="space-y-1">
@@ -220,7 +212,6 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
                     </div>
                   </div>
 
-                  {/* Actions */}
                   <div className="flex gap-2 pt-2">
                     <Button
                       variant="outline"
@@ -259,6 +250,14 @@ const FlowTemplates = ({ onUseTemplate }: FlowTemplatesProps) => {
           <p className="text-white/60">Try adjusting your search criteria or filters</p>
         </motion.div>
       )}
+
+      {/* Preview Modal */}
+      <WorkflowPreviewModal
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
+        template={previewTemplate}
+        onUseTemplate={handleUseTemplate}
+      />
     </div>
   );
 };
