@@ -54,7 +54,7 @@ const FloatingSidebar = () => {
         <Button
           onClick={() => setIsOpen(!isOpen)}
           size="icon"
-          className="w-12 h-12 rounded-full bg-[#6F2DBD]/20 hover:bg-[#6F2DBD]/30 backdrop-blur-xl border border-white/20 text-white shadow-2xl transition-all duration-300 hover:scale-110"
+          className="w-12 h-12 rounded-full glass text-white border-white/20 hover:bg-white/20 shadow-2xl transition-all duration-300 hover:scale-110 purple-glow"
         >
           <AnimatePresence mode="wait">
             {isOpen ? (
@@ -101,25 +101,25 @@ const FloatingSidebar = () => {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -320, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed left-6 top-24 w-80 h-[calc(100vh-12rem)] bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl z-50 overflow-hidden"
+              className="fixed left-6 top-24 w-80 h-[calc(100vh-12rem)] glass-dark rounded-2xl border-white/20 shadow-2xl z-50 overflow-hidden"
             >
               {/* Header */}
               <div className="p-6 border-b border-white/10">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-r from-[#6F2DBD] to-[#A663CC] rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl flex items-center justify-center">
                     <Brain className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-white">PulseOS</h2>
+                    <h2 className="text-xl font-bold gradient-text">PulseOS</h2>
                     <p className="text-white/60 text-sm">Business OS</p>
                   </div>
                 </div>
                 
                 {/* User Profile */}
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                <div className="flex items-center gap-3 p-3 rounded-xl glass border border-white/10">
                   <Avatar className="w-10 h-10">
                     <AvatarImage src={user?.user_metadata?.avatar_url} />
-                    <AvatarFallback className="bg-[#6F2DBD] text-white">
+                    <AvatarFallback className="bg-gradient-to-r from-purple-600 to-purple-800 text-white">
                       {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
@@ -151,7 +151,7 @@ const FloatingSidebar = () => {
                           onClick={() => setIsOpen(false)}
                           className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group ${
                             isActive 
-                              ? "bg-[#6F2DBD]/30 text-white border border-[#6F2DBD]/50" 
+                              ? "bg-gradient-to-r from-purple-600/30 to-purple-800/30 text-white border border-purple-500/50" 
                               : "text-white/70 hover:text-white hover:bg-white/5"
                           }`}
                         >

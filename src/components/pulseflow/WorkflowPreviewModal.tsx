@@ -47,12 +47,12 @@ const WorkflowPreviewModal = ({ isOpen, onClose, template, onUseTemplate }: Work
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl bg-gray-900 border-gray-700 text-white">
+      <DialogContent className="max-w-4xl glass border-white/20 text-white">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-white">
+          <DialogTitle className="text-2xl font-bold gradient-text">
             {template.name}
           </DialogTitle>
-          <DialogDescription className="text-gray-300">
+          <DialogDescription className="text-white/70">
             {template.description}
           </DialogDescription>
         </DialogHeader>
@@ -64,21 +64,21 @@ const WorkflowPreviewModal = ({ isOpen, onClose, template, onUseTemplate }: Work
               <h3 className="text-lg font-semibold text-white mb-3">Template Details</h3>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Category:</span>
+                  <span className="text-white/70">Category:</span>
                   <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
                     {template.category}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Nodes:</span>
+                  <span className="text-white/70">Nodes:</span>
                   <span className="text-white">{template.nodes.length}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Connections:</span>
+                  <span className="text-white/70">Connections:</span>
                   <span className="text-white">{template.edges.length}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Complexity:</span>
+                  <span className="text-white/70">Complexity:</span>
                   <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">
                     {template.nodes.length <= 3 ? 'Simple' : template.nodes.length <= 6 ? 'Medium' : 'Advanced'}
                   </Badge>
@@ -89,7 +89,7 @@ const WorkflowPreviewModal = ({ isOpen, onClose, template, onUseTemplate }: Work
             <div className="pt-4">
               <Button
                 onClick={() => onUseTemplate(template)}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white"
               >
                 <Play className="w-4 h-4 mr-2" />
                 Use This Template
@@ -107,7 +107,7 @@ const WorkflowPreviewModal = ({ isOpen, onClose, template, onUseTemplate }: Work
                   
                   return (
                     <div key={node.id} className="space-y-2">
-                      <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg border border-white/10">
+                      <div className="flex items-center gap-3 p-3 glass rounded-lg border border-white/10">
                         {getNodeIcon(node.type)}
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -116,28 +116,28 @@ const WorkflowPreviewModal = ({ isOpen, onClose, template, onUseTemplate }: Work
                               {node.type}
                             </Badge>
                           </div>
-                          <p className="text-sm text-gray-400">
+                          <p className="text-sm text-white/60">
                             {node.type === 'trigger' && 'Starts the workflow when triggered'}
                             {node.type === 'action' && 'Performs an action or operation'}
                             {node.type === 'condition' && 'Makes a decision based on criteria'}
                             {node.type === 'delay' && 'Waits for a specified duration'}
                           </p>
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-white/50">
                           Step {index + 1}
                         </div>
                       </div>
                       
                       {nextNode && index < template.nodes.length - 1 && (
                         <div className="flex justify-center">
-                          <ArrowRight className="w-4 h-4 text-gray-500" />
+                          <ArrowRight className="w-4 h-4 text-purple-400" />
                         </div>
                       )}
                     </div>
                   );
                 })}
                 {template.nodes.length > 3 && (
-                  <p className="text-purple-300 text-xs">+{remainingNodesCount.toString()} more steps</p>
+                  <p className="text-purple-300 text-xs">+{String(remainingNodesCount)} more steps</p>
                 )}
               </div>
             </ScrollArea>

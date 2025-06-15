@@ -23,10 +23,10 @@ import FlowTemplates from "@/components/pulseflow/FlowTemplates";
 import FlowHistory from "@/components/pulseflow/FlowHistory";
 
 const stats = [
-  { label: "Active Workflows", value: "12", trend: "+3", icon: Zap, color: "text-blue-400" },
+  { label: "Active Workflows", value: "12", trend: "+3", icon: Zap, color: "text-purple-400" },
   { label: "Total Executions", value: "1,247", trend: "+156", icon: Activity, color: "text-green-400" },
-  { label: "Time Saved", value: "2.3K hrs", trend: "+89", icon: Clock, color: "text-purple-400" },
-  { label: "Success Rate", value: "98.5%", trend: "+1.2%", icon: GitBranch, color: "text-emerald-400" },
+  { label: "Time Saved", value: "2.3K hrs", trend: "+89", icon: Clock, color: "text-blue-400" },
+  { label: "Success Rate", value: "98.5%", trend: "+1.2%", icon: GitBranch, color: "text-pink-400" },
 ];
 
 const PulseFlow = () => {
@@ -43,15 +43,15 @@ const PulseFlow = () => {
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">PulseFlow</h1>
+              <h1 className="text-3xl font-bold gradient-text mb-2">PulseFlow</h1>
               <p className="text-white/70">Visual workflow automation builder</p>
             </div>
             <div className="flex gap-3">
-              <Button variant="ghost" className="text-white border border-white/20 hover:bg-white/10">
+              <Button variant="ghost" className="glass text-white border-white/20 hover:bg-white/10 hover-glow">
                 <Activity className="w-4 h-4 mr-2" />
                 Analytics
               </Button>
-              <Button className="bg-white/20 hover:bg-white/30 text-white border border-white/30">
+              <Button className="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white border-0 purple-glow hover-glow">
                 <Plus className="w-4 h-4 mr-2" />
                 New Workflow
               </Button>
@@ -68,7 +68,7 @@ const PulseFlow = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className="bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
+              <Card className="glass border-white/20 hover:bg-white/10 transition-all duration-300 hover-glow">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -91,24 +91,24 @@ const PulseFlow = () => {
           transition={{ delay: 0.3 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-white/10 border-white/20">
+            <TabsList className="glass border-white/20 bg-white/5">
               <TabsTrigger 
                 value="builder" 
-                className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-800 data-[state=active]:text-white text-white/70"
               >
                 <GitBranch className="w-4 h-4 mr-2" />
                 Flow Builder
               </TabsTrigger>
               <TabsTrigger 
                 value="templates"
-                className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-800 data-[state=active]:text-white text-white/70"
               >
                 <File className="w-4 h-4 mr-2" />
                 Templates
               </TabsTrigger>
               <TabsTrigger 
                 value="history"
-                className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-800 data-[state=active]:text-white text-white/70"
               >
                 <History className="w-4 h-4 mr-2" />
                 History

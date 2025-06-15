@@ -43,7 +43,7 @@ const TemplateCard = ({
       onHoverStart={() => setHoveredTemplate(template.id)}
       onHoverEnd={() => setHoveredTemplate(null)}
     >
-      <Card className="bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group h-full">
+      <Card className="glass border-white/20 hover:bg-white/10 transition-all duration-300 group h-full hover-glow">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between mb-3">
             <div className={`w-12 h-12 ${colorClass} rounded-xl flex items-center justify-center transition-transform duration-300 ${hoveredTemplate === template.id ? 'scale-110' : ''}`}>
@@ -61,7 +61,7 @@ const TemplateCard = ({
             </CardTitle>
             <Badge 
               variant="outline" 
-              className="border-white/20 text-white/60 text-xs"
+              className="border-purple-500/30 text-purple-300 bg-purple-500/10 text-xs"
             >
               {template.category}
             </Badge>
@@ -97,7 +97,7 @@ const TemplateCard = ({
                 </div>
               ))}
               {template.nodes.length > 3 && (
-                <p className="text-purple-300 text-xs">+{remainingNodesCount.toString()} more steps</p>
+                <p className="text-purple-300 text-xs">+{String(remainingNodesCount)} more steps</p>
               )}
             </div>
           </div>
@@ -107,7 +107,7 @@ const TemplateCard = ({
               variant="outline"
               size="sm"
               onClick={() => onPreview(template)}
-              className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
+              className="flex-1 glass border-white/20 text-white hover:bg-white/20"
             >
               <Eye className="w-3 h-3 mr-1" />
               Preview
@@ -115,7 +115,7 @@ const TemplateCard = ({
             <Button
               size="sm"
               onClick={() => onUseTemplate(template)}
-              className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
+              className="flex-1 bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white"
             >
               <Download className="w-3 h-3 mr-1" />
               Use Template

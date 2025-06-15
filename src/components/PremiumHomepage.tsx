@@ -11,7 +11,7 @@ import Footer from "./homepage/Footer";
 
 const PremiumHomepage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#6F2DBD] via-[#A663CC] to-[#B298DC] overflow-x-hidden relative">
+    <div className="min-h-screen relative overflow-x-hidden">
       {/* Particles Background */}
       <ParticlesBackground />
 

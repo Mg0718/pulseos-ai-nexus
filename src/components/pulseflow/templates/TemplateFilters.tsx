@@ -20,7 +20,7 @@ const TemplateFilters = ({
   categories 
 }: TemplateFiltersProps) => {
   return (
-    <Card className="bg-white/10 border-white/20 backdrop-blur-sm">
+    <Card className="glass border-white/20">
       <CardContent className="p-6">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Search */}
@@ -30,7 +30,7 @@ const TemplateFilters = ({
               placeholder="Search templates..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60"
+              className="pl-10 glass border-white/20 text-white placeholder:text-white/50 focus:border-purple-500/50 focus:ring-purple-500/20"
             />
           </div>
 
@@ -43,8 +43,8 @@ const TemplateFilters = ({
                 size="sm"
                 onClick={() => setSelectedCategory(category)}
                 className={selectedCategory === category 
-                  ? "bg-purple-600 hover:bg-purple-700 text-white" 
-                  : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+                  ? "bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white border-0" 
+                  : "glass border-white/20 text-white hover:bg-white/20"
                 }
               >
                 {category}
