@@ -30,7 +30,7 @@ import BlockchainFinance from "@/pages/finance/BlockchainFinance";
 // People pages
 import PeopleDashboard from "@/pages/people/Dashboard";
 import Profiles from "@/pages/people/Profiles";
-import Teams as PeopleTeams from "@/pages/people/Teams";
+import PeopleTeams from "@/pages/people/Teams";
 import Onboarding from "@/pages/people/Onboarding";
 import Performance from "@/pages/people/Performance";
 import Feedback from "@/pages/people/Feedback";
