@@ -1,8 +1,8 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Web3Provider } from '@/lib/blockchain/web3Provider';
 import { IdentityManager } from '@/lib/blockchain/identity';
-import { PulsePayManager } from '@/lib/blockchain/pulsePay';
+import { EnhancedBlockchainPulsePay } from '@/lib/blockchain/enhancedPulsePay';
+import { BlockchainSessionLogger, LoginSession } from '@/lib/blockchain/sessionLogger';
 import { toast } from 'sonner';
 
 interface BlockchainContextType {
@@ -16,9 +16,13 @@ interface BlockchainContextType {
   generateIdentity: () => Promise<void>;
   authenticateWithZK: (challenge: string) => Promise<boolean>;
   
-  // PulsePay
-  createPaymentContract: (payee: string, amount: string, milestones: any[]) => Promise<any>;
-  setupEscrow: (contractId: string, amount: string) => Promise<any>;
+  // Session logging
+  logLoginSession: (userId: string, ipAddress: string, userAgent: string) => Promise<LoginSession>;
+  getSecurityAuditTrail: (userId: string, fromDate: Date, toDate: Date) => Promise<any>;
+  
+  // Enhanced PulsePay
+  processBlockchainPayment: (payee: string, amount: string, currency?: string) => Promise<any>;
+  processBlockchainPayroll: (employees: any[]) => Promise<any>;
   
   // General
   loading: boolean;
@@ -42,7 +46,8 @@ export const BlockchainProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   
   const web3Provider = Web3Provider.getInstance();
   const identityManager = new IdentityManager();
-  const pulsePayManager = new PulsePayManager();
+  const enhancedPulsePay = new EnhancedBlockchainPulsePay();
+  const sessionLogger = new BlockchainSessionLogger();
 
   useEffect(() => {
     // Check if wallet was previously connected
@@ -139,28 +144,64 @@ export const BlockchainProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   };
 
-  const createPaymentContract = async (payee: string, amount: string, milestones: any[]) => {
+  const logLoginSession = async (userId: string, ipAddress: string, userAgent: string): Promise<LoginSession> => {
     try {
       setLoading(true);
-      const contract = await pulsePayManager.createPaymentContract(payee, amount, milestones);
-      toast.success('Payment contract created successfully!');
-      return contract;
+      const session = await sessionLogger.logLoginSession(userId, ipAddress, userAgent);
+      toast.success('Login session logged on blockchain');
+      return session;
     } catch (error: any) {
-      toast.error(error.message || 'Failed to create payment contract');
+      toast.error(error.message || 'Failed to log session on blockchain');
       throw error;
     } finally {
       setLoading(false);
     }
   };
 
-  const setupEscrow = async (contractId: string, amount: string) => {
+  const getSecurityAuditTrail = async (userId: string, fromDate: Date, toDate: Date) => {
     try {
       setLoading(true);
-      const escrow = await pulsePayManager.setupEscrow(contractId, amount);
-      toast.success('Escrow setup successfully!');
-      return escrow;
+      return await sessionLogger.getSecurityAuditTrail(userId, fromDate, toDate);
     } catch (error: any) {
-      toast.error(error.message || 'Failed to setup escrow');
+      toast.error(error.message || 'Failed to retrieve audit trail');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const processBlockchainPayment = async (payee: string, amount: string, currency: string = 'USD') => {
+    if (!isWalletConnected) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const result = await enhancedPulsePay.processBlockchainManagedPayment(payee, amount, currency);
+      toast.success('Blockchain payment processed successfully!');
+      return result;
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to process blockchain payment');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const processBlockchainPayroll = async (employees: any[]) => {
+    if (!isWalletConnected) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const result = await enhancedPulsePay.processBlockchainPayroll(employees);
+      toast.success(`Blockchain payroll processed: ${result.successful.length} successful, ${result.failed.length} failed`);
+      return result;
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to process blockchain payroll');
       throw error;
     } finally {
       setLoading(false);
@@ -174,8 +215,10 @@ export const BlockchainProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     userDID,
     generateIdentity,
     authenticateWithZK,
-    createPaymentContract,
-    setupEscrow,
+    logLoginSession,
+    getSecurityAuditTrail,
+    processBlockchainPayment,
+    processBlockchainPayroll,
     loading
   };
 
