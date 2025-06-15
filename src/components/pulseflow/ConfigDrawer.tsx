@@ -17,8 +17,8 @@ import { X } from 'lucide-react';
 interface ConfigDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  node: Node | null;
-  onUpdateNode: (node: Node) => void;
+  node?: Node | null;
+  onUpdateNode?: (node: Node) => void;
 }
 
 const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps) => {
@@ -31,7 +31,7 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
   }, [node]);
 
   const handleSave = () => {
-    if (node) {
+    if (node && onUpdateNode) {
       const updatedNode = {
         ...node,
         data: {
@@ -220,7 +220,7 @@ const ConfigDrawer = ({ isOpen, onClose, node, onUpdateNode }: ConfigDrawerProps
       <SheetContent className="bg-gray-900 border-gray-700 text-white">
         <SheetHeader>
           <SheetTitle className="text-white">
-            Configure {node?.type} Node
+            Configure {node?.type || 'Node'}
           </SheetTitle>
           <SheetDescription className="text-gray-400">
             Configure the settings for this workflow node.

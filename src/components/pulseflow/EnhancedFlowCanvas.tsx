@@ -77,7 +77,7 @@ const EnhancedFlowCanvas = () => {
                 
                 <div className="border-t border-white/20 pt-6">
                   <h3 className="text-white text-lg font-semibold mb-4">Or start with a template:</h3>
-                  <FlowTemplates onUseTemplate={handleUseTemplate} />
+                  <FlowTemplates />
                 </div>
               </div>
             </TabsContent>

@@ -1,60 +1,77 @@
 
 import { useState } from 'react';
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { 
   Zap, 
+  Play, 
   GitBranch, 
-  Filter, 
   Clock, 
-  Plus,
-  Mail,
+  Search, 
+  X,
+  Settings,
+  Activity,
   Database,
-  Webhook,
-  MessageSquare,
-  FileText,
-  Calendar
-} from "lucide-react";
+  Filter
+} from 'lucide-react';
 
-const nodeCategories = [
+const nodeTypes = [
   {
-    name: "Triggers",
+    type: 'trigger',
+    name: 'Email Trigger',
     icon: Zap,
-    color: "text-purple-400",
-    nodes: [
-      { type: "trigger", name: "Webhook", icon: Webhook, description: "HTTP webhook trigger" },
-      { type: "trigger", name: "Schedule", icon: Calendar, description: "Time-based trigger" },
-      { type: "trigger", name: "Email", icon: Mail, description: "Email received trigger" },
-      { type: "trigger", name: "Database", icon: Database, description: "Database change trigger" },
-    ]
+    color: 'bg-purple-600',
+    description: 'Triggers when an email is received'
   },
   {
-    name: "Actions",
+    type: 'action',
+    name: 'Send Email',
+    icon: Play,
+    color: 'bg-green-600',
+    description: 'Send an automated email'
+  },
+  {
+    type: 'condition',
+    name: 'If/Then',
     icon: GitBranch,
-    color: "text-green-400",
-    nodes: [
-      { type: "action", name: "Send Email", icon: Mail, description: "Send email message" },
-      { type: "action", name: "Create Record", icon: Database, description: "Create database record" },
-      { type: "action", name: "Send Message", icon: MessageSquare, description: "Send chat message" },
-      { type: "action", name: "Generate Document", icon: FileText, description: "Create document" },
-    ]
+    color: 'bg-yellow-600',
+    description: 'Conditional logic branch'
   },
   {
-    name: "Logic",
-    icon: Filter,
-    color: "text-orange-400",
-    nodes: [
-      { type: "condition", name: "If/Then", icon: Filter, description: "Conditional logic" },
-      { type: "delay", name: "Wait", icon: Clock, description: "Delay execution" },
-    ]
+    type: 'delay',
+    name: 'Wait',
+    icon: Clock,
+    color: 'bg-blue-600',
+    description: 'Add a time delay'
+  },
+  {
+    type: 'action',
+    name: 'Database Action',
+    icon: Database,
+    color: 'bg-red-600',
+    description: 'Create or update records'
+  },
+  {
+    type: 'action',
+    name: 'Webhook',
+    icon: Activity,
+    color: 'bg-indigo-600',
+    description: 'Send HTTP request'
   }
 ];
 
-const NodeSidebar = () => {
-  const [expandedCategory, setExpandedCategory] = useState<string | null>("Triggers");
+interface NodeSidebarProps {
+  onClose?: () => void;
+}
+
+const NodeSidebar = ({ onClose }: NodeSidebarProps) => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredNodes = nodeTypes.filter(node =>
+    node.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const onDragStart = (event: React.DragEvent, nodeType: string, nodeName: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -63,83 +80,71 @@ const NodeSidebar = () => {
   };
 
   return (
-    <div className="w-80 bg-gray-900/90 backdrop-blur-xl border-r border-gray-700 p-4 overflow-y-auto flex-shrink-0">
-      <div className="mb-6">
-        <h3 className="text-white font-semibold text-lg mb-2">Node Library</h3>
-        <p className="text-gray-400 text-sm">Drag nodes to the canvas to build your workflow</p>
-      </div>
-
-      <div className="space-y-4">
-        {nodeCategories.map((category, categoryIndex) => (
-          <motion.div
-            key={category.name}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: categoryIndex * 0.1 }}
+    <div className="w-80 bg-gray-900/95 backdrop-blur-xl border-r border-white/10 h-full flex flex-col">
+      {/* Header */}
+      <div className="p-4 border-b border-white/10 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Settings className="w-5 h-5 text-purple-400" />
+          <h3 className="text-white font-semibold">Node Library</h3>
+        </div>
+        {onClose && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="text-gray-400 hover:text-white hover:bg-white/10"
           >
-            <Card className="bg-gray-800/40 border-gray-700 backdrop-blur-sm">
-              <CardHeader className="pb-3">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-0 h-auto text-white hover:bg-gray-700/50"
-                  onClick={() => setExpandedCategory(
-                    expandedCategory === category.name ? null : category.name
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <category.icon className={`w-5 h-5 ${category.color}`} />
-                    <CardTitle className="text-white text-base">{category.name}</CardTitle>
-                  </div>
-                  <Badge variant="outline" className="border-gray-600 text-gray-400">
-                    {category.nodes.length}
-                  </Badge>
-                </Button>
-              </CardHeader>
-              
-              {expandedCategory === category.name && (
-                <CardContent className="pt-0">
-                  <Separator className="mb-3 bg-gray-700" />
-                  <div className="space-y-2">
-                    {category.nodes.map((node, nodeIndex) => (
-                      <motion.div
-                        key={`${node.type}-${node.name}`}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: nodeIndex * 0.05 }}
-                      >
-                        <div
-                          draggable
-                          onDragStart={(e: React.DragEvent) => onDragStart(e, node.type, node.name)}
-                          className="flex items-center gap-3 p-3 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 cursor-grab active:cursor-grabbing border border-gray-700 hover:border-gray-600"
-                        >
-                          <div className={`w-8 h-8 rounded-md flex items-center justify-center ${
-                            node.type === 'trigger' ? 'bg-purple-600/20' :
-                            node.type === 'action' ? 'bg-green-600/20' :
-                            'bg-orange-600/20'
-                          }`}>
-                            <node.icon className="w-4 h-4 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-white font-medium text-sm">{node.name}</p>
-                            <p className="text-gray-400 text-xs">{node.description}</p>
-                          </div>
-                          <Plus className="w-4 h-4 text-gray-500" />
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </CardContent>
-              )}
-            </Card>
-          </motion.div>
-        ))}
+            <X className="w-4 h-4" />
+          </Button>
+        )}
       </div>
 
-      <div className="mt-6 p-4 rounded-lg bg-purple-600/20 border border-purple-500/30">
-        <h4 className="text-white font-medium mb-2">Quick Tip</h4>
-        <p className="text-purple-200 text-sm">
-          Drag any node from above onto the canvas to add it to your workflow. Connect nodes by dragging from the connection points.
-        </p>
+      {/* Search */}
+      <div className="p-4 border-b border-white/10">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Input
+            placeholder="Search nodes..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 bg-gray-800/50 border-gray-700 text-white placeholder-gray-400"
+          />
+        </div>
+      </div>
+
+      {/* Node Categories */}
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="space-y-3">
+          {filteredNodes.map((node, index) => (
+            <Card
+              key={index}
+              className="glass border-white/20 hover:bg-white/10 transition-all duration-300 cursor-move"
+              draggable
+              onDragStart={(e) => onDragStart(e, node.type, node.name)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 ${node.color} rounded-lg flex items-center justify-center`}>
+                    <node.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-white font-medium text-sm">{node.name}</h4>
+                    <p className="text-gray-400 text-xs">{node.description}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-white/10">
+        <div className="text-center">
+          <Badge variant="outline" className="border-purple-500/30 text-purple-300">
+            {filteredNodes.length} nodes available
+          </Badge>
+        </div>
       </div>
     </div>
   );

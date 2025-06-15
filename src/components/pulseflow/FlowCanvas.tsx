@@ -47,12 +47,18 @@ const FlowCanvas = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [showNodeSidebar, setShowNodeSidebar] = useState(false);
   const [showConfigDrawer, setShowConfigDrawer] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
+
+  const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
+    setSelectedNode(node);
+    setShowConfigDrawer(true);
+  }, []);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -88,6 +94,10 @@ const FlowCanvas = () => {
     },
     [nodes.length, setNodes]
   );
+
+  const handleNodeUpdate = (updatedNode: Node) => {
+    setNodes((nds) => nds.map((n) => (n.id === updatedNode.id ? updatedNode : n)));
+  };
 
   return (
     <div className="h-[600px] bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 rounded-xl border border-white/20 overflow-hidden">
@@ -165,6 +175,7 @@ const FlowCanvas = () => {
               onConnect={onConnect}
               onDrop={onDrop}
               onDragOver={onDragOver}
+              onNodeClick={onNodeClick}
               nodeTypes={nodeTypes}
               fitView
             >
@@ -183,7 +194,9 @@ const FlowCanvas = () => {
       {/* Config Drawer */}
       <ConfigDrawer 
         isOpen={showConfigDrawer} 
-        onClose={() => setShowConfigDrawer(false)} 
+        onClose={() => setShowConfigDrawer(false)}
+        node={selectedNode}
+        onUpdateNode={handleNodeUpdate}
       />
     </div>
   );
