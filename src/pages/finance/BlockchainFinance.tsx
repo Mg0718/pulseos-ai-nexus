@@ -109,7 +109,7 @@ const BlockchainFinance = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <Card className="bg-gradient-to-r from-[#6F2DBD]/20 to-[#A663CC]/20 backdrop-blur-xl border-white/20">
+            <Card className="bg-white/10 backdrop-blur-xl border-white/20">
               <CardHeader>
                 <CardTitle className="text-white">🚀 Enhanced Blockchain Implementation</CardTitle>
               </CardHeader>
@@ -134,7 +134,7 @@ const BlockchainFinance = () => {
                     </ul>
                   </div>
                 </div>
-                <div className="mt-4 p-4 bg-white/5 rounded-lg">
+                <div className="mt-4 p-4 bg-white/5 rounded-lg border border-white/10">
                   <p className="text-white/80 text-sm">
                     <strong>Security Architecture:</strong> Your data remains completely secure with blockchain-managed 
                     decisions and immutable audit trails. Even if Stripe or Razorpay are compromised, your financial 
