@@ -106,22 +106,25 @@ const NodeSidebar = () => {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: nodeIndex * 0.05 }}
-                        draggable
-                        onDragStart={(e: React.DragEvent) => onDragStart(e, node.type, node.name)}
-                        className="flex items-center gap-3 p-3 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 cursor-grab active:cursor-grabbing border border-gray-700 hover:border-gray-600"
                       >
-                        <div className={`w-8 h-8 rounded-md flex items-center justify-center ${
-                          node.type === 'trigger' ? 'bg-purple-600/20' :
-                          node.type === 'action' ? 'bg-green-600/20' :
-                          'bg-orange-600/20'
-                        }`}>
-                          <node.icon className="w-4 h-4 text-white" />
+                        <div
+                          draggable
+                          onDragStart={(e: React.DragEvent) => onDragStart(e, node.type, node.name)}
+                          className="flex items-center gap-3 p-3 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 cursor-grab active:cursor-grabbing border border-gray-700 hover:border-gray-600"
+                        >
+                          <div className={`w-8 h-8 rounded-md flex items-center justify-center ${
+                            node.type === 'trigger' ? 'bg-purple-600/20' :
+                            node.type === 'action' ? 'bg-green-600/20' :
+                            'bg-orange-600/20'
+                          }`}>
+                            <node.icon className="w-4 h-4 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-white font-medium text-sm">{node.name}</p>
+                            <p className="text-gray-400 text-xs">{node.description}</p>
+                          </div>
+                          <Plus className="w-4 h-4 text-gray-500" />
                         </div>
-                        <div className="flex-1">
-                          <p className="text-white font-medium text-sm">{node.name}</p>
-                          <p className="text-gray-400 text-xs">{node.description}</p>
-                        </div>
-                        <Plus className="w-4 h-4 text-gray-500" />
                       </motion.div>
                     ))}
                   </div>
