@@ -55,7 +55,7 @@ const HeroSection = () => {
         >
           The Future of
           <br />
-          <span className="bg-gradient-to-r from-white via-[#B9FAF8] to-white bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-white via-purple-300 to-white bg-clip-text text-transparent">
             Business Intelligence
           </span>
         </motion.h1>
@@ -79,9 +79,9 @@ const HeroSection = () => {
           <Button 
             asChild
             size="lg"
-            className="group bg-gradient-to-r from-white/20 to-white/10 hover:from-white/30 hover:to-white/20 text-white border border-white/30 backdrop-blur-sm px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            className="group bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white border-0 px-8 py-4 text-lg font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
           >
-            <Link to="/auth">
+            <Link to="/dashboard">
               <Sparkles className="w-5 h-5 mr-2 group-hover:animate-spin" />
               Start Your Journey
               <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />

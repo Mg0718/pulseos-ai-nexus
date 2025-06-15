@@ -16,7 +16,7 @@ const CTASection = () => {
       >
         <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/20 p-16 relative overflow-hidden">
           <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-[#6F2DBD]/20 via-transparent to-[#A663CC]/20"
+            className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-transparent to-purple-800/20"
             animate={{ x: ["-100%", "100%"] }}
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           />
@@ -29,9 +29,9 @@ const CTASection = () => {
           <Button 
             asChild
             size="lg"
-            className="group bg-gradient-to-r from-[#6F2DBD] to-[#A663CC] hover:from-[#A663CC] hover:to-[#6F2DBD] text-white px-12 py-6 text-xl font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl border-0 relative z-10"
+            className="group bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white px-12 py-6 text-xl font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl border-0 relative z-10"
           >
-            <Link to="/auth">
+            <Link to="/dashboard">
               <Zap className="w-6 h-6 mr-3 group-hover:animate-pulse" />
               Get Started Now
               <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" />
