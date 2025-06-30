@@ -82,4 +82,4 @@ export const SUPPORTED_CHAINS: { [key: number]: ChainConfig } = {
   }
 };
 
-export const DEFAULT_CHAIN_ID = 137; // Polygon
+const DEFAULT_CHAIN_ID = 137; // Polygon

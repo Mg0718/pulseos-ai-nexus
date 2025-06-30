@@ -1,5 +1,5 @@
 
-export interface IntegrationConnector {
+interface IntegrationConnector {
   id: string;
   name: string;
   type: 'sap' | 'oracle' | 'quickbooks' | 'banking' | 'erp' | 'crm';
@@ -10,7 +10,7 @@ export interface IntegrationConnector {
   config: Record<string, any>;
 }
 
-export interface SyncOperation {
+interface SyncOperation {
   id: string;
   connectorId: string;
   type: 'full_sync' | 'incremental' | 'real_time';
@@ -21,7 +21,7 @@ export interface SyncOperation {
   errorMessage?: string;
 }
 
-export interface DataMapping {
+interface DataMapping {
   id: string;
   connectorId: string;
   sourceField: string;

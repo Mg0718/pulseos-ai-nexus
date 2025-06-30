@@ -2,7 +2,7 @@
 import { Web3Provider } from './web3Provider';
 import { BLOCKCHAIN_CONFIG } from './config';
 
-export interface DecentralizedIdentity {
+interface DecentralizedIdentity {
   did: string;
   publicKey: string;
   verificationMethods: string[];
@@ -13,7 +13,7 @@ export interface DecentralizedIdentity {
   }>;
 }
 
-export interface ZKProof {
+interface ZKProof {
   proof: string;
   publicSignals: string[];
   verificationKey: string;

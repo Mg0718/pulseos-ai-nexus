@@ -2,7 +2,7 @@
 import { Web3Provider } from './web3Provider';
 import { BLOCKCHAIN_CONFIG, PULSE_TOKEN_CONFIG } from './config';
 
-export interface PaymentContract {
+interface PaymentContract {
   id: string;
   payer: string;
   payee: string;
@@ -14,7 +14,7 @@ export interface PaymentContract {
   createdAt: number;
 }
 
-export interface PaymentMilestone {
+interface PaymentMilestone {
   id: string;
   name: string;
   description: string;
@@ -24,7 +24,7 @@ export interface PaymentMilestone {
   proofHash?: string;
 }
 
-export interface EscrowDetails {
+interface EscrowDetails {
   contractId: string;
   contractAddress: string;
   amount: string;

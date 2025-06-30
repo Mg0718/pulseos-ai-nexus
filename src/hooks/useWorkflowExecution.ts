@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-export interface WorkflowExecution {
+interface WorkflowExecution {
   id: string;
   workflow_id: string;
   status: 'running' | 'completed' | 'failed' | 'cancelled';

@@ -1,4 +1,4 @@
-export interface ThreatDetectionModel {
+interface ThreatDetectionModel {
   id: string;
   name: string;
   type: 'anomaly_detection' | 'pattern_recognition' | 'behavioral_analysis' | 'risk_scoring';
@@ -7,7 +7,7 @@ export interface ThreatDetectionModel {
   accuracy: number;
 }
 
-export interface SecurityThreat {
+interface SecurityThreat {
   id: string;
   type: 'suspicious_transaction' | 'unusual_pattern' | 'potential_fraud' | 'compliance_violation';
   severity: 'low' | 'medium' | 'high' | 'critical';
@@ -20,7 +20,7 @@ export interface SecurityThreat {
   mitigationSteps: string[];
 }
 
-export interface AnalyticsMetric {
+interface AnalyticsMetric {
   id: string;
   name: string;
   value: number;
@@ -30,7 +30,7 @@ export interface AnalyticsMetric {
   timestamp: Date;
 }
 
-export interface RealTimeAlert {
+interface RealTimeAlert {
   id: string;
   type: 'performance' | 'security' | 'compliance' | 'cost';
   severity: 'info' | 'warning' | 'error' | 'critical';

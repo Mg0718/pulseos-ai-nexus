@@ -1,4 +1,4 @@
-export interface CostOptimization {
+interface CostOptimization {
   id: string;
   type: 'gas_optimization' | 'route_optimization' | 'timing_optimization' | 'aggregation';
   description: string;
@@ -12,7 +12,7 @@ export interface CostOptimization {
   estimatedROI: number;
 }
 
-export interface CostPrediction {
+interface CostPrediction {
   id: string;
   timeframe: '1d' | '1w' | '1m' | '3m' | '1y';
   predictedCost: number;
@@ -21,7 +21,7 @@ export interface CostPrediction {
   recommendations: string[];
 }
 
-export interface CostBreakdown {
+interface CostBreakdown {
   category: string;
   amount: number;
   percentage: number;
@@ -29,7 +29,7 @@ export interface CostBreakdown {
   previousPeriod: number;
 }
 
-export interface BenchmarkData {
+interface BenchmarkData {
   metric: string;
   yourValue: number;
   industryAverage: number;

@@ -1,5 +1,5 @@
 
-export interface CryptoTransaction {
+interface CryptoTransaction {
   id: string;
   type: 'buy' | 'sell' | 'trade' | 'transfer' | 'mining' | 'staking' | 'defi';
   fromToken: string;

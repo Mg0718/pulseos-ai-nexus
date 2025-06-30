@@ -1,12 +1,12 @@
 
-export interface WorkflowNode {
+interface WorkflowNode {
   id: string;
   type: string;
   position: { x: number; y: number };
   data: { label: string };
 }
 
-export interface WorkflowEdge {
+interface WorkflowEdge {
   id: string;
   source: string;
   target: string;
@@ -94,6 +94,6 @@ export const WorkflowTemplates: WorkflowTemplate[] = [
   }
 ];
 
-export const getTemplateById = (id: string): WorkflowTemplate | undefined => {
+const getTemplateById = (id: string): WorkflowTemplate | undefined => {
   return WorkflowTemplates.find(template => template.id === id);
 };

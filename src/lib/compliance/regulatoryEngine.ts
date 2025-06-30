@@ -10,7 +10,7 @@ export interface ComplianceFramework {
   status: 'compliant' | 'at_risk' | 'non_compliant';
 }
 
-export interface ComplianceRequirement {
+interface ComplianceRequirement {
   id: string;
   title: string;
   description: string;
@@ -34,7 +34,7 @@ export interface RegulatoryAlert {
   actionRequired: string[];
 }
 
-export interface CrossBorderRule {
+interface CrossBorderRule {
   fromJurisdiction: string;
   toJurisdiction: string;
   transactionType: string;

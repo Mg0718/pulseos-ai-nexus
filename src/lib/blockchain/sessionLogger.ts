@@ -11,7 +11,7 @@ export interface LoginSession {
   blockchainHash: string;
 }
 
-export interface PayrollDecision {
+interface PayrollDecision {
   payrollId: string;
   employeeId: string;
   amount: string;
